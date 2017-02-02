@@ -1,11 +1,28 @@
 # Wobserver
 
+[![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
+[![Hex.pm](https://img.shields.io/badge/docs-v0.0.1-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")]()
+
 Web based metrics, monitoring, and observer.
+
+## Progress
+  - [ ] System
+  - [ ] DNS Discovery - Load balancer
+  - [ ] Metrics (prometheus)
+  - [ ] Load Charts
+  - [ ] Memory Allocators
+  - [ ] Applications
+  - [ ] Processes
+  - [ ] Ports
+  - [ ] Table Viewer
+  - [ ] ~~Trace Overview~~
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `wobserver` to your list of dependencies in `mix.exs`:
+### Hex (package)
+
+Add Wobserver as a dependency to your `mix.exs` file:
 
 ```elixir
 def deps do
@@ -13,14 +30,20 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/wobserver](https://hexdocs.pm/wobserver).
+and add it to your list of applications:
+
+```elixir
+def application do
+  [applications: [:wobserver]]
+end
+```
+
+Then run `mix deps.get` in your shell to fetch the dependencies.
 
 ### Build manually
 
 Run the following commands to build the project:
-```
+```bash
 $ npm install
 $ gulp build
 $ mix deps.get
@@ -28,5 +51,5 @@ $ mix deps.get
 
 ## License
 
-Wobserver source code is released under MIT License.
-Check LICENSE file for more information.
+Wobserver source code is released under [the MIT License](LICENSE).
+Check [LICENSE](LICENSE) file for more information.
