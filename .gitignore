@@ -25,3 +25,9 @@ assets/*.map
 
 # For now there is no reason to include the assets
 assets
+
+# Ignore environment settings
+.envrc
+
+# Ignore OS generated files
+.DS_Store
