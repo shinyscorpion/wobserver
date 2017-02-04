@@ -1,0 +1,52 @@
+@import 'base';
+@import 'table';
+
+#wobserver {
+  #menu {
+    font-size: 130%;
+    height: 2em;
+    background-color: rgba(0,0,0, 0.2);
+
+    nav a {
+      cursor: pointer;
+      user-select: none;
+
+      text-decoration: none;
+      color: #666;
+      display: inline-block;
+      height: 1em;
+      padding: 0.5em;
+      vertical-align: middle;
+
+      background-color: #ccc;
+      &:hover {
+        background-color: #ddd;
+        color: #222;
+      }
+
+      &.selected {
+        background-color: #eee;
+        color: #000;
+
+      }
+    }
+  }
+  #content {
+    padding: 0.5em;
+  }
+  #footer {
+    position: absolute;
+
+    left: 0; right: 0;
+    bottom: 0;
+
+    border-top: solid 1px rgba(255,255,255, 0.3);
+    background-color: rgba(0,0,0, 0.1);
+
+    padding: 0.3em 0.5em;
+  }
+}
+
+html, body {
+  background-color: #eee;
+}
