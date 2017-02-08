@@ -1,0 +1,6 @@
+lib/wobserver/web/client.ex:5: The pattern {'ok', _@4, _@5} can never match the type {'ok',#{}}
+lib/mix/tasks/analyze.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
+lib/mix/tasks/build.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
+Unknown types:
+  'Elixir.Access':get/2
+done (warnings were emitted)

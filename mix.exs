@@ -14,6 +14,7 @@ defmodule Wobserver.Mixfile do
       # Testing
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+      dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
       # Docs
       name: "Wobserver",
       source_url: "https://github.com/shinyscorpion/wobserver",

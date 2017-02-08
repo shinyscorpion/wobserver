@@ -1,0 +1,12 @@
+{
+  "skip_files": [
+    "lib/mix/tasks",
+    "folder/file_to_skip.ex",
+    "lib/wobserver/web/client.ex", // For now...
+    "lib/wobserver/web/client_socket.ex",
+    "lib/wobserver/web/client_proxy.ex"
+  ],
+  "coverage_options": {
+    "minimum_coverage": 90
+  }
+}
