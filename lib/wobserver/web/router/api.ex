@@ -16,41 +16,70 @@ defmodule Wobserver.Web.Router.Api do
 
   alias Plug.Router.Utils
 
-  alias Wobserver.NodeDiscovery
+  alias Wobserver.Util.Node.Discovery
+  alias Wobserver.Util.Node.Remote
+  alias Wobserver.Web.Router.Api
   alias Wobserver.Web.Router.System
+
+  match "/nodes" do
+    Discovery.discover
+    |> send_json_resp(conn)
+  end
 
   match "/about" do
     Wobserver.about
     |> send_json_resp(conn)
   end
 
-  match "/nodes" do
-    NodeDiscovery.discover
-    |> send_json_resp(conn)
-  end
+  forward "/system", to: System
 
-  match "/:node_name/system/*glob" do
-    case NodeDiscovery.find(node_name) do
-      :local ->
-        Utils.forward(
-          var!(conn),
-          var!(glob),
-          System,
-          System.init([])
-        )
-      {:remote, _node} ->
+  match "/:node_name/*glob" do
+    case glob do
+      [] ->
         conn
-        |> send_resp(501, "Remote node connections not implemented yet.")
-      :unknown ->
-        conn
-        |> send_resp(404, "Node #{node_name} not Found")
+        |> send_resp(501, "Custom commands not implemented yet.")
+      _ ->
+        node_forward(node_name, conn, glob)
     end
   end
-
-  forward "/system", to: System
 
   match _ do
     conn
     |> send_resp(404, "Page not Found")
+  end
+
+  # Helpers
+
+  defp node_forward(node_name, conn, glob) do
+    case Discovery.find(node_name) do
+      :local -> local_forward(conn, glob)
+      {:remote, remote_node} -> remote_forward(remote_node, conn, glob)
+      :unknown -> send_resp(conn, 404, "Node #{node_name} not Found")
+    end
+  end
+
+  defp local_forward(conn, glob) do
+    Utils.forward(
+      var!(conn),
+      var!(glob),
+      Api,
+      Api.init([])
+    )
+  end
+
+  defp remote_forward(remote_node, conn, glob) do
+    path =
+      glob
+      |> Enum.join
+
+    case Remote.api(remote_node, "/" <>  path) do
+      :error ->
+        conn
+        |> send_resp(500, "Node #{remote_node.name} not responding.")
+      data ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(200, data)
+    end
   end
 end
