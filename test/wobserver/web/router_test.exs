@@ -13,11 +13,20 @@ defmodule Wobserver.Web.RouterTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert Poison.encode!(Wobserver.NodeDiscovery.discover) == conn.resp_body
+    assert Poison.encode!(Wobserver.Util.Node.Discovery.discover) == conn.resp_body
   end
 
   test "/ returns 200" do
     conn = conn(:get, "/")
+
+    conn = Router.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/metrics returns 200" do
+    conn = conn(:get, "/metrics")
 
     conn = Router.call(conn, @opts)
 
