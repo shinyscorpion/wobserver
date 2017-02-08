@@ -49,6 +49,7 @@ defmodule Wobserver.Mixfile do
     [
       extra_applications: [
         :logger,
+        :httpoison,
       ],
       mod: {Wobserver.Application, []},]
   end
@@ -70,9 +71,11 @@ defmodule Wobserver.Mixfile do
       {:ex_doc, "~> 0.14", only: :dev},
       {:excoveralls, "~> 0.5", only: :test},
       {:ex_doc, "~> 0.14", only: :dev},
+      {:httpoison, "~> 0.10.0"},
       {:meck, "~> 0.8.4", only: :test},
       {:plug, "~> 1.3"},
-      {:poison, "~> 3.0"},
+      {:poison, "~> 2.0 or ~> 3.0"},
+      {:websocket_client, "~> 1.2"},
     ]
   end
 end
