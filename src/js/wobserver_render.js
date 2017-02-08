@@ -1,3 +1,6 @@
+import {Popup} from './interface/popup.js';
+import {NodeDialog} from './interface/node_dialog.js';
+
 // Helpers
 function time_formatter(time) {
   let seconds = Math.floor(time / 1000);
@@ -92,11 +95,23 @@ function create_menu(items){
   }, 100);
 }
 
-function create_footer() {
+function create_footer(wobserver) {
   let footer = document.getElementById('footer');
+
+  let switch_button = document.createElement('span');
+  switch_button.className = 'button';
+  switch_button.style.marginRight = "1em";
+  switch_button.innerHTML = 'Switch Node';
+
+  let node_selection = new NodeDialog(wobserver);
+
+  switch_button.addEventListener('click', () => node_selection.show() );
+
+  footer.appendChild(switch_button);
+
   let node = document.createElement('span');
 
-  node.innerHTML = `Connected to: <em>local</em>.`
+  node.innerHTML = `Connected to: <em id="connected_node">local</em>.`
 
   footer.appendChild(node);
 }
@@ -111,7 +126,7 @@ const WobserverRender = {
         <div id="content"></div>
         <div id="footer"></div>`;
 
-      create_footer();
+      create_footer(wobserver);
 
       create_menu([
         {
@@ -125,6 +140,9 @@ const WobserverRender = {
         }
       ]);
     }
+  },
+  set_node: (node) => {
+    document.getElementById('connected_node').innerHTML = node;
   },
   display_system: (system) => {
     let content = document.getElementById('content');

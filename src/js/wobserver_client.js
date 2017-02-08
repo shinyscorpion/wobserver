@@ -4,16 +4,19 @@ class WobserverClient {
   constructor(host) {
     this.host = host;
     this.socket = null;
+    this.node = 'local';
     this.promises = {}
   }
 
-  connect(fallback_callback) {
+  connect(node_change, fallback_callback) {
+    this.node_change = node_change;
+
     this.socket =  new WebSocket('ws://' + this.host + '/ws');
 
     this.socket.onerror = (error) => {
       if( this.socket.readyState == 3 ){
         console.log('Socket can not connect, falling back to json api.')
-        fallback_callback(new WobserverApiFallback(this.host));
+        fallback_callback(new WobserverApiFallback(this.host, this.node));
       }
     }
 
@@ -24,12 +27,19 @@ class WobserverClient {
     this.socket.onmessage = (msg) => {
       let data = JSON.parse(msg.data);
 
-      console.log(data)
-
-      if( this.promises[data.type] ){
-        let promise = this.promises[data.type].pop();
-        if( promise ) {
-          promise(data.data);
+      if( data.type == 'ehlo' ) {
+        this.node = data.data.name;
+        this.node_change(this.node);
+      } else if( data.type == 'setup_proxy' && data.data.node) {
+        console.log(data.data.node);
+        this.node = data.data.node;
+        this.node_change(this.node);
+      } else {
+        if( this.promises[data.type] ){
+          let promise = this.promises[data.type].pop();
+          if( promise ) {
+            promise(data.data);
+          }
         }
       }
     }
@@ -54,6 +64,12 @@ class WobserverClient {
 
       this.command(command, data);
     });
+  }
+
+  set_node(node) {
+    if( this.node != node ) {
+      this.command('setup_proxy', node)
+    }
   }
 }
 

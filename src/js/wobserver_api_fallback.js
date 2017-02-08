@@ -1,9 +1,15 @@
-function build_url(host, command) {
-  return 'http://' + host + '/api/' + command;
- }
+function build_url(host, command, node = "") {
+  if( node == "local" ){
+    return 'http://' + host + '/api/' + command;
+  } else {
+    return 'http://' + host + '/api/' + node + "/" + command;
+  }
+}
+
 class WobserverApiFallback {
-  constructor(host) {
+  constructor(host, node = "local") {
     this.host = host;
+    this.node = node;
   }
 
   command(command, data = null) {
@@ -11,7 +17,13 @@ class WobserverApiFallback {
   }
 
   command_promise(command, data = null) {
-    return fetch(build_url(this.host, command)).then(res => res.json());
+    return fetch(build_url(this.host, command, this.node))
+    .then(res => res.json())
+    .catch((e) =>{} );
+  }
+
+  set_node(node) {
+    this.node = node;
   }
 }
 
