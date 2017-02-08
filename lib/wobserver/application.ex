@@ -7,6 +7,11 @@ defmodule Wobserver.Application do
 
   alias Plug.Adapters.Cowboy
 
+  @spec port :: integer
+  def port do
+    Application.get_env(:wobserver, :port, 4001)
+  end
+
   @spec start(term, term) ::
     {:ok, pid} |
     {:ok, pid, state :: any} |
@@ -26,7 +31,7 @@ defmodule Wobserver.Application do
     options = [
       # Options
       acceptors: 10,
-      port: Application.get_env(:wobserver, :port, 4001),
+      port: Wobserver.Application.port,
       dispatch: [
         {:_, [
           {"/ws", Wobserver.Web.Client, []},
