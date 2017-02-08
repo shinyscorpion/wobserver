@@ -13,11 +13,9 @@ defmodule Wobserver.Web.Router.System do
   use Wobserver.Web.Router.Base
 
   alias Wobserver.System
-  alias System.{
-    Info,
-    Memory,
-    Statistics,
-  }
+  alias System.Info
+  alias System.Memory
+  alias System.Statistics
 
   get "/" do
     System.overview

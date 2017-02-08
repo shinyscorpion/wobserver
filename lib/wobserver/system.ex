@@ -3,11 +3,9 @@ defmodule Wobserver.System do
   Provides System information.
   """
 
-  alias Wobserver.System.{
-    Info,
-    Memory,
-    Statistics,
-  }
+  alias Wobserver.System.Info
+  alias Wobserver.System.Memory
+  alias Wobserver.System.Statistics
 
   @typedoc ~S"""
   Memory information.
