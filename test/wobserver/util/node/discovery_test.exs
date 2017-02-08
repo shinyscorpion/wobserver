@@ -1,16 +1,17 @@
-defmodule Wobserver.NodeDiscoveryTest do
+defmodule Wobserver.Util.Node.DiscoveryTest do
   use ExUnit.Case
 
-  alias Wobserver.NodeDiscovery
+  alias Wobserver.Util.Node.Remote
+  alias Wobserver.Util.Node.Discovery
 
   def custom_search do
     [
-      %{
+      %Remote{
         name: "Remote 1",
         host: "192.168.1.34",
         port: 4001
       },
-      %{
+      %Remote{
         name: "Remote 2",
         host: "84.23.12.175",
         port: 4001
@@ -20,11 +21,11 @@ defmodule Wobserver.NodeDiscoveryTest do
 
   describe "find" do
     test "returns local for \"local\"" do
-      assert NodeDiscovery.find("local") == :local
+      assert Discovery.find("local") == :local
     end
 
     test "returns unknown for \"garbage\"" do
-      assert NodeDiscovery.find("garbage") == :unknown
+      assert Discovery.find("garbage") == :unknown
     end
 
     test "returns remote_note for \"Remote 1\"" do
@@ -38,13 +39,14 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> fn -> [%{name: ip_address, host: ip_address, port: 0}] end
+          :discovery_search -> fn -> [%Remote{name: ip_address, host: ip_address, port: 0}] end
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      assert NodeDiscovery.find(ip_address) == :local
+      assert Discovery.find(ip_address) == :local
     end
 
     test "returns :local for machine ip" do
@@ -52,15 +54,31 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> "&Wobserver.NodeDiscoveryTest.custom_search/0"
+          :discovery_search -> "&Wobserver.Util.Node.DiscoveryTest.custom_search/0"
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      {:remote, node} = NodeDiscovery.find("Remote 1")
+      {:remote, node} = Discovery.find("Remote 1")
 
       assert node.host == "192.168.1.34"
+    end
+
+    test "returns :local for 127.0.0.1 and matching port" do
+      :meck.new Application, [:passthrough]
+      :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
+        case field do
+          :discovery -> :custom
+          :discovery_search -> fn -> [%Remote{name: "Remote 1", host: "127.0.0.1", port: 4001}] end
+          :port -> 4001
+        end
+      end
+
+      on_exit(fn -> :meck.unload end)
+
+      assert Discovery.find("Remote 1") == :local
     end
   end
 
@@ -70,16 +88,21 @@ defmodule Wobserver.NodeDiscoveryTest do
         name: name,
         host: host,
         port: port,
-      }] = NodeDiscovery.discover
+      }] = Discovery.discover
 
-      assert name == "local"
+      assert is_binary(name)
       assert is_binary(host)
       assert port > 0
     end
 
     test "returns local with config set to none" do
       :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, :discovery, :none) -> :none end
+      :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
+        case field do
+          :discovery -> :none
+          :port -> 4001
+        end
+      end
 
       on_exit(fn -> :meck.unload end)
 
@@ -87,9 +110,9 @@ defmodule Wobserver.NodeDiscoveryTest do
         name: name,
         host: host,
         port: port,
-      }] = NodeDiscovery.discover
+      }] = Discovery.discover
 
-      assert name == "local"
+      assert is_binary(name)
       assert is_binary(host)
       assert port > 0
     end
@@ -100,6 +123,7 @@ defmodule Wobserver.NodeDiscoveryTest do
         case field do
           :discovery -> :dns
           :discovery_search -> "localhost."
+          :port -> 4001
         end
       end
 
@@ -109,10 +133,10 @@ defmodule Wobserver.NodeDiscoveryTest do
         name: name,
         host: host,
         port: port,
-      }] = NodeDiscovery.discover
+      }] = Discovery.discover
 
       assert name == host
-      assert name == "127.0.0.1"
+      assert is_binary(host)
       assert port > 0
     end
 
@@ -121,8 +145,16 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :dns
-          :discovery_search -> "google.nl."
+          :discovery_search -> "disovery.services.local."
+          :port -> 4001
         end
+      end
+
+      :meck.new :inet_res, [:unstick]
+      :meck.expect :inet_res, :lookup, fn (_, _, _) ->
+        {:ok, ips} = :inet.getif()
+        {ip, _, _} = List.first(ips)
+        [ip]
       end
 
       on_exit(fn -> :meck.unload end)
@@ -131,10 +163,10 @@ defmodule Wobserver.NodeDiscoveryTest do
         name: name,
         host: host,
         port: port,
-      }] = NodeDiscovery.discover
+      }] = Discovery.discover
 
-      assert name == host
       assert is_binary(name)
+      assert is_binary(host)
       assert port > 0
     end
 
@@ -143,24 +175,16 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> "&Wobserver.NodeDiscoveryTest.custom_search/0"
+          :discovery_search -> "&Wobserver.Util.Node.DiscoveryTest.custom_search/0"
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      [
-        %{
-          name: name,
-        },
-        %{
-          name: _name,
-          host: _host,
-          port: _port,
-        },
-      ] = NodeDiscovery.discover
+      [_, remote, _] = Discovery.discover
 
-      assert name == "Remote 1"
+      assert remote.name == "Remote 1"
     end
 
     test "returns nodes with config set to custom function" do
@@ -168,21 +192,16 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> &Wobserver.NodeDiscoveryTest.custom_search/0
+          :discovery_search -> &Wobserver.Util.Node.DiscoveryTest.custom_search/0
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      [
-        %{
-          name: name,
-        },
-        %{
-        },
-      ] = NodeDiscovery.discover
+      [_, remote, _] = Discovery.discover
 
-      assert name == "Remote 1"
+      assert remote.name == "Remote 1"
     end
 
     test "returns nodes with config set to lambda function as String" do
@@ -190,19 +209,16 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> "fn -> [%{name: \"Remote 1\", host: nil, port: 0}] end"
+          :discovery_search -> "fn -> [%Wobserver.Util.Node.Remote{name: \"Remote 1\", host: nil, port: 0}] end"
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      [
-        %{
-          name: name,
-        }
-      ] = NodeDiscovery.discover
+      [_, remote] = Discovery.discover
 
-      assert name == "Remote 1"
+      assert remote.name == "Remote 1"
     end
 
     test "returns nodes with config set to lambda function" do
@@ -210,19 +226,16 @@ defmodule Wobserver.NodeDiscoveryTest do
       :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
         case field do
           :discovery -> :custom
-          :discovery_search -> fn -> [%{name: "Remote 1", host: nil, port: 0}] end
+          :discovery_search -> fn -> [%Remote{name: "Remote 1", host: nil, port: 0}] end
+          :port -> 4001
         end
       end
 
       on_exit(fn -> :meck.unload end)
 
-      [
-        %{
-          name: name,
-        }
-      ] = NodeDiscovery.discover
+      [_, remote] = Discovery.discover
 
-      assert name == "Remote 1"
+      assert remote.name == "Remote 1"
     end
   end
 end
