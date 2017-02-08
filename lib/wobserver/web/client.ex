@@ -5,6 +5,7 @@ defmodule Wobserver.Web.Client do
   use Wobserver.Web.ClientSocket
 
   alias Wobserver.System
+  alias Wobserver.Util.Node.Discovery
 
   def client_init do
     {:ok, %{}}
@@ -12,7 +13,7 @@ defmodule Wobserver.Web.Client do
 
   @spec client_handle(:hello, state :: map) :: {:reply, :ehlo, map}
   def client_handle(:hello, state) do
-    {:reply, :ehlo, state}
+    {:reply, :ehlo, Discovery.local, state}
   end
 
   @spec client_handle(:system, state :: map) :: {:reply, :ehlo, map, map}
