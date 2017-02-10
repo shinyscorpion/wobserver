@@ -1,3 +1,8 @@
 import {Wobserver} from './wobserver';
 
-let wobserver = new Wobserver('localhost:4001');
+let host = window.location.host + window.location.pathname;
+if( host.endsWith("/") ) {
+  host = host.substr(0, host.length - 1);
+}
+
+let wobserver = new Wobserver(host);

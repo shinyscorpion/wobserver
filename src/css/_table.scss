@@ -29,3 +29,15 @@ table.inline {
     width: 13em;
   }
 }
+
+table.process_table {
+  thead {
+    background-color: rgba(0,0,0, 0.1);
+    font-size: 105%;
+    cursor: pointer;
+
+    th {
+      padding: 0.2em;
+    }
+  }
+}

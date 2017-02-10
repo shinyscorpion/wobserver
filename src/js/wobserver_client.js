@@ -31,14 +31,13 @@ class WobserverClient {
         this.node = data.data.name;
         this.node_change(this.node);
       } else if( data.type == 'setup_proxy' && data.data.node) {
-        console.log(data.data.node);
         this.node = data.data.node;
         this.node_change(this.node);
       } else {
         if( this.promises[data.type] ){
           let promise = this.promises[data.type].pop();
           if( promise ) {
-            promise(data.data);
+            promise(data);
           }
         }
       }

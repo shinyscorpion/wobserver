@@ -7,7 +7,9 @@ class NodeDialog {
 
   show() {
     this.wobserver.client.command_promise('nodes')
-    .then((nodes) => {
+    .then(e => {
+      let nodes = e.data;
+
       Popup.show(`
       <div id="node_selection">
         <span>Select node:</span>
@@ -20,17 +22,22 @@ class NodeDialog {
 
       nodes.forEach((node) => {
         let li = document.createElement('li');
+        let selected = (this.wobserver.client.node == node.name);
 
-        li.className = (this.wobserver.client.node == node.name) ? 'node selected' : 'node';
+        li.className = selected ? 'node selected' : 'node';
 
         let local_class = node['local?'] ? ' (local)' : '';
 
         li.innerHTML = `<span>${node.name}${local_class}</span><detail>${node.host}:${node.port}</detail>`
 
-        li.addEventListener('click', () =>{
-          this.wobserver.client.set_node(node.name);
-          this.hide();
-        });
+        if( selected ) {
+          li.addEventListener('click', () => is.hide());
+        } else {
+          li.addEventListener('click', () =>{
+            this.wobserver.client.set_node(node.name);
+            this.hide();
+          });
+        }
 
         node_options.appendChild(li);
       });

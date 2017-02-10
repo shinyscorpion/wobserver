@@ -1,8 +1,8 @@
 function build_url(host, command, node = "") {
   if( node == "local" ){
-    return 'http://' + host + '/api/' + command;
+    return 'http://' + host + '/api/' + encodeURI(command).replace(/#/g, '%23');
   } else {
-    return 'http://' + host + '/api/' + node + "/" + command;
+    return 'http://' + host + '/api/' + encodeURI(node) + "/" + encodeURI(command).replace(/#/g, '%23');
   }
 }
 
@@ -19,7 +19,12 @@ class WobserverApiFallback {
   command_promise(command, data = null) {
     return fetch(build_url(this.host, command, this.node))
     .then(res => res.json())
-    .catch((e) =>{} );
+    .then(data => { return {
+      data: data,
+      timestamp: Date.now() / 1000 | 0,
+      type: command,
+    } } )
+    .catch( _ => {} );
   }
 
   set_node(node) {

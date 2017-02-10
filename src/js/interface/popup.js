@@ -10,7 +10,11 @@ function getPopup() {
   popup.id = 'popup-overlay';
   popup.style.display = 'none';
 
-  popup.addEventListener('click', () => Popup.hide() );
+  popup.addEventListener('click', (e) => {
+    if( e.target.id == 'popup-overlay' ){
+      Popup.hide();
+    }
+  });
 
   document.body.appendChild(popup);
 
