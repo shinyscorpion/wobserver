@@ -20,6 +20,7 @@ defmodule Wobserver.Application do
     import Supervisor.Spec, warn: false
 
     children = [
+      worker(Wobserver.Util.AppInfo, []),
       cowboy_child_spec(),
     ]
 
