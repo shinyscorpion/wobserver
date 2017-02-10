@@ -2,7 +2,11 @@ defmodule Wobserver.Util.Metrics do
   @moduledoc ~S"""
   Metrics
 
-  TODO: Needs config.
+  TODO:
+    - Needs config.
+    - Needs docs.
+    - Needs cleanup.
+    - Needs tests.
   """
 
   alias Wobserver.System.Memory
