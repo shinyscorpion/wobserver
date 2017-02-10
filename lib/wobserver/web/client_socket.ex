@@ -34,8 +34,8 @@ defmodule Wobserver.Web.ClientSocket do
 
   @typedoc "Response to browser."
   @type response ::
-    {:reply, atom, any, any}
-    | {:reply, atom, any}
+    {:reply, atom | list(atom), any, any}
+    | {:reply, atom | list(atom), any}
     | {:noreply, any}
 
   @doc ~S"""
@@ -160,7 +160,11 @@ defmodule Wobserver.Web.ClientSocket do
   def parse_command(payload) do
     command_data = Poison.decode!(payload)
 
-    command = command_data["command"] |> String.to_atom
+    command =
+      case String.split(command_data["command"], "/") do
+        [one_command] -> one_command |> String.to_atom
+        list_of_commands -> list_of_commands |> Enum.map(&String.to_atom/1)
+      end
 
     case command_data["data"] do
       "" -> command
@@ -171,8 +175,8 @@ defmodule Wobserver.Web.ClientSocket do
 
   @spec send_response(
     message ::  {:noreply, any}
-              | {:reply, atom, any}
-              | {:reply, atom, map | list | String.t | nil, any},
+              | {:reply, atom | list(atom), any}
+              | {:reply, atom | list(atom), map | list | String.t | nil, any},
     socket_state :: map,
     req :: :cowboy_req.req
   ) ::
@@ -186,7 +190,7 @@ defmodule Wobserver.Web.ClientSocket do
 
   def send_response({:reply, type, message, state}, socket_state, req) do
     data = %{
-      type: type,
+      type: uniform_type(type),
       timestamp: :os.system_time(:seconds),
       data: message,
     }
@@ -239,5 +243,16 @@ defmodule Wobserver.Web.ClientSocket do
         }
         |> send_response(%{state | proxy: pid}, req)
     end
+  end
+
+  @spec uniform_type(type :: atom | list(atom)) :: String.t
+  defp uniform_type(type)
+
+  defp uniform_type(type) when is_atom(type), do: type |> Atom.to_string
+
+  defp uniform_type(type) when is_list(type) do
+    type
+    |> Enum.map(&Atom.to_string/1)
+    |> Enum.join("/")
   end
 end
