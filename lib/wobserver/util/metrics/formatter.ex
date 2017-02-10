@@ -115,10 +115,15 @@ defmodule Wobserver.Util.Metrics.Formatter do
   end
 
   def merge_metrics(metrics, formatter) do
-    case Enum.member?(metrics, :error) do
-      true -> :error
-      false -> formatter.merge_metrics(metrics)
-    end
+    # Old way: One node error, means no metrics
+    #
+    # case Enum.member?(metrics, :error) do
+    #   true -> :error
+    #   false -> formatter.merge_metrics(metrics)
+    # end
+    metrics
+    |> Enum.filter(fn m -> m != :error end)
+    |> formatter.merge_metrics
   end
 
   # Helpers
