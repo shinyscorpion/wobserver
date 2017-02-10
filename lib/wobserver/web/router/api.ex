@@ -16,6 +16,10 @@ defmodule Wobserver.Web.Router.Api do
 
   alias Plug.Router.Utils
 
+  alias Wobserver.Allocator
+  alias Wobserver.Table
+  alias Wobserver.Util.AppInfo
+  alias Wobserver.Util.Process
   alias Wobserver.Util.Node.Discovery
   alias Wobserver.Util.Node.Remote
   alias Wobserver.Web.Router.Api
@@ -28,6 +32,52 @@ defmodule Wobserver.Web.Router.Api do
 
   match "/about" do
     Wobserver.about
+    |> send_json_resp(conn)
+  end
+
+  get "/application/:app" do
+    app
+    |> String.downcase
+    |> String.to_atom
+    |> AppInfo.info_structured
+    |> send_json_resp(conn)
+  end
+
+  get "/application" do
+    AppInfo.list_structured
+    |> send_json_resp(conn)
+  end
+
+  get "/process" do
+    AppInfo.process_list
+    |> send_json_resp(conn)
+  end
+
+  get "/process/:pid" do
+    pid
+    |> Process.info
+    |> send_json_resp(conn)
+  end
+
+  get "/ports" do
+    Wobserver.Port.list
+    |> send_json_resp(conn)
+  end
+
+  get "/allocators" do
+    Allocator.list
+    |> send_json_resp(conn)
+  end
+
+  get "/table" do
+    Table.list
+    |> send_json_resp(conn)
+  end
+
+  get "/table/:table" do
+    table
+    |> Table.sanitize
+    |> Table.info(true)
     |> send_json_resp(conn)
   end
 
