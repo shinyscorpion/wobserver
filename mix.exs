@@ -4,7 +4,7 @@ defmodule Wobserver.Mixfile do
   def project do
     [
       app: :wobserver,
-      version: "0.0.3",
+      version: "0.1.0",
       elixir: "~> 1.4",
       description: "Web based metrics, monitoring, and observer.",
       package: package(),
