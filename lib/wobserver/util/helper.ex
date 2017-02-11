@@ -15,6 +15,15 @@ defmodule Wobserver.Util.Helper do
     end
   end
 
+  defimpl Encoder, for: Port do
+    @spec encode(port :: port, options :: any) :: String.t
+    def encode(port, options) do
+      port
+      |> inspect
+      |> BitString.encode(options)
+    end
+  end
+
   @doc ~S"""
   Converts Strings to module names or atoms.
   """

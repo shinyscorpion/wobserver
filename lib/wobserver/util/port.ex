@@ -1,25 +1,21 @@
 defmodule Wobserver.Port do
   @moduledoc ~S"""
-  Port
-
-  TODO:
-    - Needs docs.
-    - Needs cleanup.
-    - Needs tests.
+  Handles Ports and their information.
   """
 
-  alias Poison.Encoder
-  alias Encoder.BitString
+  @doc ~S"""
+  Lists ports and their block and carrier size.
 
-  defimpl Encoder, for: Port do
-    @spec encode(port :: port, options :: any) :: String.t
-    def encode(port, options) do
-      port
-      |> inspect
-      |> BitString.encode(options)
-    end
-  end
-
+  The returned maps contain the following information:
+    - `id`
+    - `port`
+    - `name`
+    - `links`
+    - `connected`
+    - `input`
+    - `output`
+    - `os_pid`
+  """
   @spec list :: list(map)
   def list do
     :erlang.ports
@@ -33,6 +29,7 @@ defmodule Wobserver.Port do
 
     %{
       id: Keyword.get(data, :id, -1),
+      port: port,
       name: to_string(Keyword.get(data, :name, '')),
       links: Keyword.get(data, :links, []),
       connected: Keyword.get(data, :connected, nil),

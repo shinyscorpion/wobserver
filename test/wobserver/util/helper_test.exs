@@ -29,6 +29,13 @@ defmodule Wobserver.Util.HelperTest do
 
       assert encoder.encode(pid, []) == [34, ["#PID<0.33.0>"], 34]
     end
+
+    test "Port" do
+      port = :erlang.ports |> List.first
+      encoder = Poison.Encoder.impl_for(port)
+
+      assert encoder.encode(port, []) == [34, ["#Port<0.0>"], 34]
+    end
   end
 
   describe "format_function" do
