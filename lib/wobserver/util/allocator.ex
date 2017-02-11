@@ -1,13 +1,16 @@
 defmodule Wobserver.Allocator do
   @moduledoc ~S"""
-  Allocator
-
-  TODO:
-    - Needs docs.
-    - Needs cleanup.
-    - Needs tests.
+  Handles memory allocators and their block and carrier size.
   """
 
+  @doc ~S"""
+  Lists memory allocators and their block and carrier size.
+
+  The returned maps contain the following information:
+    - `type`, the type of the memory allocator.
+    - `block`, the block size of the memory allocator. (summed over all schedulers)
+    - `carrier`, the carrier size of the memory allocator. (summed over all schedulers)
+  """
   @spec list :: list(map)
   def list do
     :alloc_util_allocators
