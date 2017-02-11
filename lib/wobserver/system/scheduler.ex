@@ -1,16 +1,32 @@
 defmodule Wobserver.System.Scheduler do
   @moduledoc ~S"""
-  Scheduler
+  Scheduler utilization per scheduler.
 
-  TODO:
-    - Needs docs.
-    - Needs cleanup.
-    - Needs tests.
+  Example:
+  ```bash
+  Wobserver.System.Scheduler.utilization
+  [1.0, 0.0306945631032665, 0.03640598025269633, 0.05220935570330663,
+   0.04884165187164101, 0.08352432821297966, 0.11547042454628796,
+   0.2861211090456038]
+  ```
   """
 
   @table :wobserver_scheduler
   @lookup_key :last_utilization
 
+  @doc ~S"""
+  Calculates scheduler utilization per scheduler.
+
+  Returns a list of floating point values range (0-1) indicating 0-100% utlization.
+
+  Example:
+  ```bash
+  Wobserver.System.Scheduler.utilization
+  [1.0, 0.0306945631032665, 0.03640598025269633, 0.05220935570330663,
+   0.04884165187164101, 0.08352432821297966, 0.11547042454628796,
+   0.2861211090456038]
+  ```
+  """
   @spec utilization :: list(float)
   def utilization do
     ensure_started()
