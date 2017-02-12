@@ -92,7 +92,7 @@ defmodule Wobserver.Web.Router.MetricsTest do
       assert conn.status == 200
     end
 
-    test "returns 500 with invalid custom metrics" do
+    test "returns 200 with invalid custom metrics" do
       :meck.new Application, [:passthrough]
       :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
         case option do
@@ -109,6 +109,20 @@ defmodule Wobserver.Web.Router.MetricsTest do
           :port -> 4001
         end
       end
+
+      on_exit(fn -> :meck.unload end)
+
+      conn = conn(:get, "/")
+
+      conn = Metrics.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "returns 500 if metrics can not be generated" do
+      :meck.new Formatter, [:passthrough]
+      :meck.expect Formatter, :merge_metrics, fn (_) -> :error end
 
       on_exit(fn -> :meck.unload end)
 
