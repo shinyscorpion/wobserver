@@ -1,7 +1,7 @@
 # Wobserver
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
-[![Hex.pm](https://img.shields.io/badge/docs-v0.1.0-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Hex.pm](https://img.shields.io/badge/docs-v0.1.1-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
 
 Web based metrics, monitoring, and observer.
@@ -716,9 +716,7 @@ Produce the following output:
 ```
 
 ## Improvements
-  - Add tests
-  - Add documentation
-  - Cleanup *AppInfo* and namespaces.
+  - Cleanup namespaces.
   - Cleanup readme, condense sample output.
   - Overhaul web interface (make fancier/pleasant)
   - Add custom pages with tables
