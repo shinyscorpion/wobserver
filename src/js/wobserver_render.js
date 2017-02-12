@@ -297,7 +297,7 @@ const WobserverRender = {
 
     show_application_graph(applications[0].name, applications[0].description, wobserver);
   },
-  display_processes: data => {
+  display_processes: processes => {
     let content = document.getElementById('content');
     let table = content.querySelector('table');
     let sorted = -1;
@@ -313,7 +313,7 @@ const WobserverRender = {
       }})
     }
 
-    let formatted_processes = data.processes.map( process => {
+    let formatted_processes = processes.map( process => {
       return `<tr>
         <td><a href="javascript:window.show_process('${process.pid}')">${process.pid}</a></td>
         <td>${process.init}</td>
