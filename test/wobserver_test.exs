@@ -1,6 +1,8 @@
 defmodule WobserverTest do
   use ExUnit.Case
 
+  alias Wobserver.Page
+
   describe "about" do
     test "includes name" do
       assert %{name: "Wobserver"} = Wobserver.about
@@ -29,6 +31,18 @@ defmodule WobserverTest do
       %{links: links} = Wobserver.about
 
       assert Enum.count(links) > 0
+    end
+  end
+
+  describe "register" do
+    test "can register page" do
+      assert Wobserver.register(:page, {"Test", :test, fn -> 5 end})
+    end
+
+    test "can register page and also call it" do
+      Wobserver.register(:page, {"Test", :test, fn -> 5 end})
+
+      assert Page.call(:test) == 5
     end
   end
 end

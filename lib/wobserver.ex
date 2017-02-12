@@ -3,6 +3,17 @@ defmodule Wobserver do
   Web based metrics, monitoring, and observer.
   """
 
+  alias Wobserver.Page
+
+  @doc ~S"""
+  Registers external application to integrate with `:wobserver`.
+
+  The following can be registered:
+    - `:page`, see: `Wobserver.Page.register/1`.
+  """
+  @spec register(:page, page :: Page.data) :: boolean
+  def register(:page, page), do: Page.register(page)
+
   @doc ~S"""
   Information about Wobserver.
 
