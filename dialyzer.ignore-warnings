@@ -2,6 +2,7 @@ lib/wobserver/web/client.ex:5: The pattern {'ok', _@4, _@5} can never match the 
 lib/mix/tasks/analyze.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
 lib/mix/tasks/build.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
 lib/wobserver/web/client.ex:18: Overloaded contract for 'Elixir.Wobserver.Web.Client':client_handle/2 has overlapping domains; such contracts are currently unsupported and are simply ignored
+lib/wobserver/web/client.ex:19: Overloaded contract for 'Elixir.Wobserver.Web.Client':client_handle/2 has overlapping domains; such contracts are currently unsupported and are simply ignored
 Unknown functions:
   appmon_info:app/4
   appmon_info:app_ctrl/4

@@ -1,7 +1,7 @@
 # Wobserver
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
-[![Hex.pm](https://img.shields.io/badge/docs-v0.1.1-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Hex.pm](https://img.shields.io/badge/docs-v0.1.2-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
 
 Web based metrics, monitoring, and observer.
@@ -10,6 +10,17 @@ Web based metrics, monitoring, and observer.
 
 [_Click to view images_](http://imgur.com/a/IqO6O)
 
+**Functionality:**
+
+* Drop-in monitoring though web interface.
+* Metrics endpoint (`/metrics`) for system monitoring.
+  (Default: [Prometheus](https://prometheus.io/))
+* Monitoring automation through JSON API.
+* Node management and discovery behind firewalls and load balancers.
+* Easy to extend:
+    * Add custom metrics and pages for your project, just by adding them in the config.
+    * Just 3 lines of code to automatically add pages/metrics for your library, when users have `:wobserver` installed.
+      (See [how](#library-integration).)
 
 ## Table of contents
 
@@ -35,6 +46,10 @@ Web based metrics, monitoring, and observer.
     * [Metrics](#configure-metrics)
         * [Add Metrics](#add-metrics)
         * [Formatting](#formatting-metrics)
+    * [Pages](#pages)
+        * [Config](#pages-app)
+        * [Dynamically](#pages-dynamic)
+* [Library Integration](#library-integration)
 * [Improvements](#improvements)
 * [license](#License)
 
@@ -47,7 +62,7 @@ Add Wobserver as a dependency to your `mix.exs` file:
 
 ```elixir
 def deps do
-  [{:wobserver, "~> 0.1.0"}]
+  [{:wobserver, "~> 0.1"}]
 end
 ```
 
@@ -715,11 +730,83 @@ Produce the following output:
 ]
 ```
 
+### <a name="pages"></a> Pages
+Pages are custom views in the web interface and endpoints in the JSON API for an application or library.
+
+There are two ways to add a custom page:
+* *config*, set a list of custom pages in the mix config.
+* *registration*, call `Wobserver.register/2` and dynamically add pages.
+
+#### <a name="pages-config"></a> Config
+Adding more pages to `:wobserver` can be done by setting the `:pages` option.
+
+The `:pages` option must be a list of page data.
+
+The page data can be formatted as:
+  * `{title, command, callback}`
+  * `{title, command, callback, options}`
+  * a `map` with the following fields:
+      * `title`
+      * `command`
+      * `callback`
+      * `options` (optional)
+
+For more information and types see: [`Wobserver.Page.register/1`](https://hexdocs.pm/wobserver/Wobserver.Page.html#register/1).
+
+Example:
+```elixir
+config :wobserver,
+  pages: [
+    {"Example", :example, fn -> %{x:  9} end}
+  ]
+```
+#### <a name="pages-dynamic"></a> Dynamically
+Dynamically register a page with `:wobserver` by calling [`Wobserver.register/2`](https://hexdocs.pm/wobserver/Wobserver.html#register/2).
+
+The following inputs are accepted:
+  * `{title, command, callback}`
+  * `{title, command, callback, options}`
+  * a `map` with the following fields:
+      * `title`
+      * `command`
+      * `callback`
+      * `options` (optional)
+
+The fields are used as followed:
+  * `title`, the name of the page. Is used for the web interface menu.
+  * `command`, single atom to associate the page with.
+  * `callback`, function to be evaluated, when the a api is called or page is viewd.
+                The result is converted to JSON and displayed.
+  * `options`, options for the page.
+
+The following options can be set:
+  * `api_only` (`boolean`), if set to true the page won't show up in the web interface, but will only be available as API.
+  * `refresh` (`float`, 0-1), sets the refresh time factor. Used in the web interface to refresh the data on the page. Set to `0` for no refresh.
+
+Example:
+```elixir
+Wobserver.register(:page, {"My App", :my_app, fn -> %{data: 123} end})
+```
+
+## Library Integration
+Integrating a library with `:wobserver` is done by calling [`Wobserver.register/2`](https://hexdocs.pm/wobserver/Wobserver.html#register/2), when the library loads, and dynamically adding pages and metrics.
+
+To safely integrate with `:wobserver` use the following code:
+```elixir
+if Code.ensure_loaded(Wobserver) == {:module, Wobserver} do:
+  Wobserver.register(:page, {"My Library", :my_library, fn -> %{data: 123} end})
+  Wobserver.register(:metric, <to be added>)
+end
+```
+The above code will make sure that the library only calls register, when `:wobserver` is loaded.
+This will prevent the library from trying to register, when `:wobserver` is not installed.
+
+For an implementation see the `:task_bunny` library: [TaskBunny]().
+
 ## Improvements
   - Cleanup namespaces.
   - Cleanup readme, condense sample output.
   - Overhaul web interface (make fancier/pleasant)
-  - Add custom pages with tables
   - Add registration service for metrics/pages
 
 ## License
