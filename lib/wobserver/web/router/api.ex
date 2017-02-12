@@ -17,6 +17,7 @@ defmodule Wobserver.Web.Router.Api do
   alias Plug.Router.Utils
 
   alias Wobserver.Allocator
+  alias Wobserver.Page
   alias Wobserver.Table
   alias Wobserver.Util.Application
   alias Wobserver.Util.Process
@@ -27,6 +28,11 @@ defmodule Wobserver.Web.Router.Api do
 
   match "/nodes" do
     Discovery.discover
+    |> send_json_resp(conn)
+  end
+
+  match "/custom" do
+    Page.list
     |> send_json_resp(conn)
   end
 
@@ -86,8 +92,12 @@ defmodule Wobserver.Web.Router.Api do
   match "/:node_name/*glob" do
     case glob do
       [] ->
-        conn
-        |> send_resp(501, "Custom commands not implemented yet.")
+        node_name
+        |> String.to_atom
+        |> Page.call
+        |> send_json_resp(conn)
+        # conn
+        # |> send_resp(501, "Custom commands not implemented yet.")
       _ ->
         node_forward(node_name, conn, glob)
     end

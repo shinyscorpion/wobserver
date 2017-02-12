@@ -169,13 +169,33 @@ defmodule Wobserver.Web.Router.ApiTest do
     assert conn.status == 200
   end
 
-  test "unknown url returns 501 for custom commands" do
+  test "custom url returns 200 for custom list" do
+    conn = conn(:get, "/custom")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "unknown url returns 200 for known custom commands" do
+    Wobserver.register(:page, {"Test", :test, fn -> 5 end})
+
+    conn = conn(:get, "/test")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "unknown url returns 404 for unknown custom commands" do
     conn = conn(:get, "/unknown")
 
     conn = Api.call(conn, @opts)
 
     assert conn.state == :sent
-    assert conn.status == 501
+    assert conn.status == 404
   end
 
   test "unknown url returns 404 for index" do

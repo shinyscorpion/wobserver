@@ -14,6 +14,13 @@ defmodule Wobserver.Web.Router.Helper do
     data :: atom | String.t | map | list,
     conn :: Plug.Conn.t
   ) :: Plug.Conn.t
+  def send_json_resp(data, conn)
+
+  def send_json_resp(:page_not_found, conn) do
+    conn
+    |> Conn.send_resp(404, "Page not Found")
+  end
+
   def send_json_resp(data, conn) do
     case Poison.encode(data) do
       {:ok, json} ->
