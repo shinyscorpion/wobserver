@@ -27,6 +27,78 @@ defmodule Wobserver.Web.Router.ApiTest do
     assert Poison.encode!(Wobserver.Util.Node.Discovery.discover) == conn.resp_body
   end
 
+  test "/application returns 200" do
+    conn = conn(:get, "/application")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/application/:app returns 200" do
+    conn = conn(:get, "/application/wobserver")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/process returns 200" do
+    conn = conn(:get, "/process")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/process/:process returns 200" do
+    conn = conn(:get, "/process/Logger")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/table returns 200" do
+    conn = conn(:get, "/table")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/table/:table returns 200" do
+    conn = conn(:get, "/table/1")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/ports returns 200" do
+    conn = conn(:get, "/ports")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
+  test "/allocators returns 200" do
+    conn = conn(:get, "/allocators")
+
+    conn = Api.call(conn, @opts)
+
+    assert conn.state == :sent
+    assert conn.status == 200
+  end
+
   test "/system returns 200" do
     conn = conn(:get, "/system")
 
