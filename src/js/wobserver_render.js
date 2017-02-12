@@ -60,9 +60,58 @@ function select_menu(nav, menu_item, item) {
   }
 }
 
-function create_menu(items){
+function create_menu(wobserver, additional = []){
+  let items = [
+      {
+        title: 'System',
+        on_open: () => wobserver.open('system', 1, WobserverRender.display_system),
+        on_close: () => wobserver.close('system', 1)
+      },
+      {
+        title: 'Load Charts',
+        on_open: () => wobserver.open('system', 0.25, WobserverRender.display_load_charts),
+        on_close: () => wobserver.close('system', 0.25)
+      },
+      {
+        title: 'Memory Allocators',
+        on_open: () => wobserver.open('allocators', 0.25, WobserverRender.display_allocators),
+        on_close: () => wobserver.close('allocators', 0.25)
+      },
+      {
+        title: 'Applications',
+        on_open: () => wobserver.open('application', 0, e => WobserverRender.display_applications(e, wobserver)),
+      },
+      {
+        title: 'Processes',
+        on_open: () => wobserver.open('process', 4, WobserverRender.display_processes),
+        on_close: () => wobserver.close('process', 4)
+      },
+      {
+        title: 'Ports',
+        on_open: () => wobserver.open('ports', 8, WobserverRender.display_ports),
+        on_close: () => wobserver.close('ports', 8)
+      },
+      {
+        title: 'Table Viewer',
+        on_open: () => wobserver.open('table', 0, WobserverRender.display_table),
+        on_close: () => wobserver.close('table', 0)
+      }
+  ];
+
+  items = items.concat(additional);
+
+  items.push(
+  {
+    title: 'About',
+    on_open: () => wobserver.open('about', 0, WobserverRender.display_about),
+  });
+
   let menu = document.getElementById('menu');
   let nav = document.createElement('nav');
+
+  while (menu.hasChildNodes()) {
+      menu.removeChild(menu.lastChild);
+  }
 
   nav.lastItem = null;
 
@@ -154,46 +203,21 @@ const WobserverRender = {
 
       create_footer(wobserver);
 
-      create_menu([
-        {
-          title: 'System',
-          on_open: () => wobserver.open_system(),
-          on_close: () => wobserver.close_system()
-        },
-        {
-          title: 'Load Charts',
-          on_open: () => wobserver.open_load_charts(),
-          on_close: () => wobserver.close_load_charts()
-        },
-        {
-          title: 'Memory Allocators',
-          on_open: () => wobserver.open_allocators(),
-          on_close: () => wobserver.close_allocators()
-        },
-        {
-          title: 'Applications',
-          on_open: () => wobserver.open_applications()
-        },
-        {
-          title: 'Processes',
-          on_open: () => wobserver.open_processes(),
-          on_close: () => wobserver.close_processes()
-        },
-        {
-          title: 'Ports',
-          on_open: () => wobserver.open_ports(),
-          on_close: () => wobserver.close_ports()
-        },
-        {
-          title: 'Table Viewer',
-          on_open: () => wobserver.open_table(),
-          on_close: () => wobserver.close_table()
-        },
-        {
-          title: 'About',
-          on_open: () => wobserver.open_about()
-        }
-      ]);
+      wobserver.client.command_promise('custom')
+      .then(e => {
+        create_menu(wobserver,
+          e.data
+          .filter(custom => !e.api_only)
+          .map(custom => {
+            return {
+              title: custom.title,
+              on_open: () => wobserver.open(custom.command, custom.refresh, WobserverRender.show_custom),
+              on_close: () => wobserver.close(custom.command, custom.refresh)
+            }
+          })
+        );
+      })
+      .catch(_ => create_menu(wobserver));
     }
   },
   set_node: (node) => {
@@ -205,7 +229,8 @@ const WobserverRender = {
       setTimeout(() => WobserverRender.set_node(node), 100);
     }
   },
-  display_system: (system) => {
+  display_system: e => {
+    let system = e.data;
     let content = document.getElementById('content');
 
     let architecture =
@@ -264,7 +289,8 @@ const WobserverRender = {
 
     content.innerHTML = architecture + cpu + memory + statistics;
   },
-  display_applications: (applications, wobserver) => {
+  display_applications: (e, wobserver) => {
+    let applications = e.data;
     applications.sort(function(a,b){return a.name.localeCompare(b.name);});
     let content = document.getElementById('content');
 
@@ -297,7 +323,8 @@ const WobserverRender = {
 
     show_application_graph(applications[0].name, applications[0].description, wobserver);
   },
-  display_processes: processes => {
+  display_processes: e => {
+    let processes = e.data;
     let content = document.getElementById('content');
     let table = content.querySelector('table');
     let sorted = -1;
@@ -349,7 +376,8 @@ const WobserverRender = {
       }
     }
   },
-  display_ports: data => {
+  display_ports: e => {
+    let data = e.data;
     let content = document.getElementById('content');
     let table = content.querySelector('table');
     let sorted = -1;
@@ -571,7 +599,8 @@ const WobserverRender = {
     `;
 
   },
-  display_table: data => {
+  display_table: e => {
+    let data = e.data;
     let content = document.getElementById('content');
     let table = content.querySelector('table');
     let sorted = -1;
@@ -624,7 +653,8 @@ const WobserverRender = {
       }
     }
   },
-  display_about: (about) => {
+  display_about: e => {
+    let about = e.data;
     let content = document.getElementById('content');
 
     let urls = about.links.map( (url) => {
@@ -647,7 +677,96 @@ const WobserverRender = {
   },
   show_table: (table, wobserver) => {
     new TableDetail(table, wobserver).show();
+  },
+  show_custom: e => {
+    let content = document.getElementById('content');
+
+    // content.innerHTML = show_custom_data(e.data);
+    content.innerHTML = show_custom_data([
+      {
+        x: 5,
+        y: 6
+      },
+      {
+        x: 5,
+        y: 6
+      }
+    ]);
   }
 };
+
+function show_custom_data(data, name = ''){
+  if(data instanceof Array){
+    return show_custom_array_table(data, name)
+  } else {
+    return show_custom_table(data, name);
+  }
+}
+
+function show_custom_array_table(data, name = '') {
+  let header =
+    Object
+    .keys(data[0])
+    .map(key => `<th>${key}</th>`)
+    .join('')
+
+  let rows =
+    data
+    .map(row =>
+      Object
+      .keys(row)
+      .map(key => `<td>${row[key]}</td>`)
+      .join('')
+    )
+    .map(row => `<tr>${row}</tr>`)
+    .join('');
+
+
+  return `
+    <table class="generic_array_table">
+      <caption>${name}</caption>
+      <thead>
+        <tr>${header}</tr>
+      </thead>
+      ${rows}
+    </table>
+  `;
+}
+
+function show_custom_table(data, name = '') {
+  let raw_table =
+    !Object
+    .keys(data)
+    .map(key => data[key] instanceof Object)
+    .reduce((a, b) => a || b);
+
+  if( raw_table ){
+    let rows =
+      Object
+      .keys(data)
+      .map(key => `<tr><th>${key}</th><td>${data[key]}</td></tr>`)
+      .join('');
+
+    return `
+      <table class="inline">
+        <caption>${name}</caption>
+        ${rows}
+      </table>
+    `;
+  } else {
+    let tables =
+      Object
+      .keys(data)
+      .map(key => show_custom_data(data[key], key))
+      .join('');
+
+    return `
+      <div>
+        <span>${name}</span>
+        ${tables}
+      </div>
+    `;
+  }
+}
 
 export{ WobserverRender }

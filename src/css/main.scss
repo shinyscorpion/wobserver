@@ -280,6 +280,30 @@
   }
 }
 
+table.generic_array_table {
+  padding: 0;
+  margin: 0;
+
+  min-width: 100%;
+
+  thead {
+    background-color: rgba(0,0,0, 0.2);
+    th {
+      font-size: 110%;
+      padding: 0.3em;
+    }
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(0,0,0, 0.1);
+  }
+
+  td {
+    height: 100%;
+    vertical-align: top;
+  }
+}
+
 .load {
   display: inline-block;
   width: 2em;
