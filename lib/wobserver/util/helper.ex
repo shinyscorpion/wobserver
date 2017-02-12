@@ -64,4 +64,14 @@ defmodule Wobserver.Util.Helper do
   def format_function(nil), do: nil
   def format_function({module, name, arity}), do: "#{module}.#{name}/#{arity}"
   def format_function(name), do: "#{name}"
+
+  @doc ~S"""
+  Parallel map implemented with `Task`.
+  """
+  @spec parallel_map(enum :: list, function :: fun) :: list
+  def parallel_map(enum, function) do
+    enum
+    |> Enum.map(&(Task.async(fn -> function.(&1) end)))
+    |> Enum.map(&Task.await/1)
+  end
 end

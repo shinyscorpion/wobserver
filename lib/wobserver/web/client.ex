@@ -7,7 +7,7 @@ defmodule Wobserver.Web.Client do
   alias Wobserver.Allocator
   alias Wobserver.Table
   alias Wobserver.System
-  alias Wobserver.Util.AppInfo
+  alias Wobserver.Util.Application
   alias Wobserver.Util.Process
   alias Wobserver.Util.Node.Discovery
 
@@ -32,17 +32,17 @@ defmodule Wobserver.Web.Client do
 
   @spec client_handle(:application, state :: map) :: {:reply, :about, map, map}
   def client_handle(:application, state) do
-    {:reply, :application, AppInfo.list_structured, state}
+    {:reply, :application, Application.list, state}
   end
 
   @spec client_handle(list(atom), state :: map) :: {:reply, :about, map, map}
   def client_handle([:application, app], state) do
-    {:reply, [:application, app], AppInfo.info_structured(app), state}
+    {:reply, [:application, app], Application.info(app), state}
   end
 
   @spec client_handle(:process, state :: map) :: {:reply, :about, map, map}
   def client_handle(:process, state) do
-    {:reply, :process, AppInfo.process_list, state}
+    {:reply, :process, Process.list, state}
   end
 
   @spec client_handle(list(atom), state :: map) :: {:reply, :about, map, map}

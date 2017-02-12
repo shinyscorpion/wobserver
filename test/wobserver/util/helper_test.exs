@@ -51,4 +51,10 @@ defmodule Wobserver.Util.HelperTest do
       assert Helper.format_function(:format_function) == "format_function"
     end
   end
+
+  describe "parallel_map" do
+    test "maps" do
+      assert Helper.parallel_map([1, 2, 3], fn x -> x * 2 end) == [2, 4, 6]
+    end
+  end
 end

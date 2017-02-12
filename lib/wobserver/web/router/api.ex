@@ -18,7 +18,7 @@ defmodule Wobserver.Web.Router.Api do
 
   alias Wobserver.Allocator
   alias Wobserver.Table
-  alias Wobserver.Util.AppInfo
+  alias Wobserver.Util.Application
   alias Wobserver.Util.Process
   alias Wobserver.Util.Node.Discovery
   alias Wobserver.Util.Node.Remote
@@ -39,17 +39,17 @@ defmodule Wobserver.Web.Router.Api do
     app
     |> String.downcase
     |> String.to_atom
-    |> AppInfo.info_structured
+    |> Application.info
     |> send_json_resp(conn)
   end
 
   get "/application" do
-    AppInfo.list_structured
+    Application.list
     |> send_json_resp(conn)
   end
 
   get "/process" do
-    AppInfo.process_list
+    Process.list
     |> send_json_resp(conn)
   end
 
