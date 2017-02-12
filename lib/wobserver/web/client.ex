@@ -5,6 +5,7 @@ defmodule Wobserver.Web.Client do
   use Wobserver.Web.ClientSocket
 
   alias Wobserver.Allocator
+  alias Wobserver.Page
   alias Wobserver.Table
   alias Wobserver.System
   alias Wobserver.Util.Application
@@ -79,6 +80,20 @@ defmodule Wobserver.Web.Client do
       |> Table.info(true)
 
     {:reply, [:table, table], data, state}
+  end
+
+  @spec client_handle(:custom, state :: map) :: {:reply, :about, map, map}
+  def client_handle(:custom, state) do
+    {:reply, :custom, Page.list, state}
+  end
+
+  @spec client_handle(atom, state :: map) ::
+    {:reply, atom, map, map} | {:noreply, map}
+  def client_handle(custom, state) do
+    case Page.call(custom) do
+      :page_not_found -> {:noreply, state}
+      data -> {:reply, custom, data, state}
+    end
   end
 
   @spec client_info(any, state :: map) :: {:noreply, map}
