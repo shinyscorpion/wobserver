@@ -1,5 +1,12 @@
 # Change log
 
+## 0.1.4
+
+* Add :plug mode to run wobserver without cowboy.
+* Fix menu loading.
+* Fix custom page rendering.
+
+
 ## 0.1.3
 
 * Add custom metrics.
