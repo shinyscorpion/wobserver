@@ -21,6 +21,11 @@ defmodule Wobserver.Web.Client do
     {:reply, :ehlo, Discovery.local, state}
   end
 
+  @spec client_handle(:ping, state :: map) :: {:reply, :ehlo, map}
+  def client_handle(:ping, state) do
+    {:reply, :pong, state}
+  end
+
   @spec client_handle(:system, state :: map) :: {:reply, :ehlo, map, map}
   def client_handle(:system, state) do
     {:reply, :system, System.overview, state}

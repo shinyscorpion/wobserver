@@ -22,6 +22,7 @@ class WobserverClient {
 
     this.socket.onopen = () => {
       this.command('hello');
+      setInterval(_ => this.command('ping') );
     }
 
     this.socket.onmessage = (msg) => {
