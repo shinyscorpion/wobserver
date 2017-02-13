@@ -42,6 +42,9 @@ Web based metrics, monitoring, and observer.
     * [Metrics](#usage-metrics)
 * [Configuration](#configuration)
     * [Port](#port)
+    * [Mode](#mode)
+        * [Standalone](#mode-standalone)
+        * [Plug](#mode-plug)
     * [Node Discovery](#node-discovery)
     * [Metrics](#configure-metrics)
         * [Add Metrics](#add-metrics)
@@ -75,6 +78,8 @@ end
 ```
 
 Then run `mix deps.get` in your shell to fetch the dependencies.
+
+__Note:__ Check out [plug mode](#mode-plug) to integrate with a *Phoenix* or other web application. (Prevents startup of separate web server.)
 
 ### Build manually
 
@@ -579,6 +584,90 @@ The port can be set in the config by setting `:port` for `:wobserver` to a valid
 config :wobserver,
   port: 80
 ```
+
+### Mode
+Wobserver runs by default in `:standalone` mode.
+This means that `:wobserver` will start its own `:cowboy` listeners on a separate port.
+Standalone mode is ideal for drop-in web viewing, but might not be ideal if another part of the application is already running an web server.
+It is possible to enable `:plug` mode to prevent `:wobserver` from starting `:cowboy` to handle web requests.
+
+#### <a name="mode-standalone"></a> Standalone
+Standalone mode is the default operating mode.
+A `:cowboy` (ranch) listener will be started with 10 accepters and a websocket.
+Set `mode` to `:standalone` in the `:wobserver` configuration to force standalone mode.
+
+Example:
+```elixir
+config :wobserver,
+  mode: :standalone
+```
+
+#### <a name="mode-plug"></a> Plug
+Plug mode prevents `:wobserver` from starting `:cowboy` (ranch).
+Set `mode` to `:plug` in the `:wobserver` configuration to use plug mode.
+
+Add the following line of code to the application's router to forward requests to `:wobserver`:
+```elixir
+  forward "/wobserver", to: Wobserver.Web.Router
+```
+
+Add the following option to you `:cowboy` child_spec to enable use of the `:wobserver` websocket:
+```elixir
+dispatch: [
+    {:_, [
+      {"/ws", Wobserver.Web.Client, []},
+      {:_, Cowboy.Handler, {<your own router>, []}}
+    ]}
+  ],
+```
+
+Example:
+
+__config.exs__
+```elixir
+config :wobserver,
+  mode: :plug
+```
+__my_router.ex__
+```elixir
+defmodule MyApp.MyRouter do
+  use Plug.Router
+
+  plug :match
+  plug :dispatch
+
+  forward "/wobserver", to: Wobserver.Web.Router
+end
+```
+__application.ex__
+```elixir
+defmodule MyApp.Application do
+  use Application
+
+  alias Plug.Adapters.Cowboy
+
+  def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    options = [
+      dispatch: [
+        {:_, [
+          {"/wobserver/ws", Wobserver.Web.Client, []},
+          {:_, Cowboy.Handler, {MyApp.MyRouter, []}}
+        ]}
+      ],
+    ]
+
+    children = [
+      Cowboy.child_spec(:http, MyApp.MyRouter, [], options)
+    ]
+
+    opts = [strategy: :one_for_one, name: Wobserver.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+```
+
 
 ### Node Discovery
 The method used can be set in the config file by setting:
