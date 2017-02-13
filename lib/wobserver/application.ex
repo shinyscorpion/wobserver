@@ -10,6 +10,9 @@ defmodule Wobserver.Application do
   alias Wobserver.Page
   alias Wobserver.Util.Metrics
 
+  @doc ~S"""
+  The port the application uses.
+  """
   @spec port :: integer
   def port do
     Application.get_env(:wobserver, :port, 4001)
@@ -25,14 +28,27 @@ defmodule Wobserver.Application do
     Metrics.load_config
 
     # Start cowboy
-    import Supervisor.Spec, warn: false
+    case supervisor_children() do
+      [] ->
+        # Return the metric storage if we're not going to start an application.
+        {:ok, Process.whereis(:wobserver_metrics)}
+      children ->
+        import Supervisor.Spec, warn: false
 
-    children = [
-      cowboy_child_spec(),
-    ]
+        opts = [strategy: :one_for_one, name: Wobserver.Supervisor]
+        Supervisor.start_link(children, opts)
+    end
+  end
 
-    opts = [strategy: :one_for_one, name: Wobserver.Supervisor]
-    Supervisor.start_link(children, opts)
+  defp supervisor_children do
+    case Application.get_env(:wobserver, :mode, :standalone) do
+      :standalone ->
+        [
+          cowboy_child_spec(),
+        ]
+      :plug ->
+        []
+    end
   end
 
   defp cowboy_child_spec do
