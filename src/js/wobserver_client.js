@@ -8,7 +8,7 @@ class WobserverClient {
     this.promises = {}
   }
 
-  connect(node_change, fallback_callback) {
+  connect(node_change, fallback_callback, connected_callback) {
     this.node_change = node_change;
 
     this.socket =  new WebSocket('ws://' + this.host + '/ws');
@@ -17,10 +17,13 @@ class WobserverClient {
       if( this.socket.readyState == 3 ){
         console.log('Socket can not connect, falling back to json api.')
         fallback_callback(new WobserverApiFallback(this.host, this.node));
+        connected_callback();
       }
     }
 
     this.socket.onopen = () => {
+      connected_callback();
+
       this.command('hello');
       setInterval(_ => this.command('ping') );
     }

@@ -191,6 +191,8 @@ function show_application_graph(app_name, description, wobserver) {
   });
 }
 
+let menu_state = 0;
+
 const WobserverRender = {
   init: (wobserver) => {
     window.onload = () => {
@@ -203,22 +205,34 @@ const WobserverRender = {
 
       create_footer(wobserver);
 
-      wobserver.client.command_promise('custom')
-      .then(e => {
-        create_menu(wobserver,
-          e.data
-          .filter(custom => !e.api_only)
-          .map(custom => {
-            return {
-              title: custom.title,
-              on_open: () => wobserver.open(custom.command, custom.refresh, WobserverRender.show_custom),
-              on_close: () => wobserver.close(custom.command, custom.refresh)
-            }
-          })
-        );
-      })
-      .catch(_ => create_menu(wobserver));
+      if( menu_state == 1 ){
+        WobserverRender.load_menu(wobserver);
+      }
+
+      menu_state = 2;
     }
+  },
+  load_menu: (wobserver) => {
+    if( menu_state == 0 ){
+      menu_state = 1;
+      return;
+    }
+
+    wobserver.client.command_promise('custom')
+    .then(e => {
+      create_menu(wobserver,
+        e.data
+        .filter(custom => !e.api_only)
+        .map(custom => {
+          return {
+            title: custom.title,
+            on_open: () => wobserver.open(custom.command, custom.refresh, WobserverRender.show_custom),
+            on_close: () => wobserver.close(custom.command, custom.refresh)
+          }
+        })
+      );
+    })
+    .catch(_ => create_menu(wobserver));
   },
   set_node: (node) => {
     let label = document.getElementById('connected_node');

@@ -11,7 +11,7 @@ class Wobserver {
 
     this.client = new WobserverClient(host);
     this.client.connect(n => WobserverRender.set_node(n),
-      client => this.client = client);
+      client => this.client = client, () => WobserverRender.load_menu(this));
 
     window.show_process = process => WobserverRender.show_process(process, this);
     window.show_table = table => WobserverRender.show_table(table, this);
