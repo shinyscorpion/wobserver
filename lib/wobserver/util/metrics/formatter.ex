@@ -1,8 +1,6 @@
 defmodule Wobserver.Util.Metrics.Formatter do
   @moduledoc ~S"""
   Formatter.
-
-  TODO: Needs config.
   """
 
   alias Wobserver.Util.Node.Discovery
@@ -45,25 +43,35 @@ defmodule Wobserver.Util.Metrics.Formatter do
     format(data, label, type, help, new_formatter)
   end
 
+  def format(data, label, type, help, formatter)
+  when is_integer(data) or is_float(data) do
+    format([{data, []}], label, type, help, formatter)
+  end
+
+  def format(data, label, type, help, formatter) when is_map(data) do
+    data
+    |> map_to_data()
+    |> format(label, type, help, formatter)
+  end
+
+  def format(data, label, type, help, formatter) when is_binary(data) do
+    {new_data, []} = Code.eval_string data
+
+    format(new_data, label, type, help, formatter)
+  catch
+    :error, _ -> :error
+  end
+
+  def format(data, label, type, help, formatter) when is_function(data) do
+    data.()
+    |> format(label, type, help, formatter)
+  end
+
   def format(data, label, type, help, formatter) do
     cond do
-      is_map(data) ->
-        data
-        |> map_to_data()
-        |> format(label, type, help, formatter)
       Keyword.keyword?(data) ->
         data
         |> list_to_data()
-        |> format(label, type, help, formatter)
-      is_binary(data) ->
-        try do
-          {new_data, []} = Code.eval_string data
-          format(new_data, label, type, help, formatter)
-        catch
-          :error, _ -> :error
-        end
-      is_function(data) ->
-        data.()
         |> format(label, type, help, formatter)
       is_list(data) ->
         data =
@@ -78,6 +86,65 @@ defmodule Wobserver.Util.Metrics.Formatter do
     end
   end
 
+  @doc ~S"""
+  Formats a keyword list of metrics.
+
+  **Metrics**
+
+  The key is the name of the metric and the value can be given in the following formats:
+    - `data`
+    - `{data, type}`
+    - `{data, type, help}`
+
+  The different fields are:
+    - `data`, the actual metrics information.
+    - `type`, the type of the metric.
+              Possible values: `:gauge`, `:counter`.
+    - `help`, a one line text description of the metric.
+
+  The `data` can be given in the following formats:
+    - `integer` | `float`, just a single value.
+    - `map`, where every key will be turned into a type value.
+    - `keyword` list, where every key will be turned into a type value
+    - `list` of tuples with the following format: `{value, labels}`, where `labels` is a keyword list with labels and their values.
+    - `function` | `string`, a function or String that can be evaluated to a function, which, when called, returns one of the above data-types.
+
+  Example:
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: 5]
+  "simple{node=\"10.74.181.35\"} 5\n"
+  ```
+
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: {5, :gauge}]
+  "# TYPE simple gauge\nsimple{node=\"10.74.181.35\"} 5\n"
+  ```
+
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: {5, :gauge, "Example desc."}]
+  "# HELP simple Example desc.\n
+  # TYPE simple gauge\n
+  simple{node=\"10.74.181.35\"} 5\n"
+  ```
+
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: %{floor: 5, wall: 8}]
+  "simple{node=\"10.74.181.35\",type=\"floor\"} 5\n
+  simple{node=\"10.74.181.35\",type=\"wall\"} 8\n"
+  ```
+
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: [floor: 5, wall: 8]]
+  "simple{node=\"10.74.181.35\",type=\"floor\"} 5\n
+  simple{node=\"10.74.181.35\",type=\"wall\"} 8\n"
+  ```
+
+  ```elixir
+  iex> Wobserver.Util.Metrics.Formatter.format_all [simple: [{5, [location: :floor]}, {8, [location: :wall]}]]
+  "simple{node=\"10.74.181.35\",location=\"floor\"} 5\n
+  simple{node=\"10.74.181.35\",location=\"wall\"} 8\n"
+  ```
+  """
   @spec format_all(data :: list, formatter :: atom) :: String.t | :error
   def format_all(data, formatter \\ nil)
 
@@ -100,6 +167,9 @@ defmodule Wobserver.Util.Metrics.Formatter do
     end
   end
 
+  @doc ~S"""
+  Merges formatted metrics together.
+  """
   @spec merge_metrics(metrics :: list(String.t), formatter :: atom)
    :: String.t | :error
   def merge_metrics(metrics, formatter \\ nil)

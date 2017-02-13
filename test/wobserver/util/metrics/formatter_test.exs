@@ -42,6 +42,20 @@ defmodule Wobserver.Util.Metrics.FormatterTest do
       ) == "# HELP data help\n# TYPE data gauge\ndata{node=\"#{local_ip()}\",type=\"point\"} 5\n"
     end
 
+    test "returns with valid data as integer" do
+      assert Formatter.format(
+        5,
+        "data"
+      ) == "data{node=\"#{local_ip()}\"} 5\n"
+    end
+
+    test "returns with valid data as float" do
+      assert Formatter.format(
+        5.4,
+        "data"
+      ) == "data{node=\"#{local_ip()}\"} 5.4\n"
+    end
+
     test "returns with valid data as keywords" do
       assert Formatter.format(
         [point: 5],
@@ -102,7 +116,7 @@ defmodule Wobserver.Util.Metrics.FormatterTest do
     test "returns :error with invalid entry" do
       assert Formatter.format_all([
         works: %{value: 8},
-        invalid: "1",
+        invalid: "w{",
       ]) == :error
     end
 
