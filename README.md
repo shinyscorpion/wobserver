@@ -1,7 +1,7 @@
 # Wobserver
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
-[![Hex.pm](https://img.shields.io/badge/docs-v0.1.2-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Hex.pm](https://img.shields.io/badge/docs-v0.1.3-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
 
 Web based metrics, monitoring, and observer.
@@ -19,7 +19,7 @@ Web based metrics, monitoring, and observer.
 * Node management and discovery behind firewalls and load balancers.
 * Easy to extend:
     * Add custom metrics and pages for your project, just by adding them in the config.
-    * Just 3 lines of code to automatically add pages/metrics for your library, when users have `:wobserver` installed.
+    * Just 3 lines of code to add pages/metrics for your library, when users have `:wobserver` installed.
       (See [how](#library-integration).)
 
 ## Table of contents
@@ -555,6 +555,21 @@ Metrics are available by calling `http://<host>[:<port>]/metrics`.
 The metrics are by default formatted for [Prometheus](https://prometheus.io/), but can be configured to work with any system.
 An explanation of how to configure the metrics format and how to add metrics to the output will be added later.
 
+`http://localhost:4001/metrics`
+```bash
+# HELP erlang_vm_used_memory_bytes Memory usage of the Erlang VM.
+# TYPE erlang_vm_used_memory_bytes gauge
+erlang_vm_used_memory_bytes{node="10.74.181.35",type="atom"} 553593
+erlang_vm_used_memory_bytes{node="10.74.181.35",type="binary"} 359552
+erlang_vm_used_memory_bytes{node="10.74.181.35",type="code"} 13533686
+erlang_vm_used_memory_bytes{node="10.74.181.35",type="ets"} 1899472
+erlang_vm_used_memory_bytes{node="10.74.181.35",type="process"} 6048552
+# HELP erlang_vm_used_io_bytes IO counter for the Erlang VM.
+# TYPE erlang_vm_used_io_bytes counter
+erlang_vm_used_io_bytes{node="10.74.181.35",type="input"} 11301316
+erlang_vm_used_io_bytes{node="10.74.181.35",type="output"} 618157
+```
+
 ## Configuration
 ### Port
 The port can be set in the config by setting `:port` for `:wobserver` to a valid number.
@@ -614,9 +629,55 @@ config :wobserver,
 Both the custom and anonymous functions can be given as a String, which will get evaluated.
 
 ### <a name="configure-metrics"></a> Metrics
-
 #### <a name="add-metrics"></a> Add Metrics
-t.b.a.
+#### Config
+Metrics and metric generators can be added by setting them in the configuration.
+
+To add custom metrics set the `:metrics` option.
+The `:metrics` option must be a keyword list with the following keys:
+  * `additional`, for a keyword list with additional metrics.
+  * `generators`, for a list of metric generators.
+
+The following settings are accepted for `additional`:
+  - `keyword` list, the key is the name of the metric and the value is the metric data.
+
+The following inputs are accepted for metric generators:
+  - `list` of callable functions.
+    Every function should return a keyword list with as key the name of the metric and as value the metric data.
+
+For more information about how to format metric data see: [`Wobserver.Util.Metrics.Formatter.format_all/1`](https://hexdocs.pm/wobserver/Wobserver.Util.Metrics.Formatter.html#format_all/1).
+
+For example this configuration:
+```elixir
+config :wobserver,
+  metrics: [
+    additional: [
+      example: {fn -> [red: 5] end, :gauge, "Description"},
+    ],
+    generators: [
+      "&MyApp.generator/0",
+      fn -> [bottles: {fn -> [wall: 8, floor: 10] end, :gauge, "Description"}] end
+      fn -> [server: {"MyApp.Server.metrics/0", :gauge, "Description"}] end
+    ]
+  ]
+```
+
+#### Dynamically
+Metrics and metric generators can also be added dynamically at runtime.
+
+To register a metric you need to pass a keyword list to `Wobserver.register` with the same data as you would set in the configuration file.
+
+For example:
+```elixir
+Wobserver.register :metric, [example: {fn -> [red: 5] end, :gauge, "Description"}]
+```
+
+To register a metric generator you need to pass a list of functions to `Wobserver.register`.
+
+For example:
+```elixir
+Wobserver.register :metric, [&MyLibrary.Metrics.generate/0]
+```
 
 #### <a name="formatting-metrics"></a> Formatting
 A custom formatter can be created for output of metrics by implementing the `Wobserver.Util.Metrics.Formatter` behavior.
@@ -791,23 +852,49 @@ Wobserver.register(:page, {"My App", :my_app, fn -> %{data: 123} end})
 ## Library Integration
 Integrating a library with `:wobserver` is done by calling [`Wobserver.register/2`](https://hexdocs.pm/wobserver/Wobserver.html#register/2), when the library loads, and dynamically adding pages and metrics.
 
+### Code
 To safely integrate with `:wobserver` use the following code:
 ```elixir
-if Code.ensure_loaded(Wobserver) == {:module, Wobserver} do:
-  Wobserver.register(:page, {"My Library", :my_library, fn -> %{data: 123} end})
-  Wobserver.register(:metric, <to be added>)
+if Code.ensure_loaded(Wobserver) == {:module, Wobserver} do
+  Wobserver.register :page, {"My Library", :my_library, fn -> %{data: 123} end}
+  Wobserver.register :metric, [&MyLibrary.Metrics.generate/0]
 end
 ```
 The above code will make sure that the library only calls register, when `:wobserver` is loaded.
 This will prevent the library from trying to register, when `:wobserver` is not installed.
 
-For an implementation see the `:task_bunny` library: [TaskBunny]().
+For an implementation see the `:task_bunny` library: [TaskBunny](https://github.com/shinyscorpion/task_bunny), [`lib/task_bunny.ex`](https://github.com/shinyscorpion/task_bunny/blob/master/lib/task_bunny.ex).
+
+### Remove Warnings
+The above code will generate warnings while compiling the library.
+```bash
+warning: function Wobserver.register/2 is undefined (module Wobserver is not available)
+```
+
+There are two options to remove those warnings.
+
+#### Edit mix.exs
+The `mix.exs` file can be edited to excluded `Wobserver` from reference checks.
+
+To do this add the following line to `project/0` in your mix file:
+```elixir
+  xref: [exclude: [Wobserver]]
+```
+
+#### Kernel.apply
+The code can be rewritten to use [`Kernel.apply/3`](https://hexdocs.pm/elixir/Kernel.html#apply/3).
+The following code will be less readable and slightly slower, but will not generate warnings.
+```elixir
+if Code.ensure_loaded(Wobserver) == {:module, Wobserver} do
+  apply Wobserver, :register, [:page, {"My Library", :my_library, fn -> %{data: 123} end}]
+  apply Wobserver, :register, [:metric, [&MyLibrary.Metrics.generate/0]]
+end
+```
 
 ## Improvements
   - Cleanup namespaces.
   - Cleanup readme, condense sample output.
   - Overhaul web interface (make fancier/pleasant)
-  - Add registration service for metrics/pages
 
 ## License
 
