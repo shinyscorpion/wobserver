@@ -681,17 +681,7 @@ const WobserverRender = {
   show_custom: e => {
     let content = document.getElementById('content');
 
-    // content.innerHTML = show_custom_data(e.data);
-    content.innerHTML = show_custom_data([
-      {
-        x: 5,
-        y: 6
-      },
-      {
-        x: 5,
-        y: 6
-      }
-    ]);
+    content.innerHTML = show_custom_data(e.data);
   }
 };
 
@@ -704,6 +694,10 @@ function show_custom_data(data, name = ''){
 }
 
 function show_custom_array_table(data, name = '') {
+  if( data.length <= 0 ){
+    return '';
+  }
+
   let header =
     Object
     .keys(data[0])
