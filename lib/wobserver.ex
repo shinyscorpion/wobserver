@@ -4,15 +4,18 @@ defmodule Wobserver do
   """
 
   alias Wobserver.Page
+  alias Wobserver.Util.Metrics
 
   @doc ~S"""
   Registers external application to integrate with `:wobserver`.
 
   The following can be registered:
     - `:page`, see: `Wobserver.Page.register/1`.
+    - `:metric`, see: `Wobserver.Util.Metrics.register/1`.
   """
   @spec register(:page, page :: Page.data) :: boolean
   def register(:page, page), do: Page.register(page)
+  def register(:metric, metric), do: Metrics.register(metric)
 
   @doc ~S"""
   Information about Wobserver.

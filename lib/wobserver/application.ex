@@ -6,7 +6,9 @@ defmodule Wobserver.Application do
   use Application
 
   alias Plug.Adapters.Cowboy
+
   alias Wobserver.Page
+  alias Wobserver.Util.Metrics
 
   @spec port :: integer
   def port do
@@ -20,6 +22,7 @@ defmodule Wobserver.Application do
   def start(_type, _args) do
     # Load pages and metrics from config
     Page.load_config
+    Metrics.load_config
 
     # Start cowboy
     import Supervisor.Spec, warn: false

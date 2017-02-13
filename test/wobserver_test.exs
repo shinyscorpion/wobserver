@@ -2,6 +2,7 @@ defmodule WobserverTest do
   use ExUnit.Case
 
   alias Wobserver.Page
+  alias Wobserver.Util.Metrics
 
   describe "about" do
     test "includes name" do
@@ -43,6 +44,20 @@ defmodule WobserverTest do
       Wobserver.register(:page, {"Test", :test, fn -> 5 end})
 
       assert Page.call(:test) == 5
+    end
+
+    test "registers a metric" do
+      assert Wobserver.register :metric, [example: {fn -> [{5, []}] end, :gauge, "Description"}]
+
+      assert Keyword.has_key?(Metrics.overview, :example)
+    end
+
+    test "registers a metric generator" do
+      assert Wobserver.register :metric, [
+        fn -> [generated: {fn -> [{5, []}] end, :gauge, "Description"}] end
+      ]
+
+      assert Keyword.has_key?(Metrics.overview, :generated)
     end
   end
 end
