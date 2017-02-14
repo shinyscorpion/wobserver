@@ -42,17 +42,18 @@ function memory_formatter(memory) {
   }, {});
 }
 
-function select_menu(nav, menu_item, item) {
-  nav.childNodes.forEach( (child) => child.className = '' );
+function select_menu(ol, menu_item, item) {
+  ol.querySelectorAll('a').forEach( (child) => child.className = '' );
+  // nav.childNodes.forEach( (child) => child.className = '' );
   menu_item.className = 'selected';
 
-  if( nav.lastItem && nav.lastItem.on_close ){
-    nav.lastItem.on_close();
+  if( ol.lastItem && ol.lastItem.on_close ){
+    ol.lastItem.on_close();
   }
 
   item.on_open();
 
-  nav.lastItem = item;
+  ol.lastItem = item;
   if( history.pushState ) {
     history.pushState(null, null, '#' + item.title.replace(' ', ''));
   } else {
@@ -64,35 +65,42 @@ function create_menu(wobserver, additional = []){
   let items = [
       {
         title: 'System',
+        icon: 'fa-heartbeat',
         on_open: () => wobserver.open('system', 1, WobserverRender.display_system),
         on_close: () => wobserver.close('system', 1)
       },
       {
         title: 'Load Charts',
+        icon: 'fa-area-chart',
         on_open: () => wobserver.open('system', 0.25, WobserverRender.display_load_charts),
         on_close: () => wobserver.close('system', 0.25)
       },
       {
         title: 'Memory Allocators',
+        icon: 'fa-microchip',
         on_open: () => wobserver.open('allocators', 0.25, WobserverRender.display_allocators),
         on_close: () => wobserver.close('allocators', 0.25)
       },
       {
         title: 'Applications',
+        icon: 'fa-desktop',
         on_open: () => wobserver.open('application', 0, e => WobserverRender.display_applications(e, wobserver)),
       },
       {
         title: 'Processes',
+        icon: 'fa-list-alt',
         on_open: () => wobserver.open('process', 4, WobserverRender.display_processes),
         on_close: () => wobserver.close('process', 4)
       },
       {
         title: 'Ports',
+        icon: 'fa-usb',
         on_open: () => wobserver.open('ports', 8, WobserverRender.display_ports),
         on_close: () => wobserver.close('ports', 8)
       },
       {
         title: 'Table Viewer',
+        icon: 'fa-table',
         on_open: () => wobserver.open('table', 0, WobserverRender.display_table),
         on_close: () => wobserver.close('table', 0)
       }
@@ -103,39 +111,47 @@ function create_menu(wobserver, additional = []){
   items.push(
   {
     title: 'About',
+    icon: 'fa-info',
     on_open: () => wobserver.open('about', 0, WobserverRender.display_about),
   });
 
   let menu = document.getElementById('menu');
-  let nav = document.createElement('nav');
+  let ol = menu.querySelector('ol');
+  let header = document.createElement('header');
+    menu.appendChild(header);
+    header.innerHTML = '<i class="elixir-icon"></i> Wobserver';
 
-  while (menu.hasChildNodes()) {
-      menu.removeChild(menu.lastChild);
+  if( ol ){
+    while (ol.hasChildNodes()) {
+        ol.removeChild(ol.lastChild);
+    }
+  } else {
+    ol = document.createElement('ol');
+    menu.appendChild(ol);
   }
 
-  nav.lastItem = null;
+  ol.lastItem = null;
 
   let first = false;
 
   items.map((item) => {
-    let menu_item = document.createElement('a');
-    let menu_text = document.createTextNode(item.title);
+    let menu_item = document.createElement('li');
+    let menu_link = document.createElement('a');
+    menu_item.appendChild(menu_link);
 
-    //menu_item.setAttribute('href', '#');
-    menu_item.appendChild(menu_text);
-    menu_item.addEventListener('click', () => {
-      select_menu(nav, menu_item, item);
+    let icon = item.icon ? item.icon : 'fa-home';
+    menu_link.innerHTML = `<i class="menuIcon fa fa-fw ${icon}"></i><span>${item.title}</span>`;
+
+    menu_link.addEventListener('click', () => {
+      select_menu(ol, menu_link, item);
     });
 
-    nav.appendChild(menu_item);
+    ol.appendChild(menu_item);
 
-    item.menu_item = menu_item;
+    item.menu_item = menu_link;
 
     return item;
   });
-
-
-  menu.appendChild(nav);
 
   setTimeout(() => {
     let select = items.find(item => '#' + item.title.replace(' ', '') == window.location.hash);
@@ -144,15 +160,32 @@ function create_menu(wobserver, additional = []){
       select = items[0];
     }
 
-    select_menu(nav, select.menu_item, select);
+    select_menu(ol, select.menu_item, select);
   }, 100);
+
+  if( !menu.querySelector('.menu-footer') ){
+      let footer = document.createElement('div');
+      footer.className = 'menu-footer';
+
+      let switch_button = document.createElement('span');
+      switch_button.className = 'button-primary';
+      switch_button.style.marginRight = "1em";
+      switch_button.innerHTML = 'Switch Node';
+
+      let node_selection = new NodeDialog(wobserver);
+
+      switch_button.addEventListener('click', () => node_selection.show() );
+
+      footer.appendChild(switch_button);
+      menu.appendChild(footer);
+  }
 }
 
 function create_footer(wobserver) {
   let footer = document.getElementById('footer');
 
   let switch_button = document.createElement('span');
-  switch_button.className = 'button';
+  switch_button.className = 'button-primary';
   switch_button.style.marginRight = "1em";
   switch_button.innerHTML = 'Switch Node';
 
@@ -199,7 +232,7 @@ const WobserverRender = {
       let wobserver_root = document.getElementById('wobserver');
 
       wobserver_root.innerHTML =
-        `<div id="menu"></div>
+        `<nav id="menu"></nav>
         <div id="content"></div>
         <div id="footer"></div>`;
 
