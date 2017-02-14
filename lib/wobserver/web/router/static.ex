@@ -11,36 +11,57 @@ defmodule Wobserver.Web.Router.Static do
 
   use Plug.Router
 
+  alias Wobserver.Assets
+
   plug :match
   plug :dispatch
-
-  @root_directory Application.get_env(:wobserver, :assets, "deps/wobserver/")
 
   get "/" do
     conn
     |> put_resp_content_type("text/html")
-    |> send_file(200, "#{@root_directory}assets/index.html");
+    |> send_asset("assets/index.html", &Assets.html/0);
   end
 
   get "/main.css" do
     conn
     |> put_resp_content_type("text/css")
-    |> send_file(200, "#{@root_directory}assets/main.css");
+    |> send_asset("assets/main.css", &Assets.css/0);
   end
 
   get "/app.js" do
     conn
     |> put_resp_content_type("application/javascript")
-    |> send_file(200, "#{@root_directory}assets/app.js");
+    |> send_asset("assets/app.js", &Assets.js/0);
   end
 
   get "/license" do
     conn
-    |> send_file(200, "#{@root_directory}LICENSE");
+    |> send_asset("LICENSE", &Assets.license/0);
   end
 
   match _ do
     conn
     |> send_resp(404, "Page not Found")
+  end
+
+  # Helpers
+
+  case Application.get_env(:wobserver, :assets, false) do
+    false ->
+      defp send_asset(conn, _asset, fallback) do
+        conn
+        |> send_resp(200, fallback.())
+      end
+    root ->
+      defp send_asset(conn, asset, fallback) do
+        case File.exists?(unquote(root) <> asset) do
+          true ->
+            conn
+            |> send_file(200, unquote(root) <> asset)
+          false ->
+            conn
+            |> send_resp(200, fallback.())
+        end
+      end
   end
 end

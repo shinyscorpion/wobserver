@@ -4,7 +4,8 @@
     "folder/file_to_skip.ex",
     "lib/wobserver/web/client.ex", // For now...
     "lib/wobserver/web/client_socket.ex",
-    "lib/wobserver/web/client_proxy.ex"
+    "lib/wobserver/web/client_proxy.ex",
+    "lib/wobserver/web/router/static.ex"
   ],
   "coverage_options": {
     "minimum_coverage": 90

@@ -1,5 +1,6 @@
 {
   "build": ["css", "js", "html"],
+  "deploy": ["css-prod", "js-prod", "html-prod"],
   "watch": ["css", "js", "html"],
   "root": {
     "src": "./src",
@@ -8,16 +9,16 @@
   "css": {
     "src": "css",
     "dest": "",
-    "pattern": "**/*.scss"
+    "pattern": "/**/*.scss"
   },
   "js": {
     "src": "js",
     "dest": "",
-    "pattern": "**/*.js"
+    "pattern": "/**/*.js"
   },
   "html": {
     "src": "html",
     "dest": "",
-    "pattern": "**/*"
+    "pattern": "/**/*"
   }
 }

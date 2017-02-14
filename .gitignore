@@ -31,3 +31,6 @@ assets
 
 # Ignore OS generated files
 .DS_Store
+
+# Ignore generated asset modules
+/lib/wobserver/assets.ex

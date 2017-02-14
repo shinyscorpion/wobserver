@@ -26,3 +26,16 @@ gulp.task('js', () => {
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(path.join(config.root.dest, config.js.dest)));
 });
+
+gulp.task('js-prod', () => {
+  return browserify({entries: path.join(config.root.src, config.js.src, 'app.js'), extensions: ['.js'], debug: false})
+    .transform(babelify, {
+      sourceMapsAbsolute: false,
+      presets: ['es2015']
+    })
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .pipe(gulp.dest(path.join(config.root.dest, config.js.dest)));
+});
