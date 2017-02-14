@@ -1,45 +1,113 @@
 defmodule Wobserver.Web.Router.StaticTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Plug.Test
 
   alias Wobserver.Web.Router.Static
 
   @opts Static.init([])
 
-  test "/ returns 200" do
-    conn = conn(:get, "/")
+  describe "with config set to false" do
+    setup do
+      :meck.new Application, [:passthrough]
+      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+        case option do
+          :assets -> false
+          :port -> 4001
+        end
+      end
 
-    conn = Static.call(conn, @opts)
+      on_exit(fn -> :meck.unload end)
 
-    assert conn.state == :sent
-    assert conn.status == 200
+      :ok
+    end
+
+    test "/ returns 200" do
+      conn = conn(:get, "/")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "/main.css returns 200" do
+      conn = conn(:get, "/main.css")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "/app.js returns 200" do
+      conn = conn(:get, "/app.js")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "/license returns 200" do
+      conn = conn(:get, "/license")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
   end
 
-  test "/main.css returns 200" do
-    conn = conn(:get, "/main.css")
+  describe "with config set to \"\"" do
+    setup do
+      :meck.new Application, [:passthrough]
+      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+        case option do
+          :assets -> ""
+          :port -> 4001
+        end
+      end
 
-    conn = Static.call(conn, @opts)
+      on_exit(fn -> :meck.unload end)
 
-    assert conn.state == :sent
-    assert conn.status == 200
-  end
+      :ok
+    end
 
-  test "/app.js returns 200" do
-    conn = conn(:get, "/app.js")
+    test "/ returns 200" do
+      conn = conn(:get, "/")
 
-    conn = Static.call(conn, @opts)
+      conn = Static.call(conn, @opts)
 
-    assert conn.state == :sent
-    assert conn.status == 200
-  end
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
 
-  test "/license returns 200" do
-    conn = conn(:get, "/license")
+    test "/main.css returns 200" do
+      conn = conn(:get, "/main.css")
 
-    conn = Static.call(conn, @opts)
+      conn = Static.call(conn, @opts)
 
-    assert conn.state == :sent
-    assert conn.status == 200
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "/app.js returns 200" do
+      conn = conn(:get, "/app.js")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "/license returns 200" do
+      conn = conn(:get, "/license")
+
+      conn = Static.call(conn, @opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
   end
 
   test "unknown url returns 404" do
