@@ -1,0 +1,18 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+$base-font: 'Roboto', 'Open Sans', 'Lato', 'Droid Sans', Verdana, Geneva, sans-serif !default;
+
+$primary-color: #ff442e !default;
+//$primary-color: #2c65ff !default;
+//$primary-color: #00f !default;
+$secondary-color: #ff3535 !default;
+
+
+$highlight-color: $secondary-color !default;
+
+$content-font: $base-font !default;
+$content-color: #000 !default;
+$content-background-color: change_color($primary-color, $saturation: 75%, $lightness: 95%) !default;
+
+$menu-font: $base-font !default;
+$menu-background-color: change_color($primary-color, $saturation: 75%, $lightness: 45%) !default;
+$menu-color: lighten($menu-background-color, 40%) !default; //lighten($menu-background-color, 35%) !default;

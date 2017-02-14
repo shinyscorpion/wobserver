@@ -1,0 +1,98 @@
+$button-color: #333;
+$button-border-color: #ccc;
+$button-background: #fff;
+
+input[type=submit] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  box-sizing: content-box;
+}
+
+button {
+  box-sizing: content-box;
+  font-size: 1rem;
+  height: 1.2em;
+  //top: -0.1em;
+}
+
+.button {
+  position: relative;
+  display: inline-block;
+
+  margin: 0.3em 0.3em;
+  padding: 0.5em 1em;
+
+  color: $button-color;
+  background-color: $button-background;
+  border: 0;
+
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25);
+
+  font-weight: 400;
+  text-align: center;
+  text-indent: 0;
+
+  cursor: pointer;
+
+  transition: background-color 0.1s;
+  @include user-select(none);
+
+  &:hover {
+	color: $button-color;
+	background-color: #e6e6e6;
+	border-color: #adadad;
+  }
+
+  &:after {
+	position: absolute;
+
+	content: "";
+
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 0.2em;
+
+	background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  &:active {
+	&:after {
+	  background-color: rgba(0, 0, 0, 0.2);
+	}
+  }
+  .disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+  }
+}
+
+@mixin button( $color, $background, $background-hover: darken( $background, 10% ) ) {
+  @extend .button;
+
+  color: $color;
+  background-color: $background;
+
+  &:hover {
+	color: $color;
+	background-color: $background-hover;
+  }
+}
+
+.button-primary {
+  @include button(#eee, lighten($primary-color, 5%), darken($primary-color, 5%));
+}
+
+.button-success {
+  @include button(#fff, #4cae4c, #449d44);
+}
+
+.button-danger {
+  @include button(#fff, #e44);
+}
+
+.button-info {
+  //326bff
+  @include button(#fff, #4d7fff);
+}

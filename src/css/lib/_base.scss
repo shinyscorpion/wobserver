@@ -1,0 +1,80 @@
+@import 'reset';
+
+$breakpoint-small: 720px;
+$breakpoint-medium: (1920px / 2);
+$breakpoint-large: 2000px;
+
+$menu-width-retracted: 3em;
+$menu-width-extended: 10em;
+$menu-button-height: 2.5em;
+$menu-button-height-horizontal: $menu-button-height;
+$menu-header-height: 3em;
+
+$menu-background-color-selected: darken($menu-background-color, 10%);
+$menu-summary-width: 20em;
+$menu-drop-down-height: 15em;
+$menu-drop-down-background-color: darken($menu-background-color, 20%);
+
+$sidebar-width-retracted: 0;
+$sidebar-width-extended: 15em;
+
+$breakpoint-medium: (8 * $menu-width-extended) + 1.1em; // 1.1em is scrollbar width
+
+h1 {
+  font-size: 1.7em;
+  font-weight: bold;
+
+  color: $primary-color;
+}
+
+h2 {
+  font-size: 1.4em;
+  font-weight: bold;
+
+  color: $primary-color;
+}
+
+h1, h2 {
+  &::before {
+	//content: "\f292";
+	font-family: FontAwesome, sans-serif;
+
+	font-weight: normal;
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 1rem;
+	padding-right: 0.7em;
+	position: relative;
+	left: 0.2em;
+	bottom: 0.1em;
+  }
+
+}
+
+p + h1, p + h2 {
+  margin-top: 0.5em;
+}
+
+@mixin user-select( $type ) {
+  -webkit-touch-callout: $type; /* iOS Safari */
+  -webkit-user-select: $type; /* Chrome/Safari/Opera */
+  -khtml-user-select: $type; /* Konqueror */
+  -moz-user-select: $type; /* Firefox */
+  -ms-user-select: $type; /* Internet Explorer/Edge */
+  user-select: $type;
+}
+
+#wobserver {
+  position: relative;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  margin: auto;
+
+  @include user-select(none);
+}
+
+@import 'button';
+@import 'menu';
+@import 'content';
+@import 'footer';
+@import 'popup';

@@ -1,0 +1,19 @@
+#footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  color: #eee;
+  background-color: lighten($menu-background-color, 10%);
+
+
+  transition: left 1s linear;
+  left: $menu-width-retracted;
+  @media screen and (min-width: $breakpoint-small) {
+    left: $menu-width-extended;
+  }
+  @media screen and (min-width: $breakpoint-medium) {
+    transition: left 0s linear;
+    left: 0;
+  }
+}

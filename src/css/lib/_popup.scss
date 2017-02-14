@@ -1,0 +1,63 @@
+
+#node_selection {
+  position: absolute;
+  left: 0; right:0; top: 0; bottom: 0;
+
+  margin: auto;
+
+  width: 20em;
+  height: 30em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  background-color: #eee;
+
+  & > span {
+    background-color: rgba(0,0,0, 0.1);
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+  ul {
+    margin: 0; padding: 0;
+
+    li.node {
+      padding: 0.5em;
+      cursor: pointer;
+
+      span {
+        font-weight: bold;
+        display: block;
+        font-size: 120%;
+      }
+
+      detail {
+        font-size: 90%;
+        padding-left: 2em;
+        font-style: italic;
+      }
+
+      &:hover{
+        background-color: rgba(0,200,255, 0.1);
+      }
+    }
+
+    .selected {
+      cursor: default !important;
+      color: #999;
+
+      &:hover{
+        background-color: rgba(0,0,0, 0) !important;
+      }
+    }
+  }
+}
+
+#popup-overlay {
+  position: fixed;
+  left: 0; right:0; top: 0; bottom: 0;
+  z-index: 15;
+
+  background-color: rgba(0,0,0, 0.8);
+}
