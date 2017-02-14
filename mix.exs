@@ -32,7 +32,7 @@ defmodule Wobserver.Mixfile do
       maintainers: ["Ian Luites"],
       licenses: ["MIT"],
       files: [
-        "lib", "mix.exs", "README*", "LICENSE*", # Elixir
+        "lib/wobserver", "lib/wobserver.ex", "mix.exs", "README*", "LICENSE*", # Elixir
       ],
       links: %{
         "GitHub" => "https://github.com/shinyscorpion/wobserver",
