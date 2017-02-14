@@ -1,7 +1,7 @@
 # Wobserver
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
-[![Hex.pm](https://img.shields.io/badge/docs-v0.1.4-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Hex.pm](https://img.shields.io/badge/docs-v0.1.5-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
 
 Web based metrics, monitoring, and observer.
@@ -605,6 +605,7 @@ config :wobserver,
 #### <a name="mode-plug"></a> Plug
 Plug mode prevents `:wobserver` from starting `:cowboy` (ranch).
 Set `mode` to `:plug` in the `:wobserver` configuration to use plug mode.
+Set `remote_url_prefix` to the url prefix you put `:wobserver` behind to make sure dns node discovery still functions.
 
 Add the following line of code to the application's router to forward requests to `:wobserver`:
 ```elixir
@@ -626,7 +627,8 @@ Example:
 __config.exs__
 ```elixir
 config :wobserver,
-  mode: :plug
+  mode: :plug,
+  remote_url_prefix: "/wobserver"
 ```
 __my_router.ex__
 ```elixir

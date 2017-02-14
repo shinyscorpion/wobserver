@@ -3,8 +3,10 @@
 ## 0.1.5
 
 * Bake assets into wobserver.
+* Remove custom tasks from hex package.
 * Improve web build tools.
 * Improve package build tools.
+* Improve node discovery in plug mode.
 * Fix distillery support. (#3)
 
 ## 0.1.4
