@@ -20,3 +20,10 @@ gulp.task('css', () => {
     .pipe(autoprefixer())
     .pipe(gulp.dest(path.join(config.root.dest, config.css.dest)));
 });
+
+gulp.task('css-prod', () => {
+  gulp.src(path.join(config.root.src, config.css.src, config.css.pattern))
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(autoprefixer())
+    .pipe(gulp.dest(path.join(config.root.dest, config.css.dest)));
+});

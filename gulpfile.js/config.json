@@ -1,5 +1,6 @@
 {
   "build": ["css", "js", "html"],
+  "deploy": ["css-prod", "js-prod", "html-prod"],
   "watch": ["css", "js", "html"],
   "root": {
     "src": "./src",
