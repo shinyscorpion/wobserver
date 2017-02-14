@@ -1,5 +1,12 @@
 # Change log
 
+## 0.1.5
+
+* Bake assets into wobserver.
+* Improve web build tools.
+* Improve package build tools.
+* Fix distillery support. (#3)
+
 ## 0.1.4
 
 * Add :plug mode to run wobserver without cowboy.
