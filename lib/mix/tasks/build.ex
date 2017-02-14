@@ -61,6 +61,7 @@ defmodule Mix.Tasks.Build do
         #{html}
         \"""
       end
+      _ = @lint
 
       @lint false
       @doc false
@@ -70,6 +71,7 @@ defmodule Mix.Tasks.Build do
         #{css}
         \"""
       end
+      _ = @lint
 
       @lint false
       @doc false
@@ -79,6 +81,7 @@ defmodule Mix.Tasks.Build do
         #{js}
         \"""
       end
+      _ = @lint
 
       @lint false
       @doc false
@@ -88,6 +91,7 @@ defmodule Mix.Tasks.Build do
         #{license}
         \"""
       end
+      _ = @lint
     end
     """
   end
