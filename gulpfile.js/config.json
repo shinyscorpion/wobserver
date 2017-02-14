@@ -9,16 +9,16 @@
   "css": {
     "src": "css",
     "dest": "",
-    "pattern": "**/*.scss"
+    "pattern": "/**/*.scss"
   },
   "js": {
     "src": "js",
     "dest": "",
-    "pattern": "**/*.js"
+    "pattern": "/**/*.js"
   },
   "html": {
     "src": "html",
     "dest": "",
-    "pattern": "**/*"
+    "pattern": "/**/*"
   }
 }
