@@ -24,6 +24,8 @@ defmodule Wobserver.Util.Node.Remote do
     local?: false,
   ]
 
+  @remote_url_prefix Application.get_env(:wobserver, :remote_url_prefix, "")
+
   @spec call(map, endpoint :: String.t) :: String.t | :error
   defp call(%{host: host, port: port}, endpoint) do
     request =
@@ -42,7 +44,7 @@ defmodule Wobserver.Util.Node.Remote do
 
   def metrics(remote_node = %{local?: false}) do
     remote_node
-    |> call("/metrics/n/local")
+    |> call("#{@remote_url_prefix}/metrics/n/local")
   end
 
   def metrics(%{local?: true}) do
@@ -53,7 +55,7 @@ defmodule Wobserver.Util.Node.Remote do
   @spec api(remote_node :: map, path :: String.t) :: String.t | :error
   def api(remote_node, path) do
     remote_node
-    |> call("/api" <> path)
+    |> call("#{@remote_url_prefix}/api" <> path)
   end
 
   @spec socket_proxy(atom | map) :: {pid, String.t} | {:error, String.t}
@@ -61,7 +63,7 @@ defmodule Wobserver.Util.Node.Remote do
 
   def socket_proxy(%{name: name, host: host, port: port}) do
     connection =
-      %URI{scheme: "ws", host: host, port: port, path: "/ws"}
+      %URI{scheme: "ws", host: host, port: port, path: "#{@remote_url_prefix}/ws"}
       |> URI.to_string
       |> ClientProxy.connect
 
