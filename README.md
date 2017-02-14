@@ -662,7 +662,7 @@ defmodule MyApp.Application do
       Cowboy.child_spec(:http, MyApp.MyRouter, [], options)
     ]
 
-    opts = [strategy: :one_for_one, name: Wobserver.Supervisor]
+    opts = [strategy: :one_for_one, name: MyApp.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
