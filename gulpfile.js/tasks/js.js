@@ -22,7 +22,6 @@ gulp.task('js', () => {
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify())
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(path.join(config.root.dest, config.js.dest)));
 });
