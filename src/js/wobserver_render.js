@@ -106,7 +106,16 @@ function create_menu(wobserver, additional = []){
       }
   ];
 
-  items = items.concat(additional);
+  if( additional.length == 1 ){
+    items.push(additional[0]);
+  } else if( additional.length > 1 ){
+    items.push({
+      title: 'Plugins',
+      icon: 'fa-bolt',
+      on_open: () => {},
+      children: additional
+    });
+  }
 
   items.push(
   {
@@ -170,7 +179,7 @@ function create_menu(wobserver, additional = []){
       let switch_button = document.createElement('span');
       switch_button.className = 'button-primary';
       switch_button.style.marginRight = "1em";
-      switch_button.innerHTML = 'Switch Node';
+      switch_button.innerHTML = '<i class="fa fa-plug" aria-hidden="true"></i><span> Switch Node</span>';
 
       let node_selection = new NodeDialog(wobserver);
 
@@ -399,7 +408,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>Pid</th>
           <th>Name or Initial Function</th>
@@ -409,7 +418,7 @@ const WobserverRender = {
           <th>Current Function</th>
         </tr></thead>
         ${formatted_processes}
-      </table>
+      </table></div>
     `;
 
     table = content.querySelector('table');
@@ -453,7 +462,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>ID</th>
           <th>Name</th>
@@ -463,7 +472,7 @@ const WobserverRender = {
           <th>Links</th>
         </tr></thead>
         ${formatted_ports}
-      </table>
+      </table></div>
     `;
 
     table = content.querySelector('table');
@@ -676,7 +685,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>Name</th>
           <th>ID</th>
@@ -686,7 +695,7 @@ const WobserverRender = {
           <th>Owner</th>
         </tr></thead>
         ${formatted_tables}
-      </table>
+      </table></table>
     `;
 
     table = content.querySelector('table');
@@ -708,15 +717,15 @@ const WobserverRender = {
       return `<tr><th>${url.name}</th><td><a href="${url.url}">${url.url}</a></td></tr>`
     }).join('');
 
-    content.innerHTML = `
+    content.innerHTML = `<div class="about">
       <h1 style="margin-bottom:0;">${about.name}</h1>
       <span style="font-weight:bold;font-size:80%;font-style:italic;">Version: ${about.version}</span>
       <p>${about.description}</p>
       <h2>Info</h2>
-      <table style="text-align: left;">
+      <div class="table-holder"><table style="text-align: left;">
         <tr><th>Licence</th><td><a href="${about.license.url}">${about.license.name}</a></td></tr>
         ${urls}
-      </table>
+      </table></div></div>
     `;
   },
   show_process: (process, wobserver) => {
@@ -764,13 +773,13 @@ function show_custom_array_table(data, name = '') {
 
 
   return `
-    <table class="generic_array_table">
+    <div class="table-holder"><table class="generic_array_table">
       <caption>${name}</caption>
       <thead>
         <tr>${header}</tr>
       </thead>
       ${rows}
-    </table>
+    </table></div>
   `;
 }
 
@@ -789,10 +798,10 @@ function show_custom_table(data, name = '') {
       .join('');
 
     return `
-      <table class="inline">
+      <div class="table-holder"><table class="inline">
         <caption>${name}</caption>
         ${rows}
-      </table>
+      </table></div>
     `;
   } else {
     let tables =
