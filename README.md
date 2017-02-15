@@ -612,7 +612,7 @@ Add the following line of code to the application's router to forward requests t
   forward "/wobserver", to: Wobserver.Web.Router
 ```
 
-Add the following option to you `:cowboy` child_spec to enable use of the `:wobserver` websocket:
+Add the following option to the `:cowboy` child_spec to enable use of the `:wobserver` websocket:
 ```elixir
 dispatch: [
     {:_, [
