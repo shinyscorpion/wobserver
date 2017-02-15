@@ -47,4 +47,8 @@
     text-align: center;
     color: darken($content-background-color, 10%);
   }
+
+  select {
+    font-size: 100%;
+  }
 }

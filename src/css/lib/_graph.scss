@@ -1,8 +1,8 @@
 .process-node {
+  font-size: 80%;
 
   border: 1px solid #000;
   border-radius: 1em;
-  padding: 0.5em;
 
   cursor: pointer;
 
@@ -37,12 +37,23 @@
   top: 1em;
   left: 1em;
   z-index: 1;
+
+  @media screen and (min-width: $breakpoint-medium) {
+    top: 6em;
+  }
 }
 #application_chart {
   box-sizing: border-box;
   position: absolute;
   left:0; right:0;
-  height: 100%;
+  // height: 100%;
+  top: 1em;
+  bottom: 1em;
+
+  @media screen and (min-width: $breakpoint-medium) {
+    top: 6em;
+    bottom: 3em;
+  }
 }
 /* required LIB STYLES */
 /* .Treant se automatski dodaje na svaki chart conatiner */

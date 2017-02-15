@@ -4,10 +4,9 @@
   @media screen and (min-width: $breakpoint-medium) {
 	box-shadow: none;
   }
-
+	z-index: 10;
   position: fixed;
-  height: 100%;
-  z-index: 10;
+  height: 110%;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -357,6 +356,31 @@
 		display: block;
 		bottom: 0;
 		position: fixed;
+		width: $menu-width-retracted;
+
+		@media screen and (max-width: $breakpoint-small) {
+			.button {
+				padding: 0;
+				width: 2.3em;
+				height: 2.3em;
+				display: inline-block;
+
+				margin-left: 0.25em;
+
+				i {
+					margin: 0.65em;
+				}
+				span{
+					display: none;
+				}
+			}
+		}
+		@media screen and (min-width: $breakpoint-small) {
+			width: $menu-width-extended + 0.5em;
+		}
+		@media screen and (min-width: $breakpoint-medium) {
+			display: none;
+		}
 
 		text-align: center;
 	}

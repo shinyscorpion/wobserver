@@ -1,12 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 $base-font: 'Roboto', 'Open Sans', 'Lato', 'Droid Sans', Verdana, Geneva, sans-serif !default;
 
-$primary-color: #ff442e !default;
-//$primary-color: #2c65ff !default;
-//$primary-color: #00f !default;
-$secondary-color: #ff3535 !default;
+// Fran colours
+// $primary-color: #000 !default;
+// $secondary-color: #000 !default;
 
+// $menu-color: #eee;
+// $menu-background-color: #222;
+// $content-color: #000;
+// $content-background-color: #fff;
 
+// Default
+// $primary-color: #ff442e !default;
+// $secondary-color: #ff3535 !default;
+// $primary-color: #2c65ff !default;
+// $secondary-color: #00f !default;
+// $secondary-color: #ff3535 !default;
+$primary-color: #509 !default;
+$secondary-color: $primary-color !default;
 $highlight-color: $secondary-color !default;
 
 $content-font: $base-font !default;

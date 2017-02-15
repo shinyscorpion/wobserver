@@ -1,6 +1,19 @@
 // @import 'base';
 @import 'table';
-@import 'graph';
 @import 'chart';
 
 @import './lib/base';
+
+.about {
+  max-width: 100%;
+  table {
+    width: 100%;
+    th{
+      font-weight: bold;
+      padding: 0 1em 0 1em;
+    &::after {
+      content: ':';
+    }
+    }
+  }
+}

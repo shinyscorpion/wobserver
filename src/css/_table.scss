@@ -1,5 +1,7 @@
 table.inline {
-  width: 27em;
+  //width: 27em;
+  max-width: 27em;
+  width: 100%;
   display: inline-block;
   background-color: rgba(0,0,0, 0.1);
   border-radius: 0.5em;
@@ -30,7 +32,13 @@ table.inline {
   }
 }
 
+div.table-holder {
+  max-width: 100%;
+  overflow: auto;
+}
 table.process_table {
+  white-space: nowrap;
+
   thead {
     background-color: rgba(0,0,0, 0.1);
     font-size: 105%;
