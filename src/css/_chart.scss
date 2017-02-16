@@ -1,11 +1,11 @@
 .wobserver-chart {
   display: inline-block;
 
-  width: 100%;
+  width: 100% !important;
   height: 20em;
 
   vertical-align: top;
-  margin-bottom: 2em;
+  margin-bottom: 2em !important;
 
   canvas {
     margin-bottom: 2em;

@@ -21,17 +21,39 @@
   	//margin-right: $sidebar-width-extended;
   }
 
-  display: -webkit-flex;
-  display: flex;
-  -webkit-align-items: center;
-  align-items: center;
-  /*-webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-content: center;
-  align-content: center;*/
+  // display: -webkit-flex;
+  // display: flex;
+  // -webkit-align-items: center;
+  // align-items: center;
+  // -webkit-flex-flow: column wrap;
+  // flex-flow: column wrap;
 
-  -webkit-flex-flow: column wrap;
-  flex-flow: column wrap;
+  // -webkit-justify-content: center;
+  // justify-content: center;
+  // -webkit-align-content: center;
+  // align-content: center;
+
+  // display: -webkit-flex;
+  // display: flex;
+  // -webkit-align-items: flex-start;
+  // align-items: flex-start;
+  // // -webkit-flex-flow: row wrap;
+  // // flex-flow: row wrap;
+
+  // // text-align: center;
+  // & > * {
+  //   //text-align: left;
+  //   align-self: center;
+  // }
+
+  text-align: center;
+  & > div{
+    text-align: left;
+    display:inline-block;
+    width: auto;
+    margin: auto;
+  }
+
 
   & > footer {
     display: block;
