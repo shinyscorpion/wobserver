@@ -12,6 +12,12 @@ defmodule Wobserver.Web.Client do
   alias Wobserver.Util.Process
   alias Wobserver.Util.Node.Discovery
 
+  @doc ~S"""
+  Starts the websocket client.
+
+  Returns a map as state.
+  """
+  @spec client_init :: {:ok, map}
   def client_init do
     {:ok, %{}}
   end
