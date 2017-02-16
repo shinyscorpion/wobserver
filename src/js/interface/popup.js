@@ -27,7 +27,7 @@ const Popup = {
 
     popup.innerHTML = content;
 
-    popup.style.display = 'block';
+    popup.style.display = 'flex';
   },
   hide: () => {
     getPopup().style.display = 'none';

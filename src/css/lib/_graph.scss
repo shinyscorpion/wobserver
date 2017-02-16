@@ -1,5 +1,5 @@
 .process-node {
-  font-size: 80%;
+  font-size: 90%;
 
   border: 1px solid #000;
   border-radius: 1em;
@@ -7,7 +7,11 @@
   cursor: pointer;
 
   p {
-    margin: 0.3em;
+    margin: 0.3em 0.7em 0.3em -1em;
+
+    &:nth-child(even) {
+      font-style: italic;
+    }
   }
 }
 

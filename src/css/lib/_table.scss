@@ -29,6 +29,15 @@ table.inline {
 
   td {
     width: 13em;
+
+    .load {
+      display: inline-block;
+      width: 2em;
+      text-align: right;
+    }
+    .high {
+      color: #f00;
+    }
   }
 }
 
