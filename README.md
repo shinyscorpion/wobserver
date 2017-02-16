@@ -1,7 +1,9 @@
 # Wobserver
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
-[![Hex.pm](https://img.shields.io/badge/docs-v0.1.5-brightgreen.svg "Docs")](https://hexdocs.pm/wobserver)
+[![Build Status](https://travis-ci.org/shinyscorpion/wobserver.svg?branch=master)](https://travis-ci.org/shinyscorpion/wobserver)
+[![Inline docs](http://inch-ci.org/github/shinyscorpion/wobserver.svg?branch=master)](http://inch-ci.org/github/shinyscorpion/wobserver)
+[![Deps Status](https://beta.hexfaktor.org/badge/all/github/shinyscorpion/wobserver.svg)](https://beta.hexfaktor.org/github/shinyscorpion/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
 
 Web based metrics, monitoring, and observer.
