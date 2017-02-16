@@ -613,7 +613,7 @@ const WobserverRender = {
       size_chart = document.getElementById('size_chart').chart;
       util_chart = document.getElementById('util_chart').chart;
     } else {
-      content.innerHTML = `<div id="size_chart" style="width:100%;height: 30%;"></div><div id="util_chart" style="width:100%;height: 30%;"></div><div id="alloc_table"></div>`;
+      content.innerHTML = `<div id="size_chart" style="width:100%;height: 22em;"></div><div id="util_chart" style="width:100%;height: 22em;"></div><div id="alloc_table"></div>`;
 
       let r_set = [1, 0, 0, 1, 0, 1, 1, 0];
       let g_set = [0, 1, 0, 1, 1, 0, 1, 0];
