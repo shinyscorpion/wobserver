@@ -69,15 +69,28 @@ defmodule Wobserver.Web.ClientSocket do
       # Callbacks
 
       ## Init / Shutdown
+
+      @doc ~S"""
+      Initialize the websocket connection.
+
+      The `req` cowboy request and `options` are passed, but unused in the setup.
+      """
       @spec init(any, :cowboy_req.req, any) ::
         {:upgrade, :protocol, :cowboy_websocket}
-      def init(_, _req, _opts) do
+      def init(_, _req, _options) do
         {:upgrade, :protocol, :cowboy_websocket}
       end
 
+      @doc ~S"""
+      Initialize the websocket connection by calling the implementing client.
+
+      The `req` cowboy request is passed along to the client.
+
+      The `type` and `options` are passed, but unused in the setup.
+      """
       @spec websocket_init(any, req :: :cowboy_req.req, any) ::
         {:ok, :cowboy_req.req, any, non_neg_integer}
-      def websocket_init(_type, req, _opts) do
+      def websocket_init(_type, req, _options) do
         case client_init() do
           {:ok, state, timeout} ->
             {:ok, req, %{state: state, proxy: nil}, timeout}
@@ -86,6 +99,11 @@ defmodule Wobserver.Web.ClientSocket do
         end
       end
 
+      @doc ~S"""
+      Gracefully handles websocked terminate.
+
+      The `reason`, req` and `options` are ignored.
+      """
       @spec websocket_terminate({atom, any}, :cowboy_req.req, any) :: :ok
       def websocket_terminate(_reason, _req, _state) do
         :ok
