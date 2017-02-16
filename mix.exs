@@ -65,10 +65,10 @@ defmodule Wobserver.Mixfile do
   defp deps do
     [
       {:cowboy, "~> 1.0"},
-      {:credo, "~> 0.5", only: [:dev, :test]},
+      {:credo, "~> 0.6", only: [:dev, :test]},
       {:dialyxir, "~> 0.4", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.14", only: :dev},
-      {:excoveralls, "~> 0.5", only: :test},
+      {:excoveralls, "~> 0.6", only: :test},
       {:ex_doc, "~> 0.14", only: :dev},
       {:httpoison, "~> 0.11"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]},
