@@ -2,7 +2,7 @@ function process_to_node(process) {
   return {
     HTMLclass: process.meta.class,
     text: {
-      name: process.name,
+      name: process.name.replace(/^Elixir\./, ''),
       title: process.pid
     },
     meta: {

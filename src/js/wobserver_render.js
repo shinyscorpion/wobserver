@@ -305,7 +305,7 @@ const WobserverRender = {
 
     //let scheduler_average = (100*system.scheduler.reduce((sum, e) => sum + e, 0) / (system.scheduler.length || 1));
     //let scheduler_average = system.scheduler.map(e=>Math.floor(e*100)+'%').join(',');
-    let scheduler_average = system.scheduler.map(e=>'<span class="load">' + Math.floor(e*100)+'</span>%').join(' ');
+    let scheduler_average = system.scheduler.map(e=> (e>=0.9 ? '<span class="load high">' : '<span class="load">') + Math.floor(e*100)+'</span>%').join(' ');
 
     let cpu =
       `<table class="inline">
@@ -675,7 +675,7 @@ const WobserverRender = {
     let formatted_tables = data.map( t => {
       let id = !isNaN(parseFloat(t.id)) && isFinite(t.id) ? t.id : '';
       return `<tr>
-        <td><a href="javascript:window.show_table('${t.id}')">${t.name}</a></td>
+        <td><a href="javascript:window.show_table('${t.id}')">${t.name.replace(/^Elixir\./, '')}</a></td>
         <td>${id}</td>
         <td>${t.size}</td>
         <td>${byte_formatter(t.memory)}</td>
