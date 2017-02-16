@@ -37,15 +37,33 @@ div.table-holder {
   overflow: auto;
 }
 table.process_table {
+  border-collapse: collapse;
   white-space: nowrap;
 
+  border: solid 1px rgba(0,0,0, 0.2);
+
+  td, th{
+    vertical-align: bottom;
+    border-bottom: 1px solid rgba($menu-background-color-selected, 0.1);
+  }
+
   thead {
-    background-color: rgba(0,0,0, 0.1);
+    color: #fff;
+    background-color: $menu-background-color-selected;
+    //background-color: rgba(0,0,0, 0.1);
     font-size: 105%;
     cursor: pointer;
 
     th {
-      padding: 0.2em;
+      padding: 0.5em;
     }
+  }
+  td {
+    padding: 0.3em;
+    background-color: rgba(255,255,255, 0.8);
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba($menu-background-color-selected, 0.1);
   }
 }
