@@ -6,5 +6,17 @@ elixir:
 otp_release:
   - 19.0
   - 19.1
+install:
+  - nvm install v6.9.4
+  - npm install
+  - mix local.rebar --force # for Elixir 1.3.0 and up
+  - mix local.hex --force
+  - mix deps.get
+  - mix build
 after_script:
   - MIX_ENV=test mix inch.report
+cache:
+  directories:
+    - node_modules
+    - _build
+    - deps
