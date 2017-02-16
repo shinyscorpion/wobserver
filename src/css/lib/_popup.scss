@@ -61,3 +61,144 @@
 
   background-color: rgba(0,0,0, 0.8);
 }
+
+#process_information {
+  position: absolute;
+  left: 0; right:0; top: 0; bottom: 0;
+
+  margin: auto;
+
+  width: 35em;
+  height: 50em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  background-color: #eee;
+
+  pre {
+    height: 19em;
+    overflow: auto;
+    margin: 1em;
+    background-color: rgba(255,255,255, 0.5);
+    border-radius: 0.1em;
+  }
+
+  & > span {
+    background-color: rgba(0,0,0, 0.1);
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+
+  table {
+    margin: 0 1em;
+
+    caption {
+      font-weight: bold;
+      font-size: 110%;
+    }
+
+    & + table {
+      margin-top: 1em;
+    }
+    width: 100%;
+    text-align: left;
+    tr {
+      th {
+        width: 50%;
+      }
+    }
+  }
+
+  div#process_relations {
+    text-align: center;
+    margin-top: 1em;
+
+    div {
+      width: 30%;
+      display: inline-block;
+      text-align: left;
+
+      span {
+        font-weight: bold;
+      }
+
+      ul {
+        margin-top: -0.1em;
+        height: 4em;
+        overflow: auto;
+        background-color: rgba(255,255,255, 0.1);
+        padding-left: 0;
+
+        li {
+          list-style: none;
+        }
+      }
+    }
+  }
+}
+
+#table_information {
+  position: absolute;
+  left: 0; right:0; top: 0; bottom: 0;
+
+  margin: auto;
+
+  width: 90%;
+  height: 35em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  background-color: #eee;
+
+  & > span {
+    background-color: rgba(0,0,0, 0.1);
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+
+  & > div {
+    overflow: auto;
+    height: 32em;
+  }
+
+  pre {
+    margin: 0;
+  }
+  table {
+    padding: 0;
+    margin: 0;
+
+    min-width: 100%;
+
+    tr:nth-child(even) {
+      background-color: rgba(0,0,0, 0.1);
+    }
+
+    td {
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+}
+#alloc_table {
+  padding-top: 2em;
+  table {
+    padding: 0;
+    margin: 0;
+
+    min-width: 100%;
+
+    tr:nth-child(even) {
+      background-color: rgba(0,0,0, 0.1);
+    }
+
+    td {
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+}
