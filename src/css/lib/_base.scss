@@ -18,7 +18,7 @@ $menu-drop-down-background-color: darken($menu-background-color, 20%);
 $sidebar-width-retracted: 0;
 $sidebar-width-extended: 15em;
 
-$breakpoint-medium: (8 * $menu-width-extended) + 1.1em; // 1.1em is scrollbar width
+$breakpoint-medium: (9 * $menu-width-extended) + 1.1em; // 1.1em is scrollbar width
 
 h1 {
   font-size: 1.7em;

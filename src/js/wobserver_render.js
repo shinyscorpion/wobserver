@@ -43,7 +43,8 @@ function memory_formatter(memory) {
 }
 
 function select_menu(ol, menu_item, item) {
-  ol.querySelectorAll('a').forEach( (child) => child.className = '' );
+  //ol.querySelectorAll('a').forEach( (child) => child.className = '' );
+  document.querySelectorAll('#menu a').forEach( (child) => child.className = '' );
   // nav.childNodes.forEach( (child) => child.className = '' );
   menu_item.className = 'selected';
 
@@ -60,7 +61,38 @@ function select_menu(ol, menu_item, item) {
     location.hash = '#' + item.title.replace(' ', '');
   }
 }
+function build_menu(items, ol){
+  return items.map((item) => {
+    let menu_item = document.createElement('li');
+    let menu_link = document.createElement('a');
 
+    menu_item.appendChild(menu_link);
+
+    let icon = item.icon ? item.icon : 'fa-home';
+    menu_link.innerHTML = `<i class="menuIcon fa fa-fw ${icon}"></i><span>${item.title}</span>`;
+
+
+    if( item.children ){
+      let child_ol = document.createElement('ol');
+      child_ol.className = 'smallDropDown';
+
+      build_menu(item.children, child_ol);
+
+      menu_link.style.cursor = 'default';
+
+      menu_item.appendChild(child_ol);
+    } else {
+      menu_link.addEventListener('click', () => {
+        select_menu(ol, menu_link, item);
+      });
+    }
+
+    ol.appendChild(menu_item);
+
+    item.menu_item = menu_link;
+    return item;
+  });
+}
 function create_menu(wobserver, additional = []){
   let items = [
       {
@@ -143,24 +175,7 @@ function create_menu(wobserver, additional = []){
 
   let first = false;
 
-  items.map((item) => {
-    let menu_item = document.createElement('li');
-    let menu_link = document.createElement('a');
-    menu_item.appendChild(menu_link);
-
-    let icon = item.icon ? item.icon : 'fa-home';
-    menu_link.innerHTML = `<i class="menuIcon fa fa-fw ${icon}"></i><span>${item.title}</span>`;
-
-    menu_link.addEventListener('click', () => {
-      select_menu(ol, menu_link, item);
-    });
-
-    ol.appendChild(menu_item);
-
-    item.menu_item = menu_link;
-
-    return item;
-  });
+  build_menu(items, ol);
 
   setTimeout(() => {
     let select = items.find(item => '#' + item.title.replace(' ', '') == window.location.hash);
@@ -738,6 +753,15 @@ const WobserverRender = {
     let content = document.getElementById('content');
 
     content.innerHTML = show_custom_data(e.data);
+  },
+  loading: loading => {
+    let content = document.getElementById('content');
+
+    if( loading ){
+      content.style.opacity = 0;
+    } else {
+      content.style.opacity = 1;
+    }
   }
 };
 
