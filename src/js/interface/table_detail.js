@@ -19,6 +19,14 @@ class TableDetail {
         return;
       }
 
+      if( table.data.length <= 0 ){
+        return Popup.show(`
+        <div id="table_information">
+          <span>Table has no content.</span>
+        </div>
+        `);
+      }
+
       let table_data = table.data.map((row, index) => {
         let formatted_row = row.map(field => `<td><pre>${field}</pre></td>`).join('');
         return `<tr><th>${index+1}</th>${formatted_row}</tr>`;
