@@ -30,7 +30,7 @@ class WobserverClient {
       connected_callback();
 
       this.command('hello');
-      setInterval(_ => this.command('ping') );
+      setInterval(_ => this.command('ping'), 55 * 1000 ); // Every 55 seconds
     }
 
     this.add_handlers();
