@@ -1,0 +1,14 @@
+#footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  color: #eee;
+  background-color: lighten($menu-background-color, 10%);
+
+  display: none;
+  @media screen and (min-width: $breakpoint-medium) {
+    display: block;
+  }
+}

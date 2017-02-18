@@ -42,100 +42,140 @@ function memory_formatter(memory) {
   }, {});
 }
 
-function select_menu(nav, menu_item, item) {
-  nav.childNodes.forEach( (child) => child.className = '' );
+function select_menu(ol, menu_item, item) {
+  //ol.querySelectorAll('a').forEach( (child) => child.className = '' );
+  document.querySelectorAll('#menu a').forEach( (child) => child.className = '' );
+  // nav.childNodes.forEach( (child) => child.className = '' );
   menu_item.className = 'selected';
 
-  if( nav.lastItem && nav.lastItem.on_close ){
-    nav.lastItem.on_close();
+  if( ol.lastItem && ol.lastItem.on_close ){
+    ol.lastItem.on_close();
   }
 
   item.on_open();
 
-  nav.lastItem = item;
+  ol.lastItem = item;
   if( history.pushState ) {
     history.pushState(null, null, '#' + item.title.replace(' ', ''));
   } else {
     location.hash = '#' + item.title.replace(' ', '');
   }
 }
+function build_menu(items, ol){
+  return items.map((item) => {
+    let menu_item = document.createElement('li');
+    let menu_link = document.createElement('a');
 
+    menu_item.appendChild(menu_link);
+
+    let icon = item.icon ? item.icon : 'fa-home';
+    menu_link.innerHTML = `<i class="menuIcon fa fa-fw ${icon}"></i><span>${item.title}</span>`;
+
+
+    if( item.children ){
+      let child_ol = document.createElement('ol');
+      child_ol.className = 'smallDropDown';
+
+      build_menu(item.children, child_ol);
+
+      menu_link.style.cursor = 'default';
+
+      menu_item.appendChild(child_ol);
+    } else {
+      menu_link.addEventListener('click', () => {
+        select_menu(ol, menu_link, item);
+      });
+    }
+
+    ol.appendChild(menu_item);
+
+    item.menu_item = menu_link;
+    return item;
+  });
+}
 function create_menu(wobserver, additional = []){
   let items = [
       {
         title: 'System',
+        icon: 'fa-heartbeat',
         on_open: () => wobserver.open('system', 1, WobserverRender.display_system),
         on_close: () => wobserver.close('system', 1)
       },
       {
         title: 'Load Charts',
+        icon: 'fa-area-chart',
         on_open: () => wobserver.open('system', 0.25, WobserverRender.display_load_charts),
         on_close: () => wobserver.close('system', 0.25)
       },
       {
         title: 'Memory Allocators',
+        icon: 'fa-microchip',
         on_open: () => wobserver.open('allocators', 0.25, WobserverRender.display_allocators),
         on_close: () => wobserver.close('allocators', 0.25)
       },
       {
         title: 'Applications',
+        icon: 'fa-desktop',
         on_open: () => wobserver.open('application', 0, e => WobserverRender.display_applications(e, wobserver)),
       },
       {
         title: 'Processes',
+        icon: 'fa-list-alt',
         on_open: () => wobserver.open('process', 4, WobserverRender.display_processes),
         on_close: () => wobserver.close('process', 4)
       },
       {
         title: 'Ports',
+        icon: 'fa-usb',
         on_open: () => wobserver.open('ports', 8, WobserverRender.display_ports),
         on_close: () => wobserver.close('ports', 8)
       },
       {
         title: 'Table Viewer',
+        icon: 'fa-table',
         on_open: () => wobserver.open('table', 0, WobserverRender.display_table),
         on_close: () => wobserver.close('table', 0)
       }
   ];
 
-  items = items.concat(additional);
+  if( additional.length == 1 ){
+    items.push(additional[0]);
+  } else if( additional.length > 1 ){
+    items.push({
+      title: 'Plugins',
+      icon: 'fa-bolt',
+      on_open: () => {},
+      children: additional
+    });
+  }
 
   items.push(
   {
     title: 'About',
+    icon: 'fa-info',
     on_open: () => wobserver.open('about', 0, WobserverRender.display_about),
   });
 
   let menu = document.getElementById('menu');
-  let nav = document.createElement('nav');
+  let ol = menu.querySelector('ol');
+  let header = document.createElement('header');
+    menu.appendChild(header);
+    header.innerHTML = '<i class="elixir-icon"></i> Wobserver';
 
-  while (menu.hasChildNodes()) {
-      menu.removeChild(menu.lastChild);
+  if( ol ){
+    while (ol.hasChildNodes()) {
+        ol.removeChild(ol.lastChild);
+    }
+  } else {
+    ol = document.createElement('ol');
+    menu.appendChild(ol);
   }
 
-  nav.lastItem = null;
+  ol.lastItem = null;
 
   let first = false;
 
-  items.map((item) => {
-    let menu_item = document.createElement('a');
-    let menu_text = document.createTextNode(item.title);
-
-    //menu_item.setAttribute('href', '#');
-    menu_item.appendChild(menu_text);
-    menu_item.addEventListener('click', () => {
-      select_menu(nav, menu_item, item);
-    });
-
-    nav.appendChild(menu_item);
-
-    item.menu_item = menu_item;
-
-    return item;
-  });
-
-
-  menu.appendChild(nav);
+  build_menu(items, ol);
 
   setTimeout(() => {
     let select = items.find(item => '#' + item.title.replace(' ', '') == window.location.hash);
@@ -144,15 +184,32 @@ function create_menu(wobserver, additional = []){
       select = items[0];
     }
 
-    select_menu(nav, select.menu_item, select);
+    select_menu(ol, select.menu_item, select);
   }, 100);
+
+  if( !menu.querySelector('.menu-footer') ){
+      let footer = document.createElement('div');
+      footer.className = 'menu-footer';
+
+      let switch_button = document.createElement('span');
+      switch_button.className = 'button-primary';
+      switch_button.style.marginRight = "1em";
+      switch_button.innerHTML = '<i class="fa fa-plug" aria-hidden="true"></i><span> Switch Node</span>';
+
+      let node_selection = new NodeDialog(wobserver);
+
+      switch_button.addEventListener('click', () => node_selection.show() );
+
+      footer.appendChild(switch_button);
+      menu.appendChild(footer);
+  }
 }
 
 function create_footer(wobserver) {
   let footer = document.getElementById('footer');
 
   let switch_button = document.createElement('span');
-  switch_button.className = 'button';
+  switch_button.className = 'button-primary';
   switch_button.style.marginRight = "1em";
   switch_button.innerHTML = 'Switch Node';
 
@@ -199,7 +256,7 @@ const WobserverRender = {
       let wobserver_root = document.getElementById('wobserver');
 
       wobserver_root.innerHTML =
-        `<div id="menu"></div>
+        `<nav id="menu"></nav>
         <div id="content"></div>
         <div id="footer"></div>`;
 
@@ -263,7 +320,7 @@ const WobserverRender = {
 
     //let scheduler_average = (100*system.scheduler.reduce((sum, e) => sum + e, 0) / (system.scheduler.length || 1));
     //let scheduler_average = system.scheduler.map(e=>Math.floor(e*100)+'%').join(',');
-    let scheduler_average = system.scheduler.map(e=>'<span class="load">' + Math.floor(e*100)+'</span>%').join(' ');
+    let scheduler_average = system.scheduler.map(e=> (e>=0.9 ? '<span class="load high">' : '<span class="load">') + Math.floor(e*100)+'</span>%').join(' ');
 
     let cpu =
       `<table class="inline">
@@ -366,7 +423,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>Pid</th>
           <th>Name or Initial Function</th>
@@ -376,7 +433,7 @@ const WobserverRender = {
           <th>Current Function</th>
         </tr></thead>
         ${formatted_processes}
-      </table>
+      </table></div>
     `;
 
     table = content.querySelector('table');
@@ -420,7 +477,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>ID</th>
           <th>Name</th>
@@ -430,7 +487,7 @@ const WobserverRender = {
           <th>Links</th>
         </tr></thead>
         ${formatted_ports}
-      </table>
+      </table></div>
     `;
 
     table = content.querySelector('table');
@@ -571,7 +628,7 @@ const WobserverRender = {
       size_chart = document.getElementById('size_chart').chart;
       util_chart = document.getElementById('util_chart').chart;
     } else {
-      content.innerHTML = `<div id="size_chart" style="width:100%;height: 30%;"></div><div id="util_chart" style="width:100%;height: 30%;"></div><div id="alloc_table"></div>`;
+      content.innerHTML = `<div id="size_chart" style="width:100%;height: 22em;"></div><div id="util_chart" style="width:100%;height: 22em;"></div><div id="alloc_table"></div>`;
 
       let r_set = [1, 0, 0, 1, 0, 1, 1, 0];
       let g_set = [0, 1, 0, 1, 1, 0, 1, 0];
@@ -633,7 +690,7 @@ const WobserverRender = {
     let formatted_tables = data.map( t => {
       let id = !isNaN(parseFloat(t.id)) && isFinite(t.id) ? t.id : '';
       return `<tr>
-        <td><a href="javascript:window.show_table('${t.id}')">${t.name}</a></td>
+        <td><a href="javascript:window.show_table('${t.id}')">${t.name.replace(/^Elixir\./, '')}</a></td>
         <td>${id}</td>
         <td>${t.size}</td>
         <td>${byte_formatter(t.memory)}</td>
@@ -643,7 +700,7 @@ const WobserverRender = {
     }).join('');
 
     content.innerHTML = `
-      <table class="process_table" style="text-align: left;">
+      <div class="table-holder"><table class="process_table" style="text-align: left;">
         <thead><tr>
           <th>Name</th>
           <th>ID</th>
@@ -653,7 +710,7 @@ const WobserverRender = {
           <th>Owner</th>
         </tr></thead>
         ${formatted_tables}
-      </table>
+      </table></table>
     `;
 
     table = content.querySelector('table');
@@ -675,15 +732,15 @@ const WobserverRender = {
       return `<tr><th>${url.name}</th><td><a href="${url.url}">${url.url}</a></td></tr>`
     }).join('');
 
-    content.innerHTML = `
+    content.innerHTML = `<div class="about">
       <h1 style="margin-bottom:0;">${about.name}</h1>
       <span style="font-weight:bold;font-size:80%;font-style:italic;">Version: ${about.version}</span>
       <p>${about.description}</p>
       <h2>Info</h2>
-      <table style="text-align: left;">
+      <div class="table-holder"><table style="text-align: left;">
         <tr><th>Licence</th><td><a href="${about.license.url}">${about.license.name}</a></td></tr>
         ${urls}
-      </table>
+      </table></div></div>
     `;
   },
   show_process: (process, wobserver) => {
@@ -696,6 +753,15 @@ const WobserverRender = {
     let content = document.getElementById('content');
 
     content.innerHTML = show_custom_data(e.data);
+  },
+  loading: loading => {
+    let content = document.getElementById('content');
+
+    if( loading ){
+      content.style.opacity = 0;
+    } else {
+      content.style.opacity = 1;
+    }
   }
 };
 
@@ -731,13 +797,13 @@ function show_custom_array_table(data, name = '') {
 
 
   return `
-    <table class="generic_array_table">
+    <div class="table-holder"><table class="generic_array_table">
       <caption>${name}</caption>
       <thead>
         <tr>${header}</tr>
       </thead>
       ${rows}
-    </table>
+    </table></div>
   `;
 }
 
@@ -756,10 +822,10 @@ function show_custom_table(data, name = '') {
       .join('');
 
     return `
-      <table class="inline">
+      <div class="table-holder"><table class="inline">
         <caption>${name}</caption>
         ${rows}
-      </table>
+      </table></div>
     `;
   } else {
     let tables =

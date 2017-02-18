@@ -31,7 +31,7 @@ class NodeDialog {
         li.innerHTML = `<span>${node.name}${local_class}</span><detail>${node.host}:${node.port}</detail>`
 
         if( selected ) {
-          li.addEventListener('click', () => is.hide());
+          li.addEventListener('click', () => this.hide());
         } else {
           li.addEventListener('click', () =>{
             this.wobserver.client.set_node(node.name);

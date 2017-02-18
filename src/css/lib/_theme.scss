@@ -1,0 +1,82 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+$base-font: 'Roboto', 'Open Sans', 'Lato', 'Droid Sans', Verdana, Geneva, sans-serif !default;
+
+// Fran colours
+// $primary-color: #000 !default;
+// $secondary-color: #000 !default;
+
+// $menu-color: #eee;
+// $menu-background-color: #222;
+// $content-color: #000;
+// $content-background-color: #fff;
+
+// Default
+// $primary-color: #ff442e !default;
+// $secondary-color: #ff3535 !default;
+// $primary-color: #2c65ff !default;
+// $secondary-color: #00f !default;
+// $secondary-color: #ff3535 !default;
+
+
+// Test colours
+// $primary-color: #519 !default;
+// $secondary-color: $primary-color !default;
+// $highlight-color: $secondary-color !default;
+
+// $content-font: $base-font !default;
+// $content-color: #000 !default;
+// $content-background-color: change_color($primary-color, $saturation: 75%, $lightness: 95%) !default;
+
+// $menu-font: $base-font !default;
+// $menu-background-color: change_color($primary-color, $saturation: 75%, $lightness: 45%) !default;
+// $menu-color: lighten($menu-background-color, 40%) !default; //lighten($menu-background-color, 35%) !default;
+
+// $menu-background-color-selected: #2d0047;
+// $menu-header-background-color: #43008d;
+
+// Final colours
+$primary-color: #58229a;
+$secondary-color: #64d041;
+$highlight-color: #614ed9;
+
+$content-font: $base-font !default;
+$content-color: #131313 !default;
+$content-background-color: #fefefe;
+
+$menu-font: $base-font !default;
+$menu-background-color: #543094;
+$menu-color: #e5e5e5;
+
+// Alts on final
+$menu-background-color: #463366;
+$primary-color: #472e66;
+$highlight-color: #574ba6;
+
+// Inbetween
+// $menu-background-color: #472966;
+// $primary-color: #472e66;
+// $highlight-color: #574ba6;
+
+// For Alts
+$content-header-background-color: #564376;
+$table-header-background-color: $content-header-background-color;
+$menu-headerd-color: #eee;
+
+
+// $content-header-background-color: #56388b;
+// $table-header-background-color: $content-header-background-color;
+
+// $primary-color: #6a5189;
+// $secondary-color: #64d041;
+// $highlight-color: #614ed9;
+
+// $content-font: $base-font !default;
+// $content-color: #d8d8d8 !default;
+// $content-background-color: #232020;
+
+// $menu-font: $base-font !default;
+// $menu-background-color: #372a4d;
+// $menu-color: #e5e5e5;
+
+// $menu-headerd-color: #eee;
+

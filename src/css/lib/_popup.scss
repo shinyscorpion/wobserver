@@ -1,0 +1,232 @@
+
+#node_selection {
+  overflow: hidden;
+  margin: auto;
+
+  width: 20em;
+  // height: 30em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  background-color: $content-background-color;
+
+  & > span {
+    color: #fff;
+    background-color: $content-header-background-color;
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+  ul {
+    margin: 0; padding: 0;
+    list-style: none;
+
+    li.node {
+      padding: 0.5em;
+      cursor: pointer;
+
+      span {
+        font-weight: bold;
+        display: block;
+        font-size: 120%;
+      }
+
+      detail {
+        font-size: 90%;
+        padding-left: 2em;
+        font-style: italic;
+      }
+
+      &:hover{
+        background-color: rgba($menu-background-color-selected, 0.2);
+      }
+    }
+
+    .selected {
+      cursor: default !important;
+      color: #999;
+
+      &:hover{
+        background-color: rgba(0,0,0, 0) !important;
+      }
+    }
+  }
+}
+
+#popup-overlay {
+  position: fixed;
+  left: 0; right:0; top: 0; bottom: 0;
+  z-index: 15;
+
+  background-color: rgba(0,0,0, 0.8);
+
+  display: flex;
+  align-content: center;
+}
+
+#process_information {
+  overflow: hidden;
+  position: absolute;
+  left: 0; right:0; top: 0; bottom: 0;
+
+  margin: auto;
+
+  max-width: 35em;
+  width: 100%;
+  height: 50em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  //background-color: #eee;
+  background-color: $content-background-color;
+
+  pre {
+    height: 19em;
+    overflow: auto;
+    margin: 1em;
+    background-color: rgba(255,255,255, 0.5);
+    border-radius: 0.1em;
+  }
+
+  & > span {
+    color: #fff;
+    background-color: $content-header-background-color;
+    // background-color: rgba(0,0,0, 0.1);
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+
+  table {
+    margin: 0 1em;
+
+    caption {
+      color: $content-header-background-color;
+      font-weight: bold;
+      font-size: 115%;
+    }
+
+    & + table {
+      margin-top: 1em;
+    }
+    width: 100%;
+    text-align: left;
+    tr {
+      th {
+        width: 50%;
+        font-weight: bold;
+      }
+    }
+  }
+
+  div#process_relations {
+    text-align: center;
+    margin-top: 1em;
+
+    div {
+      width: 30%;
+      display: inline-block;
+      text-align: left;
+
+      span {
+        font-weight: bold;
+      }
+
+      ul {
+        margin-top: -0.1em;
+        height: 4em;
+        overflow: auto;
+        background-color: rgba(255,255,255, 0.1);
+        padding-left: 0;
+
+        li {
+          list-style: none;
+        }
+      }
+    }
+  }
+}
+
+#table_information {
+  overflow: hidden;
+  // position: absolute;
+  // left: 0; right:0; top: 0; bottom: 0;
+
+  margin: auto;
+
+  max-width: 90%;
+  width: auto;
+  max-height: 95%;
+  height: auto;
+  // height: 35em;
+
+  border-radius: 0.5em;
+  border: solid 1px #000;
+  background-color: #eee;
+
+  & > span {
+    color: #fff;
+    background-color: $content-header-background-color;
+    width: 100%;
+    display: block;
+    padding: 0.3em;
+    font-size: 120%;
+  }
+
+  & > div {
+    overflow: auto;
+    height: auto;
+    max-height: 90vh;
+  }
+
+  pre {
+    margin: 0;
+  }
+  table {
+    border-collapse: collapse;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+
+    min-width: 100%;
+
+    tr:nth-child(even) {
+      background-color: rgba($table-header-background-color, 0.1);
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    td, th{
+      height: 100%;
+      vertical-align: top;
+      padding: 0.3em;
+      background-color: rgba(255,255,255, 0.8);
+      vertical-align: bottom;
+      border-bottom: 1px solid rgba($table-header-background-color, 0.1);
+      border-left: 1px solid rgba($table-header-background-color, 0.1);
+    }
+  }
+}
+
+#alloc_table {
+  padding-top: 2em;
+  table {
+    padding: 0;
+    margin: 0;
+
+    min-width: 100%;
+
+    tr:nth-child(even) {
+      background-color: rgba(0,0,0, 0.1);
+    }
+
+    td {
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+}

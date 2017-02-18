@@ -5,7 +5,7 @@ function format_pid_url(pid) {
     return pid
   }
 
-  return `<li><a href="javascript:window.show_process('${pid}')">${pid}</a></li>`
+  return `<li><a href="javascript:window.show_process('${pid}')">${pid.replace(/^Elixir\./, '')}</a></li>`
 }
 
 class ProcessDetail {
