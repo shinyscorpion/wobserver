@@ -1,3 +1,5 @@
+$menu-headerd-color: lighten($menu-background-color, 50%) !default;
+$menu-header-background-color: lighten($menu-background-color, 10%) !default;
 
 #menu {
   box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
@@ -80,8 +82,8 @@
 		text-align: center;
 		height: $menu-header-height;
 		line-height: $menu-header-height;
-		background-color: lighten($menu-background-color, 10%);
-		color: lighten($menu-background-color, 50%);
+		background-color: $menu-header-background-color;
+		color: $menu-headerd-color;
 		font-weight: bold;
 		box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
 

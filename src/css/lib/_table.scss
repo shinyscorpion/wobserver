@@ -53,12 +53,12 @@ table.process_table {
 
   td, th{
     vertical-align: bottom;
-    border-bottom: 1px solid rgba($menu-background-color-selected, 0.1);
+    border-bottom: 1px solid rgba($table-header-background-color, 0.1);
   }
 
   thead {
     color: #fff;
-    background-color: $menu-background-color-selected;
+    background-color: $table-header-background-color;
     //background-color: rgba(0,0,0, 0.1);
     font-size: 105%;
     cursor: pointer;
@@ -69,10 +69,18 @@ table.process_table {
   }
   td {
     padding: 0.3em;
-    background-color: rgba(255,255,255, 0.8);
+    @if (lightness($content-background-color) > 50) {
+      background-color: rgba(255,255,255, 0.8);
+    } @else {
+      background-color: rgba(0,0,0, 0.5);
+    }
   }
 
   tr:nth-child(even) {
-    background-color: rgba($menu-background-color-selected, 0.1);
+    @if (lightness($content-background-color) > 50) {
+      background-color: rgba($table-header-background-color, 0.1);
+    } @else {
+      background-color: #181818;
+    }
   }
 }

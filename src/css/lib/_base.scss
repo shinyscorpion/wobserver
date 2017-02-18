@@ -1,5 +1,12 @@
 @import 'reset';
 
+
+$menu-background-color-selected: darken($menu-background-color, 10%) !default;
+$menu-drop-down-background-color: darken($menu-background-color, 20%) !default;
+
+$table-header-background-color: $menu-background-color-selected !default;
+$content-header-background-color: $table-header-background-color !default;
+
 $breakpoint-small: 720px;
 $breakpoint-medium: (1920px / 2);
 $breakpoint-large: 2000px;
@@ -10,10 +17,8 @@ $menu-button-height: 2.5em;
 $menu-button-height-horizontal: $menu-button-height;
 $menu-header-height: 3em;
 
-$menu-background-color-selected: darken($menu-background-color, 10%);
 $menu-summary-width: 20em;
 $menu-drop-down-height: 15em;
-$menu-drop-down-background-color: darken($menu-background-color, 20%);
 
 $sidebar-width-retracted: 0;
 $sidebar-width-extended: 15em;
