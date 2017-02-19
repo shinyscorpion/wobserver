@@ -102,7 +102,7 @@ defmodule Wobserver.Web.ClientSocket do
       @doc ~S"""
       Gracefully handles websocked terminate.
 
-      The `reason`, req` and `options` are ignored.
+      The `reason`, `req` and `state` are ignored.
       """
       @spec websocket_terminate({atom, any}, :cowboy_req.req, any) :: :ok
       def websocket_terminate(_reason, _req, _state) do
@@ -110,6 +110,13 @@ defmodule Wobserver.Web.ClientSocket do
       end
 
       ## Incoming from client / browser
+      @doc ~S"""
+      Handles incoming messages from the websocket client.
+
+      The `message` is parsed and passed on to the client, which responds with an update `state` and possible reply.
+
+      The `req` is ignored.
+      """
       @spec websocket_handle(
         {:text, String.t},
         req :: :cowboy_req.req,
@@ -146,6 +153,13 @@ defmodule Wobserver.Web.ClientSocket do
       end
 
       ## Outgoing
+      @doc ~S"""
+      Handles incoming messages from processes.
+
+      The `message` is passed on to the client, which responds with an update `state` and possible reply.
+
+      The `req` is ignored.
+      """
       @spec websocket_info(
         message :: any,
         req :: :cowboy_req.req,
@@ -174,6 +188,9 @@ defmodule Wobserver.Web.ClientSocket do
   # Helpers
 
   ## Command
+  @doc ~S"""
+  Parses the JSON `payload` to an atom command and map data.
+  """
   @spec parse_command(payload :: String.t) :: atom | {atom, any}
   def parse_command(payload) do
     command_data = Poison.decode!(payload)
@@ -191,6 +208,13 @@ defmodule Wobserver.Web.ClientSocket do
     end
   end
 
+  @doc ~S"""
+  Send a JSON encoded to the websocket client.
+
+  The given `message` is JSON encoded (exception: `:noreply`).
+  The `socket_state` is used updated to reflect changes made by the client.
+  The cowboy `req` is returned untouched.
+  """
   @spec send_response(
     message ::  {:noreply, any}
               | {:reply, atom | list(atom), any}
@@ -227,6 +251,11 @@ defmodule Wobserver.Web.ClientSocket do
     send_response({:reply, type, nil, state}, socket_state, req)
   end
 
+  @doc """
+  Sets up a websocket proxy to a given `proxy`.
+
+  The `state` is modified to add in the new proxy, while `req` is returned untouched.
+  """
   @spec setup_proxy(proxy :: String.t, state :: map, req :: :cowboy_req.req) ::
     {:reply, {:text, String.t}, :cowboy_req.req, map}
     | {:ok, :cowboy_req.req, map}
