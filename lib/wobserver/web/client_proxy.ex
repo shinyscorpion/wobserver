@@ -7,6 +7,7 @@ defmodule Wobserver.Web.ClientProxy do
 
   @behaviour :websocket_client
 
+  @doc false
   @spec connect(url :: String.t, client :: pid) ::
     {:ok, pid}
     | any
@@ -28,6 +29,7 @@ defmodule Wobserver.Web.ClientProxy do
     end
   end
 
+  @doc false
   @spec init(state :: [any]) :: {:reconnect, map}
   def init([state]) do
     {:reconnect, state}
