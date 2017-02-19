@@ -46,7 +46,9 @@ defmodule Wobserver.Util.Metrics do
   end
 
   @doc ~S"""
-  Registers a metric or metric generator with `:wobserver`.
+  Registers a metrics or metric generators with `:wobserver`.
+
+  The `metrics` parameter must always be a list of metrics or metric generators.
 
   Returns true if succesfully added. (otherwise false)
 
