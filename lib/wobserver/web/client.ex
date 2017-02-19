@@ -22,6 +22,13 @@ defmodule Wobserver.Web.Client do
     {:ok, %{}}
   end
 
+  @doc ~S"""
+  Handles the `command` given by the websocket interface.
+
+  The current `state` is passed and can be modified.
+
+  Returns a map as state.
+  """
   @spec client_handle(atom | list(atom), state :: map) ::
     {:reply, atom | list(atom), map, map}
     | {:reply, atom | list(atom), map}
@@ -98,6 +105,11 @@ defmodule Wobserver.Web.Client do
     end
   end
 
+  @doc ~S"""
+  Handles process messages.
+
+  Should not be used, the `do` is ignored and the `state` is returned unmodified.
+  """
   @spec client_info(any, state :: map) :: {:noreply, map}
   def client_info(_do, state) do
     {:noreply, state}
