@@ -43,7 +43,7 @@ defmodule Wobserver.Util.Process do
   ]
 
   @doc ~S"""
-  Turns the argument into a pid or if not possible returns `nil`.
+  Turns the argument `pid` into a pid or if not possible returns `nil`.
 
   It will accept:
     - pids
@@ -124,7 +124,7 @@ defmodule Wobserver.Util.Process do
   def pid(_), do: nil
 
   @doc ~S"""
-  Turns the argument into a pid or if not possible raises error.
+  Turns the argument `pid` into a pid or if not possible raises error.
 
   For example see: `Wobserver.Util.Process.pid/1`.
   """
@@ -141,7 +141,7 @@ defmodule Wobserver.Util.Process do
   end
 
   @doc ~S"""
-  Retreives a complete overview of process stats.
+  Creates a complete overview of process stats based on the given `pid`.
 
   Including but not limited to:
     - `id`, the process pid
@@ -180,7 +180,7 @@ defmodule Wobserver.Util.Process do
   end
 
   @doc ~S"""
-  Retreives formatted meta information about the process.
+  Creates formatted meta information about the process based on the given `pid`.
 
   The information contains:
     - `init`, initial function or name.
@@ -193,7 +193,7 @@ defmodule Wobserver.Util.Process do
     do: pid |> process_info(@process_meta, &structure_meta/2)
 
   @doc ~S"""
-  Retreives formatted summary information about the process.
+  Creates formatted summary about the process based on the given `pid`.
 
   Every summary contains:
     - `id`, the process pid.
