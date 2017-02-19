@@ -7,20 +7,16 @@ defmodule Mix.Tasks.Build do
 
   @shortdoc "Run through all the build steps for wobserver."
 
-  @spec execute(String.t, String.t, [String.t]) :: any
-  defp execute(label, command, options) do
-    label_padded = String.pad_trailing("  #{label}...", 30, " ")
-    IO.write label_padded
-    case System.cmd(command, options, [stderr_to_stdout: true]) do
-      {_, 0} ->
-        IO.puts " \e[32msuccess\e[0m"
-      {output, _} ->
-        IO.puts " \e[31mfailed\e[0m"
-        IO.puts output
-        System.halt(1)
-    end
-  end
+  @doc ~S"""
+  Run through all the build steps for wobserver.
 
+  The following steps are performed:
+    - `gulp` (deploy)
+    - `building assets.ex`
+    - `compile`
+    - `docs`
+    - `hex.build`
+  """
   @spec run([binary]) :: any
   def run(_) do
     IO.puts "Building \e[44mwobserver\e[0m:"
@@ -34,6 +30,20 @@ defmodule Mix.Tasks.Build do
     execute "Packaging wobserver", "mix", ["hex.build"]
 
     IO.puts "\n\e[44mwobserver\e[0m packaged."
+  end
+
+  @spec execute(String.t, String.t, [String.t]) :: any
+  defp execute(label, command, options) do
+    label_padded = String.pad_trailing("  #{label}...", 30, " ")
+    IO.write label_padded
+    case System.cmd(command, options, [stderr_to_stdout: true]) do
+      {_, 0} ->
+        IO.puts " \e[32msuccess\e[0m"
+      {output, _} ->
+        IO.puts " \e[31mfailed\e[0m"
+        IO.puts output
+        System.halt(1)
+    end
   end
 
   defp load_asset(asset) do
