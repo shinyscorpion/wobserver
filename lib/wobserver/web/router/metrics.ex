@@ -8,15 +8,12 @@ defmodule Wobserver.Web.Router.Metrics do
     - `/io` => IO metrics for the local node.
   """
 
-  use Plug.Router
+  use Wobserver.Web.Router.Base
 
   alias Wobserver.Util.Metrics
   alias Wobserver.Util.Metrics.Formatter
   alias Wobserver.Util.Node.Discovery
   alias Wobserver.Util.Node.Remote
-
-  plug :match
-  plug :dispatch
 
   match "/" do
     data =

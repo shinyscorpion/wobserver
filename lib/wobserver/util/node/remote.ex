@@ -39,6 +39,9 @@ defmodule Wobserver.Util.Node.Remote do
     end
   end
 
+  @doc ~S"""
+  Collects metrics from a given `remote_node`.
+  """
   @spec metrics(remote_node :: map) :: String.t | :error
   def metrics(remote_node)
 
@@ -52,13 +55,21 @@ defmodule Wobserver.Util.Node.Remote do
     |> Formatter.format_all
   end
 
+  @doc ~S"""
+  Performs an api call using the `path` on the `remote_node` and returns the result.
+  """
   @spec api(remote_node :: map, path :: String.t) :: String.t | :error
   def api(remote_node, path) do
     remote_node
     |> call("#{@remote_url_prefix}/api" <> path)
   end
 
+  @doc ~S"""
+  Sets up a websocket connection to the given `remote_node`.
+  """
   @spec socket_proxy(atom | map) :: {pid, String.t} | {:error, String.t}
+  def socket_proxy(remote_node)
+
   def socket_proxy(%{local?: true}), do: socket_proxy(:local)
 
   def socket_proxy(%{name: name, host: host, port: port}) do

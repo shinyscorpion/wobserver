@@ -3,11 +3,6 @@ lib/mix/tasks/analyze.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour 
 lib/mix/tasks/build.ex:1: Callback info about the 'Elixir.Mix.Task' behaviour is not available
 lib/wobserver/web/client.ex:18: Overloaded contract for 'Elixir.Wobserver.Web.Client':client_handle/2 has overlapping domains; such contracts are currently unsupported and are simply ignored
 lib/wobserver/web/client.ex:19: Overloaded contract for 'Elixir.Wobserver.Web.Client':client_handle/2 has overlapping domains; such contracts are currently unsupported and are simply ignored
-Unknown functions:
-  appmon_info:app/4
-  appmon_info:app_ctrl/4
-  appmon_info:start_link/3
-  observer_backend:etop_collect/1
 Unknown types:
   'Elixir.Access':get/2
 done (warnings were emitted)

@@ -18,6 +18,19 @@ defmodule Wobserver.Application do
     Application.get_env(:wobserver, :port, 4001)
   end
 
+  @doc ~S"""
+  Starts `wobserver`.
+
+  The option `:mode` is used to determine how to start `wobserver`.
+
+  The following values are possible:
+    - `:standalone`, starts a supervisor that supervises cowboy.
+    - `:plug`, passes the Agent storage of the metrics back as pid, without starting any extra processes.
+
+  In `:plug` mode no cowboy/ranch server is started, so the `wobserver` router will need to be called from somewhere else.
+
+  **Note:** both `type` and `args` are unused.
+  """
   @spec start(term, term) ::
     {:ok, pid} |
     {:ok, pid, state :: any} |
