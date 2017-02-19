@@ -17,7 +17,7 @@ defmodule Wobserver.Table do
   end
 
   @doc """
-  Retreives table information.
+  Creates an overview of table information based on the given `table` atom or number.
 
   If `include_data` is set to `true`, it will also contain the table data.
   """
@@ -48,7 +48,7 @@ defmodule Wobserver.Table do
   end
 
   @doc ~S"""
-  Sanitizes a table name and returns either the table id or name.
+  Sanitizes a `table` name and returns either the table id or name.
 
   Example:
   ```bash
