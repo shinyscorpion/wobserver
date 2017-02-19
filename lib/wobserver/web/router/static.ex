@@ -9,12 +9,9 @@ defmodule Wobserver.Web.Router.Static do
     - `/license`, for the *MIT* license information.
   """
 
-  use Plug.Router
+  use Wobserver.Web.Router.Base
 
   alias Wobserver.Assets
-
-  plug :match
-  plug :dispatch
 
   get "/" do
     conn
