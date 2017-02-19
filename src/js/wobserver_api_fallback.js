@@ -10,10 +10,11 @@ class WobserverApiFallback {
   constructor(host, node = "local") {
     this.host = host;
     this.node = node;
+    this.connected = true;
   }
 
   command(command, data = null) {
-    console.log('Send fallback command');
+    fetch(build_url(this.host, command, this.node))
   }
 
   command_promise(command, data = null) {
@@ -24,7 +25,18 @@ class WobserverApiFallback {
       timestamp: Date.now() / 1000 | 0,
       type: command,
     } } )
-    .catch( _ => {} );
+    .then(e => {
+      if( !this.connected ){
+        this.connected = true;
+        this.on_reconnect()
+      }
+
+      return e;
+    })
+    .catch(_ => {
+      this.connected = false;
+      this.on_disconnect();
+    });
   }
 
   set_node(node) {
