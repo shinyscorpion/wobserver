@@ -20,11 +20,13 @@ defmodule Mix.Tasks.Analyze do
     IO.puts "Running:"
     execute "mix", ["credo", "--strict"]
     execute "mix", ["dialyzer", "--halt-exit-status"]
-    execute "mix", ["coveralls.html"], true
+    execute "mix", ["coveralls.html"], fn output ->
+      if !String.contains?(output, "[TOTAL] 100.0%"), do: IO.write output
+    end
   end
 
-  @spec execute(String.t, [String.t], boolean) :: any
-  defp execute(command, options, show_output \\ false) do
+  @spec execute(String.t, [String.t], fun | nil) :: any
+  defp execute(command, options, post_process \\ nil) do
     commands = ["-q", "/dev/null", command]
 
     label = "\e[1m#{command} #{Enum.join(options, " ")}\e[0m";
@@ -38,7 +40,7 @@ defmodule Mix.Tasks.Analyze do
       {output, 0} ->
         IO.puts "\e[32msuccess\e[0m"
 
-        if show_output, do: IO.puts output
+        if post_process, do: post_process.(output)
       {output, _} ->
         IO.puts "\e[31mfailed\e[0m"
         IO.puts output
