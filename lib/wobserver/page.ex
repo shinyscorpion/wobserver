@@ -73,7 +73,7 @@ defmodule Wobserver.Page do
   end
 
   @doc ~S"""
-  Find the page for a given command.
+  Find the page for a given `command`
 
   Returns `:page_not_found`, if no page can be found.
   """
@@ -88,7 +88,7 @@ defmodule Wobserver.Page do
   end
 
   @doc ~S"""
-  Calls the function associated with the command/page.
+  Calls the function associated with the `command`/page.
 
   Returns the result of the function or `:page_not_found`, if the page can not be found.
   """
@@ -99,7 +99,7 @@ defmodule Wobserver.Page do
   def call(_), do: :page_not_found
 
   @doc ~S"""
-  Registers a page with `:wobserver`.
+  Registers a `page` with `:wobserver`.
 
   Returns true if succesfully added. (otherwise false)
 
@@ -143,9 +143,18 @@ defmodule Wobserver.Page do
   def register(_), do: false
 
   @doc ~S"""
-  Registers a page with `:wobserver`.
+  Registers a `page` with `:wobserver`.
 
-  For more information and types see: `Wobserver.Page.register/1`.
+  The arguments are used as followed:
+    - `title`, the name of the page. Is used for the web interface menu.
+    - `command`, single atom to associate the page with.
+    - `callback`, function to be evaluated, when the a api is called or page is viewd.
+                  The result is converted to JSON and displayed.
+    - `options`, options for the page.
+
+  The following options can be set:
+    - `api_only` (`boolean`), if set to true the page won't show up in the web interface, but will only be available as API.
+    - `refresh` (`float`, 0-1), sets the refresh time factor. Used in the web interface to refresh the data on the page. Set to `0` for no refresh.
   """
   @spec register(
     title :: String.t,
