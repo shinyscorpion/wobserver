@@ -9,11 +9,16 @@ defmodule Wobserver do
   @doc ~S"""
   Registers external application to integrate with `:wobserver`.
 
-  The following can be registered:
+  The registration is done by passing a `type` and the `data` to register.
+  The `data` is usually passed on to a specialized function.
+
+  The following types can be registered:
     - `:page`, see: `Wobserver.Page.register/1`.
     - `:metric`, see: `Wobserver.Util.Metrics.register/1`.
   """
-  @spec register(:page, page :: Page.data) :: boolean
+  @spec register(type :: atom, data :: any) :: boolean
+  def register(type, data)
+
   def register(:page, page), do: Page.register(page)
   def register(:metric, metric), do: Metrics.register(metric)
 
