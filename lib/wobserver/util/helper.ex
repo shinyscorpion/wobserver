@@ -7,6 +7,11 @@ defmodule Wobserver.Util.Helper do
   alias Encoder.BitString
 
   defimpl Encoder, for: PID do
+    @doc ~S"""
+    JSON encodes a `PID`.
+
+    Uses `inspect/1` to turn the `pid` into a String and passes the `options` to `BitString.encode/1`.
+    """
     @spec encode(pid :: pid, options :: any) :: String.t
     def encode(pid, options) do
       pid
@@ -16,6 +21,11 @@ defmodule Wobserver.Util.Helper do
   end
 
   defimpl Encoder, for: Port do
+    @doc ~S"""
+    JSON encodes a `Port`.
+
+    Uses `inspect/1` to turn the `port` into a String and passes the `options` to `BitString.encode/1`.
+    """
     @spec encode(port :: port, options :: any) :: String.t
     def encode(port, options) do
       port
@@ -26,6 +36,8 @@ defmodule Wobserver.Util.Helper do
 
   @doc ~S"""
   Converts Strings to module names or atoms.
+
+  The given `module` string will be turned into atoms that get concatted.
   """
   @spec string_to_module(module :: String.t) :: atom
   def string_to_module(module) do
@@ -45,6 +57,8 @@ defmodule Wobserver.Util.Helper do
 
   @doc ~S"""
   Formats function information as readable string.
+
+  Only name will be return if only `name` is given.
 
   Example:
   ```bash
@@ -67,6 +81,8 @@ defmodule Wobserver.Util.Helper do
 
   @doc ~S"""
   Parallel map implemented with `Task`.
+
+  Maps the `function` over the `enum` using `Task.async/1` and `Task.await/1`.
   """
   @spec parallel_map(enum :: list, function :: fun) :: list
   def parallel_map(enum, function) do
