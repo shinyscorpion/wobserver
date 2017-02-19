@@ -749,6 +749,16 @@ const WobserverRender = {
   show_table: (table, wobserver) => {
     new TableDetail(table, wobserver).show();
   },
+  disconnect_popup: (show) => {
+    if( show ){
+      Popup.show(`
+        <div id="table_information">
+          <span>Connection lost.</span>
+        </div>`);
+    } else {
+      Popup.hide();
+    }
+  },
   show_custom: e => {
     let content = document.getElementById('content');
 
