@@ -5,6 +5,15 @@ defmodule Wobserver.Util.Metrics.Formatter do
 
   alias Wobserver.Util.Node.Discovery
 
+  @doc ~S"""
+  Format a set of `data` with a `label`.
+
+  The `data` must be given as a `list` of tuples with the following format: `{value, labels}`, where `labels` is a keyword list with labels and their values.
+
+  The following options can also be given:
+    - `type`, the type of the metric. The following values are currently supported: `:gauge`, `:counter`.
+    - `help`, a single line text description of the metric.
+  """
   @callback format_data(
     name :: String.t,
     data :: [{integer | float, keyword}],
@@ -12,14 +21,36 @@ defmodule Wobserver.Util.Metrics.Formatter do
     help :: String.t
   ) :: String.t
 
+  @doc ~S"""
+  Combines formatted metrics together.
+
+  Arguments:
+    - `metrics`, a list of formatted metrics for one node.
+  """
   @callback combine_metrics(
     metrics :: list[String.t]
   ) :: String.t
 
+  @doc ~S"""
+  Merges formatted sets of metrics from different nodes together.
+
+  The merge should prevent double declarations of help and type.
+
+  Arguments:
+    - `metrics`, a list of formatted sets metrics for multiple node.
+  """
   @callback merge_metrics(
     metrics :: list[String.t]
   ) :: String.t
 
+  @doc ~S"""
+  Format a set of `data` with a `label` for a metric parser/aggregater.
+
+  The following options can also be given:
+    - `type`, the type of the metric. The following values are currently supported: `:gauge`, `:counter`.
+    - `help`, a single line text description of the metric.
+    - `formatter`, a module implementing the `Formatter` behaviour to format metrics.
+  """
   @spec format(
     data :: any,
     label :: String.t,
@@ -87,7 +118,7 @@ defmodule Wobserver.Util.Metrics.Formatter do
   end
 
   @doc ~S"""
-  Formats a keyword list of metrics.
+  Formats a keyword list of metrics using a given `formatter`.
 
   **Metrics**
 
@@ -168,7 +199,12 @@ defmodule Wobserver.Util.Metrics.Formatter do
   end
 
   @doc ~S"""
-  Merges formatted metrics together.
+  Merges formatted sets of metrics from different nodes together using a given `formatter`.
+
+  The merge should prevent double declarations of help and type.
+
+  Arguments:
+    - `metrics`, a list of formatted sets metrics for multiple node.
   """
   @spec merge_metrics(metrics :: list(String.t), formatter :: atom)
    :: String.t | :error

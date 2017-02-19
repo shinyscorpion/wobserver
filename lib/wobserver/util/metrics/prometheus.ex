@@ -3,10 +3,67 @@ defmodule Wobserver.Util.Metrics.Prometheus do
   Prometheus formatter.
 
   Formats metrics in a for Prometheus readable way.
-  See: https://prometheus.io/docs/instrumenting/writing_exporters/
+  See: [https://prometheus.io/docs/instrumenting/writing_exporters/](https://prometheus.io/docs/instrumenting/writing_exporters/)
   """
 
   @behaviour Wobserver.Util.Metrics.Formatter
+
+  @doc ~S"""
+  Format a set of `data` with a `label` for a Prometheus.
+
+  The `data` must be given as a `list` of tuples with the following format: `{value, labels}`, where `labels` is a keyword list with labels and their values.
+
+  The following options can also be given:
+    - `type`, the type of the metric. The following values are currently supported: `:gauge`, `:counter`.
+    - `help`, a single line text description of the metric.
+  """
+  @spec format_data(
+    name :: String.t,
+    data :: [{integer | float, keyword}],
+    type :: :atom,
+    help :: String.t
+  ) :: String.t
+  def format_data(name, data, type, help) do
+    "#{format_help name, help}#{format_type name, type}#{format_values name, data}"
+  end
+
+  @doc ~S"""
+  Combines formatted metrics together.
+
+  Arguments:
+    - `metrics`, a list of formatted metrics for one node.
+
+  Example:
+      iex> combine_metrics ["metric1{node="127.0.0.1"} 5\n", "metric2{node="127.0.0.1"} 5\n"]
+      "metric1{node="127.0.0.1"} 5\n", "metric2{node="127.0.0.1"} 5\n"
+  """
+  @spec combine_metrics(
+    metrics :: list[String.t]
+  ) :: String.t
+  def combine_metrics(metrics), do: Enum.join(metrics)
+
+  @doc ~S"""
+  Merges formatted sets of metrics from different nodes together.
+
+  The merge will filter out double declarations of help and type.
+
+  Arguments:
+    - `metrics`, a list of formatted sets metrics for multiple node.
+
+  Example:
+      iex> combine_metrics ["metric{node="192.168.0.6"} 5\n", "metric{node="192.168.0.5"} 5\n"]
+      "metric{node="192.168.0.6"} 5\n", "metric{node="192.168.0.7"} 5\n"
+  """
+  @spec merge_metrics(
+    metrics :: list[String.t]
+  ) :: String.t
+  def merge_metrics(metrics) do
+    {combined, _} = Enum.reduce(metrics, {"", []}, &filter/2)
+
+    combined
+  end
+
+  # Helpers
 
   defp format_help(_name, nil), do: ""
   defp format_help(name, help) do
@@ -28,16 +85,6 @@ defmodule Wobserver.Util.Metrics.Prometheus do
     data
     |> Enum.map(fn {value, labels} -> "#{name}{#{format_labels labels}} #{value}\n" end)
     |> Enum.join
-  end
-
-  @spec format_data(
-    name :: String.t,
-    data :: [{integer | float, keyword}],
-    type :: :atom,
-    help :: String.t
-  ) :: String.t
-  def format_data(name, data, type, help) do
-    "#{format_help name, help}#{format_type name, type}#{format_values name, data}"
   end
 
   defp analyze_metrics(metrics) do
@@ -73,19 +120,5 @@ defmodule Wobserver.Util.Metrics.Prometheus do
       |> Kernel.++(filter)
 
     {metrics <> filtered_metric, updated_filter}
-  end
-
-  @spec combine_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
-  def combine_metrics(metrics), do: Enum.join(metrics)
-
-  @spec merge_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
-  def merge_metrics(metrics) do
-    {combined, _} = Enum.reduce(metrics, {"", []}, &filter/2)
-
-    combined
   end
 end
