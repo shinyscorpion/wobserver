@@ -55,6 +55,11 @@ defmodule Wobserver.Util.Node.Discovery do
 
   @doc ~S"""
   Searches for a node in the discovered nodes.
+
+  The `search` will be used to filter through names, hosts and host:port combinations.
+
+  The special values for search are:
+    - `local`, will always return the local node.
   """
   @spec find(String.t) ::
     :local
@@ -77,6 +82,9 @@ defmodule Wobserver.Util.Node.Discovery do
     end
   end
 
+  @doc ~S"""
+  Retuns the local node.
+  """
   def local do
     discover()
     |> Enum.find(fn %{local?: is_local} -> is_local end)
