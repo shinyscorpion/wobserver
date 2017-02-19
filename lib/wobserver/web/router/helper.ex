@@ -8,7 +8,9 @@ defmodule Wobserver.Web.Router.Helper do
   @doc ~S"""
   Sends a JSON encoded response back to the client.
 
-  The https status will be `200` or `500` if the given data can not be JSON encoded.
+  The https status will be `200` or `500` if the given `data` can not be JSON encoded.
+
+  The `conn` content type is set to `application/json`, only if the data could be encoded.
   """
   @spec send_json_resp(
     data :: atom | String.t | map | list,
