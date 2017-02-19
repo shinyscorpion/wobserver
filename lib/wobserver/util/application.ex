@@ -23,6 +23,8 @@ defmodule Wobserver.Util.Application do
   @doc ~S"""
   Retreives information about the application.
 
+  The given `app` atom is used to find the started application.
+
   Containing:
     - `pid`, the process id or port id.
     - `name`, the registered name or pid/port.
