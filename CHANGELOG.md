@@ -3,6 +3,12 @@
 ## 0.1.6
 
 * Improved interface style.
+* Improved documentation.
+* Fixed assets over HTTPS.
+* Fixed overactive keep-alive.
+* Fixed url redirect.
+* Fixed disconnect/reconnect of websocket.
+
 
 ## 0.1.5
 
@@ -35,7 +41,7 @@
 
 ## 0.1.1
 
-* Code cleanup and general Fixedes.
+* Code cleanup and general fixes.
 
 
 ## 0.1.0
