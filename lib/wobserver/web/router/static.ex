@@ -14,9 +14,16 @@ defmodule Wobserver.Web.Router.Static do
   alias Wobserver.Assets
 
   get "/" do
-    conn
-    |> put_resp_content_type("text/html")
-    |> send_asset("assets/index.html", &Assets.html/0);
+    case String.ends_with?(conn.request_path, "/") do
+      true ->
+        conn
+        |> put_resp_content_type("text/html")
+        |> send_asset("assets/index.html", &Assets.html/0);
+      false ->
+        conn
+        |> put_resp_header("location", conn.request_path <> "/")
+        |> resp(301, "Redirecting to Wobserver.")
+    end
   end
 
   get "/main.css" do
