@@ -27,7 +27,7 @@ defmodule Wobserver.Util.ApplicationTest do
         pid: pid,
         name: name,
         meta: %{
-          class: :unknown
+          class: :application
         },
         children: children,
       } = Application.info(:wobserver)

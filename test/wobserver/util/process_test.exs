@@ -92,7 +92,7 @@ defmodule Wobserver.Util.ProcessTest do
     test "returns init", context do
       %{init: init} = context[:logger]
 
-      assert init == "proc_lib.init_p/5"
+      assert init == "gen_event.init_it/6"
     end
 
     test "returns current", context do
@@ -180,7 +180,7 @@ defmodule Wobserver.Util.ProcessTest do
     test "returns init", context do
       %{init: init} = context[:logger]
 
-      assert init == "proc_lib.init_p/5"
+      assert init == "gen_event.init_it/6"
     end
 
     test "returns current", context do

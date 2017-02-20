@@ -412,9 +412,11 @@ const WobserverRender = {
     }
 
     let formatted_processes = processes.map( process => {
+      let init = process.init.startsWith("Elixir.") ? process.init.substr(7) : process.init;
+
       return `<tr>
         <td><a href="javascript:window.show_process('${process.pid}')">${process.pid}</a></td>
-        <td>${process.init}</td>
+        <td>${init}</td>
         <td>${process.reductions}</td>
         <td>${process.memory}</td>
         <td>${process.message_queue_length}</td>

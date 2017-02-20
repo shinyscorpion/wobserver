@@ -236,11 +236,14 @@ defmodule Wobserver.Util.Process do
   @doc false
   @spec initial_call(data :: keyword) :: {atom, atom, integer} | atom
   def initial_call(data) do
-    case Keyword.get(data, :initial_call, nil) do
+    dictionary_init =
+      data
+      |> Keyword.get(:dictionary, [])
+      |> Keyword.get(:"$initial_call", nil)
+
+    case dictionary_init do
       nil ->
-        data
-        |> Keyword.get(:dictionary, [])
-        |> Keyword.get(:"$initial_call", nil)
+        Keyword.get(data, :initial_call, nil)
       call ->
         call
     end
