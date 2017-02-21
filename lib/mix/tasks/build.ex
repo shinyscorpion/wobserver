@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Build do
   def run(_) do
     IO.puts "Building \e[44mwobserver\e[0m:"
 
-    execute "Building web assets", "gulp", ["deploy"]
+    execute "Building web assets", Path.absname("node_modules/.bin/gulp"), ["deploy"]
     IO.write "  Building asset module...    "
     pack()
     IO.puts " \e[32msuccess\e[0m"
