@@ -14,7 +14,7 @@ install:
   - mix deps.get
   - mix build
 after_script:
-  - MIX_ENV=test mix inch.report
+  - MIX_ENV=test mix do deps.get, compile, inch.report, coveralls.travis
 cache:
   directories:
     - node_modules

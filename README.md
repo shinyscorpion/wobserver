@@ -2,6 +2,7 @@
 
 [![Hex.pm](https://img.shields.io/hexpm/v/wobserver.svg "Hex")](https://hex.pm/packages/wobserver)
 [![Build Status](https://travis-ci.org/shinyscorpion/wobserver.svg?branch=master)](https://travis-ci.org/shinyscorpion/wobserver)
+[![Coverage Status](https://coveralls.io/repos/github/shinyscorpion/wobserver/badge.svg?branch=master)](https://coveralls.io/github/shinyscorpion/wobserver?branch=master)
 [![Inline docs](http://inch-ci.org/github/shinyscorpion/wobserver.svg?branch=master)](http://inch-ci.org/github/shinyscorpion/wobserver)
 [![Deps Status](https://beta.hexfaktor.org/badge/all/github/shinyscorpion/wobserver.svg)](https://beta.hexfaktor.org/github/shinyscorpion/wobserver)
 [![Hex.pm](https://img.shields.io/hexpm/l/wobserver.svg "License")](LICENSE)
