@@ -610,12 +610,21 @@ Plug mode prevents `:wobserver` from starting `:cowboy` (ranch).
 Set `mode` to `:plug` in the `:wobserver` configuration to use plug mode.
 Set `remote_url_prefix` to the url prefix you put `:wobserver` behind to make sure dns node discovery still functions.
 
+
+##### cowboy
+
+Plug mode prevents `:wobserver` from starting `:cowboy` (ranch). Set `mode` to `:plug` in the `:wobserver` 
+configuration to use plug mode. Set `remote_url_prefix` to the url prefix you put `:wobserver` behind to make 
+sure dns node discovery still functions.
+
 Add the following line of code to the application's router to forward requests to `:wobserver`:
+
 ```elixir
   forward "/wobserver", to: Wobserver.Web.Router
 ```
 
 Add the following option to the `:cowboy` child_spec to enable use of the `:wobserver` websocket:
+
 ```elixir
 dispatch: [
     {:_, [
@@ -625,7 +634,22 @@ dispatch: [
   ],
 ```
 
-Example:
+##### Phoenix
+
+Add the following line of code to the Phoenix router to forward requests to `:wobserver`:
+
+```elixir
+  forward "/wobserver", Wobserver.Web.Router
+```
+
+Add the following option to your Phoenix applications Endpoint to enable use of the `:wobserver` websocket (the 
+path should match what is in the 'forward' in your router):
+
+```elixir
+  socket "/wobserver", Wobserver.Web.PhoenixSocket
+```
+
+##### Cowboy Example
 
 __config.exs__
 ```elixir
