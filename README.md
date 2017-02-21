@@ -89,8 +89,8 @@ __Note:__ Check out [plug mode](#mode-plug) to integrate with a *Phoenix* or oth
 Run the following commands to build the project:
 ```bash
 $ npm install
-$ gulp build
 $ mix deps.get
+$ mix build
 ```
 
 ## Usage
