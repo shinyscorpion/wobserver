@@ -57,6 +57,7 @@ Web based metrics, monitoring, and observer.
         * [Dynamically](#pages-dynamic)
 * [Library Integration](#library-integration)
 * [Improvements](#improvements)
+* [Contributors](#contributors)
 * [license](#License)
 
 
@@ -1013,6 +1014,11 @@ end
   - Cleanup namespaces.
   - Cleanup readme, condense sample output.
   - Overhaul web interface (make fancier/pleasant)
+
+## Contributors
+
+* [OvermindDL1](https://github.com/OvermindDL1) - Phoenix Socket support and lots of issue reports.
+
 
 ## License
 
