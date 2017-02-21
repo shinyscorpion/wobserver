@@ -1,13 +1,19 @@
 # Change log
 
+## 0,.1.7
+
+
+
+
 ## 0.1.6
 
-* Improved interface style.
-* Improved documentation.
-* Fixed assets over HTTPS.
-* Fixed overactive keep-alive.
-* Fixed url redirect.
-* Fixed disconnect/reconnect of websocket.
+* Improved interface style. (#9)
+* Improved documentation. (#12)
+* Fixed assets over HTTPS. (#7)
+* Fixed overactive keep-alive. (#10)
+* Fixed url redirect. (#6)
+* Fixed disconnect/reconnect of websocket. (#5)
+* Fixed crash involving port list.  (#13)
 
 
 ## 0.1.5
@@ -18,6 +24,7 @@
 * Improved package build tools.
 * Improved node discovery in plug mode.
 * Fixed distillery support. (#3)
+
 
 ## 0.1.4
 
