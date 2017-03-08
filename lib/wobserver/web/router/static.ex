@@ -21,7 +21,7 @@ defmodule Wobserver.Web.Router.Static do
         |> send_asset("assets/index.html", &Assets.html/0);
       false ->
         conn
-        |> put_resp_header("location", conn.request_path <> "/")
+        |> put_resp_header("location", "./wobserver/")
         |> resp(301, "Redirecting to Wobserver.")
     end
   end
