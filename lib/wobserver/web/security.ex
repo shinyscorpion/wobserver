@@ -1,5 +1,13 @@
 defmodule Wobserver.Security do
-  @moduledoc false
+  @moduledoc ~S"""
+  Handles basic websocket authentication.
+
+  A different module with the following methods can be set as `:security` in the config:
+
+   - `authenticate(Conn.t) :: Conn.t`
+   - `authenticated?(Conn.t) :: boolean`
+   - `authenticated?(:cowboy_req.req) :: boolean`
+  """
 
   alias Plug.Conn
 
