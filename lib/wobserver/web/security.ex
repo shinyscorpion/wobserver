@@ -5,6 +5,9 @@ defmodule Wobserver.Security do
 
   @secret "security-secret"
 
+  @doc ~S"""
+  Authenticates a given `conn`.
+  """
   @spec authenticate(Conn.t) :: Conn.t
   def authenticate(conn) do
     Conn.put_resp_cookie(
@@ -14,6 +17,9 @@ defmodule Wobserver.Security do
     )
   end
 
+  @doc ~S"""
+  Checks whether a given `conn` is authenticated.
+  """
   @spec authenticated?(Conn.t) :: boolean
   def authenticated?(conn = %Conn{}) do
     conn = Conn.fetch_cookies(conn)
@@ -24,6 +30,9 @@ defmodule Wobserver.Security do
     end
   end
 
+  @doc ~S"""
+  Checks whether a given `req` is authenticated.
+  """
   @spec authenticated?(:cowboy_req.req) :: boolean
   def authenticated?(req) do
     {ip, _} = elem(req, 7)
