@@ -28,6 +28,7 @@ defmodule Wobserver.Web.ClientSocket do
 
   require Logger
 
+  alias Wobserver.Security
   alias Wobserver.Util.Node.Discovery
   alias Wobserver.Util.Node.Remote
   alias Wobserver.Web.ClientSocket
@@ -77,8 +78,11 @@ defmodule Wobserver.Web.ClientSocket do
       """
       @spec init(any, :cowboy_req.req, any) ::
         {:upgrade, :protocol, :cowboy_websocket}
-      def init(_, _req, _options) do
-        {:upgrade, :protocol, :cowboy_websocket}
+      def init(_, req, _options) do
+        case Security.authenticated?(req) do
+          true -> {:upgrade, :protocol, :cowboy_websocket}
+          false -> {:ok, req, :cowboy_websocket}
+        end
       end
 
       @doc ~S"""

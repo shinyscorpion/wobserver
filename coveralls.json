@@ -6,6 +6,7 @@
     "lib/wobserver/web/client_socket.ex",
     "lib/wobserver/web/client_proxy.ex",
     "lib/wobserver/web/phoenix_socket.ex",
+    "lib/wobserver/web/security.ex",
     "lib/wobserver/web/router/static.ex"
   ],
   "coverage_options": {

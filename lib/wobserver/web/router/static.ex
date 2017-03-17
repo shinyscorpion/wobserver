@@ -12,8 +12,11 @@ defmodule Wobserver.Web.Router.Static do
   use Wobserver.Web.Router.Base
 
   alias Wobserver.Assets
+  alias Wobserver.Security
 
   get "/" do
+    conn = Security.authenticate(conn)
+
     case String.ends_with?(conn.request_path, "/") do
       true ->
         conn
