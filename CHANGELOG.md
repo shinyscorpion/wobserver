@@ -2,7 +2,9 @@
 
 ## 0,.1.7
 
-
+* Improved assets over HTTPS and baking them in. (#17, #25)
+* Fixed not being able to select in tables. (#30)
+* Fixed divided by 0 in utilization. (#18)
 
 
 ## 0.1.6
