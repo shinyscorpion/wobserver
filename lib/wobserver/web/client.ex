@@ -114,4 +114,12 @@ defmodule Wobserver.Web.Client do
   def client_info(_do, state) do
     {:noreply, state}
   end
+
+  @doc false
+  @spec terminate(any, any, any) :: :ok
+  def terminate(_,_,_), do: :ok
+
+  @doc false
+  @spec handle(:cowboy_req.req, any) :: {:ok, :cowboy_req.req, any}
+  def handle(req, state), do: {:ok, req, state}
 end

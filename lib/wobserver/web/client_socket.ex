@@ -61,6 +61,8 @@ defmodule Wobserver.Web.ClientSocket do
     quote do
       import Wobserver.Web.ClientSocket, only: :functions
 
+      @security Application.get_env(:wobserver, :security, Wobserver.Security)
+
       @behaviour :cowboy_websocket_handler
       @behaviour Wobserver.Web.ClientSocket
 
@@ -77,8 +79,11 @@ defmodule Wobserver.Web.ClientSocket do
       """
       @spec init(any, :cowboy_req.req, any) ::
         {:upgrade, :protocol, :cowboy_websocket}
-      def init(_, _req, _options) do
-        {:upgrade, :protocol, :cowboy_websocket}
+      def init(_, req, _options) do
+        case @security.authenticated?(req) do
+          true -> {:upgrade, :protocol, :cowboy_websocket}
+          false -> {:ok, req, :cowboy_websocket}
+        end
       end
 
       @doc ~S"""

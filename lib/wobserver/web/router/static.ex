@@ -13,7 +13,11 @@ defmodule Wobserver.Web.Router.Static do
 
   alias Wobserver.Assets
 
+  @security Application.get_env(:wobserver, :security, Wobserver.Security)
+
   get "/" do
+    conn = @security.authenticate(conn)
+
     case String.ends_with?(conn.request_path, "/") do
       true ->
         conn

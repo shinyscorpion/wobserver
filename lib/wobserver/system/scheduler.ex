@@ -38,7 +38,9 @@ defmodule Wobserver.System.Scheduler do
       last ->
         get_utilization()
         |> Enum.zip(last)
-        |> Enum.map(fn {{_, u0, t0}, {_, u1, t1}} -> percentage((u1 - u0), (t1 - t0)) end)
+        |> Enum.map(fn {{_, u0, t0}, {_, u1, t1}} ->
+                      percentage((u1 - u0), (t1 - t0))
+                    end)
     end
   end
 
