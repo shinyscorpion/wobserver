@@ -3,7 +3,7 @@ defmodule Wobserver.Security do
 
   alias Plug.Conn
 
-  @secret "security-secret"
+  @secret Application.get_env(:wobserver, :security_key, "secret-key-setting")
 
   @doc ~S"""
   Authenticates a given `conn`.
