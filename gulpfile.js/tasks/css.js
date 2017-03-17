@@ -14,9 +14,9 @@ const sassOptions  = {
 
 gulp.task('css', () => {
   gulp.src(path.join(config.root.src, config.css.src, config.css.pattern))
-    .pipe(sourcemaps.init())
+    // .pipe(sourcemaps.init())
     .pipe(sass(sassOptions).on('error', sass.logError))
-    .pipe(sourcemaps.write())
+    // .pipe(sourcemaps.write())
     .pipe(autoprefixer())
     .pipe(gulp.dest(path.join(config.root.dest, config.css.dest)));
 });

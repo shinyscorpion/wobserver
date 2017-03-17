@@ -2,6 +2,8 @@ $menu-headerd-color: lighten($menu-background-color, 50%) !default;
 $menu-header-background-color: lighten($menu-background-color, 10%) !default;
 
 #menu {
+  @include user-select(none);
+
   box-shadow: inset -10px 0 20px -10px rgba(0, 0, 0, 0.6);
   @media screen and (min-width: $breakpoint-medium) {
 	box-shadow: none;
