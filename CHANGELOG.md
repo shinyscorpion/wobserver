@@ -1,6 +1,9 @@
 # Change log
 
-## 0,.1.7
+## 0.1.8
+
+
+## 0.1.7
 
 * Improved assets over HTTPS and baking them in. (#17, #25)
 * Fixed not being able to select in tables. (#30)
