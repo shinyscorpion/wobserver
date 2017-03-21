@@ -54,9 +54,9 @@ defmodule Mix.Tasks.Build do
 
   defp pack do
     html = load_asset "./assets/index.html"
-    css = load_asset "./assets/main.css";
-    js = load_asset "./assets/app.js";
-    license = load_asset "./LICENSE";
+    css = load_asset "./assets/main.css"
+    js = load_asset "./assets/app.js"
+    license = load_asset "./LICENSE"
 
     File.write! "./lib/wobserver/assets.ex",
     """

@@ -22,7 +22,7 @@ defmodule Wobserver.Web.Router.Static do
       true ->
         conn
         |> put_resp_content_type("text/html")
-        |> send_asset("assets/index.html", &Assets.html/0);
+        |> send_asset("assets/index.html", &Assets.html/0)
       false ->
         conn
         |> put_resp_header("location", conn.request_path <> "/")
@@ -33,18 +33,18 @@ defmodule Wobserver.Web.Router.Static do
   get "/main.css" do
     conn
     |> put_resp_content_type("text/css")
-    |> send_asset("assets/main.css", &Assets.css/0);
+    |> send_asset("assets/main.css", &Assets.css/0)
   end
 
   get "/app.js" do
     conn
     |> put_resp_content_type("application/javascript")
-    |> send_asset("assets/app.js", &Assets.js/0);
+    |> send_asset("assets/app.js", &Assets.js/0)
   end
 
   get "/license" do
     conn
-    |> send_asset("LICENSE", &Assets.license/0);
+    |> send_asset("LICENSE", &Assets.license/0)
   end
 
   match _ do

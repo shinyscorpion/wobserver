@@ -271,7 +271,7 @@ defmodule Wobserver.Util.Process do
 
   defp structure_full(data, pid) do
     gc = Keyword.get(data, :garbage_collection, [])
-    dictionary = Keyword.get(data, :dictionary);
+    dictionary = Keyword.get(data, :dictionary)
 
     %{
       pid: pid,
@@ -299,7 +299,7 @@ defmodule Wobserver.Util.Process do
   end
 
   defp structure_meta(data, pid) do
-    init = initial_call(data);
+    init = initial_call(data)
 
     class =
       case init do
