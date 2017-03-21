@@ -64,12 +64,11 @@ defmodule Wobserver.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:cowboy, "~> 1.0"},
-      {:credo, "~> 0.6", only: [:dev, :test]},
-      {:dialyxir, "~> 0.4", only: [:dev], runtime: false},
-      {:ex_doc, "~> 0.14", only: :dev},
+      {:cowboy, "~> 1.1"},
+      {:credo, "~> 0.7", only: [:dev, :test]},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:ex_doc, "~> 0.15", only: :dev},
       {:excoveralls, "~> 0.6", only: :test},
-      {:ex_doc, "~> 0.14", only: :dev},
       {:httpoison, "~> 0.11"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]},
       {:meck, "~> 0.8.4", only: :test},
