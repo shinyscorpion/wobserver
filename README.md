@@ -9,6 +9,8 @@
 
 Web based metrics, monitoring, and observer.
 
+We are talking about `:wobserver` at [ElixirConf 2017](http://www.elixirconf.eu/#programme). Check out the [presentation and samples](https://github.com/IanLuites/wobserver-elixirconf-2017) and our other talk about [Task Bunny](https://github.com/shinyscorpion/task_bunny).
+
 <a href="http://imgur.com/a/44TR5" target="_blank"><img src="http://i.imgur.com/9rybvU2.gif" alt="Click to see more images." width="210" height="250" /></a>
 
 [_Click to view images_](http://imgur.com/a/44TR5)
