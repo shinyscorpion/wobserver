@@ -58,7 +58,7 @@ defmodule Wobserver do
           url: "https://hexdocs.pm/wobserver/",
         },
         %{
-          name: "Github",
+          name: "GitHub",
           url: "https://github.com/shinyscorpion/wobserver",
         },
       ],
