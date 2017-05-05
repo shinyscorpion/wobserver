@@ -12,6 +12,7 @@ defmodule Wobserver.Security do
   alias Plug.Conn
 
   @secret Application.get_env(:wobserver, :security_key, "secret-key-setting")
+  @verify_remote_ip Application.get_env(:wobserver, :verify_remote_ip, false)
 
   @doc ~S"""
   Authenticates a given `conn`.
@@ -57,11 +58,14 @@ defmodule Wobserver.Security do
 
   @spec generate(tuple, list(tuple)) :: String.t
   defp generate(remote_ip, headers) do
-    ip =
+    ip = if @verify_remote_ip do
       remote_ip
       |> Tuple.to_list
       |> Enum.map(&to_string/1)
       |> Enum.join(".")
+    else
+      ""
+    end
 
     user_agent =
       Enum.find_value(headers, "unknown", fn
