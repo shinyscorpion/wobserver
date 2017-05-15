@@ -152,6 +152,7 @@ defmodule Wobserver.Web.Router.ApiTest do
       case field do
         :port -> 4001
         :discovery -> :custom
+        :metric_format -> Wobserver.Util.Metrics.Prometheus
         :discovery_search -> fn -> [%Wobserver.Util.Node.Remote{name: "remote", host: "85.65.12.4", port: 0}] end
       end
     end
