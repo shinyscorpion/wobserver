@@ -1,8 +1,8 @@
 function build_url(host, command, node = "") {
   if( node == "local" ){
-    return 'http://' + host + '/api/' + encodeURI(command).replace(/#/g, '%23');
+    return location.protocol + "//" + host + '/api/' + encodeURI(command).replace(/#/g, '%23');
   } else {
-    return 'http://' + host + '/api/' + encodeURI(node) + "/" + encodeURI(command).replace(/#/g, '%23');
+    return location.protocol + "//" + host + '/api/' + encodeURI(node) + "/" + encodeURI(command).replace(/#/g, '%23');
   }
 }
 
