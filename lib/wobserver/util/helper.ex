@@ -34,6 +34,20 @@ defmodule Wobserver.Util.Helper do
     end
   end
 
+  defimpl Encoder, for: Reference do
+    @doc ~S"""
+    JSON encodes a `Reference`.
+
+    Uses `inspect/1` to turn the `reference` into a String and passes the `options` to `BitString.encode/1`.
+    """
+    @spec encode(reference :: reference, options :: any) :: String.t
+    def encode(reference, options) do
+      reference
+      |> inspect
+      |> BitString.encode(options)
+    end
+  end
+
   @doc ~S"""
   Converts Strings to module names or atoms.
 

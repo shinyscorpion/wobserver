@@ -4,7 +4,7 @@ defmodule Wobserver.Mixfile do
   def project do
     [
       app: :wobserver,
-      version: "0.1.7",
+      version: "0.1.8",
       elixir: "~> 1.4",
       description: "Web based metrics, monitoring, and observer.",
       package: package(),
@@ -69,11 +69,11 @@ defmodule Wobserver.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_doc, "~> 0.15", only: :dev},
       {:excoveralls, "~> 0.6", only: :test},
-      {:httpoison, "~> 0.11"},
+      {:httpoison, "~> 0.11 or ~> 0.12"},
       {:inch_ex, "~> 0.5", only: [:dev, :test]},
       {:meck, "~> 0.8.4", only: :test},
-      {:plug, "~> 1.3"},
-      {:poison, "~> 2.0 or ~> 3.0"},
+      {:plug, "~> 1.3 or ~> 1.4"},
+      {:poison, "~> 2.0 or ~> 3.1"},
       {:websocket_client, "~> 1.2"},
     ]
   end

@@ -32,6 +32,8 @@ class ProcessDetail {
       let ancestors = process.relations.ancestors.map(pid => format_pid_url(pid) ).join('');
       let monitors = '';
 
+      let safeState = process.state.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
       Popup.show(`
       <div id="process_information">
         <span>Process information:</span>
@@ -72,7 +74,7 @@ class ProcessDetail {
           </div>
         </div>
         <span>State</span>
-        <pre>${process.state}</pre>
+        <pre>${safeState}</pre>
       </div>
       `);
     });
