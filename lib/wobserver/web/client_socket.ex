@@ -246,7 +246,7 @@ defmodule Wobserver.Web.ClientSocket do
       {:ok, payload} ->
         {:reply, {:text, payload}, req, %{socket_state | state: state}}
       {:error, error} ->
-        Logger.warn "Wobserver.Web.ClientSocket: Can't send message #{inspect message}, reason: #{inspect error}"
+        Logger.warn "Wobserver.Web.ClientSocket: Can't send message, reason: #{inspect error}, message: #{inspect message}"
 
         {:ok, req, %{socket_state | state: state}}
     end
