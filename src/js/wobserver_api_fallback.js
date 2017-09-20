@@ -14,11 +14,11 @@ class WobserverApiFallback {
   }
 
   command(command, data = null) {
-    fetch(build_url(this.host, command, this.node))
+    fetch(build_url(this.host, command, this.node), { credentials: 'same-origin' })
   }
 
   command_promise(command, data = null) {
-    return fetch(build_url(this.host, command, this.node))
+    return fetch(build_url(this.host, command, this.node), { credentials: 'same-origin' })
     .then(res => res.json())
     .then(data => { return {
       data: data,
