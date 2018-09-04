@@ -1,7 +1,8 @@
 # Change log
 
-## 0.1.8
+## 0.1.9
 
+* Updated `wobserver_api_fallback.js` to use `location.protocol` instead of hardcoding `http://`, which allows for `https://` requests to work with the api fallback.
 
 ## 0.1.7
 
