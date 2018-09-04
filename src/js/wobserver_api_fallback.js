@@ -1,8 +1,9 @@
 function build_url(host, command, node = "") {
-  if( node == "local" ){
-    return 'http://' + host + '/api/' + encodeURI(command).replace(/#/g, '%23');
+  let scheme = location.protocol + '//'
+  if (node == "local") {
+    return scheme + host + '/api/' + encodeURI(command).replace(/#/g, '%23');
   } else {
-    return 'http://' + host + '/api/' + encodeURI(node) + "/" + encodeURI(command).replace(/#/g, '%23');
+    return scheme + host + '/api/' + encodeURI(node) + "/" + encodeURI(command).replace(/#/g, '%23');
   }
 }
 
@@ -19,24 +20,26 @@ class WobserverApiFallback {
 
   command_promise(command, data = null) {
     return fetch(build_url(this.host, command, this.node))
-    .then(res => res.json())
-    .then(data => { return {
-      data: data,
-      timestamp: Date.now() / 1000 | 0,
-      type: command,
-    } } )
-    .then(e => {
-      if( !this.connected ){
-        this.connected = true;
-        this.on_reconnect()
-      }
+      .then(res => res.json())
+      .then(data => {
+        return {
+          data: data,
+          timestamp: Date.now() / 1000 | 0,
+          type: command,
+        }
+      })
+      .then(e => {
+        if (!this.connected) {
+          this.connected = true;
+          this.on_reconnect()
+        }
 
-      return e;
-    })
-    .catch(_ => {
-      this.connected = false;
-      this.on_disconnect();
-    });
+        return e;
+      })
+      .catch(_ => {
+        this.connected = false;
+        this.on_disconnect();
+      });
   }
 
   set_node(node) {
@@ -44,4 +47,4 @@ class WobserverApiFallback {
   }
 }
 
-export{ WobserverApiFallback }
+export { WobserverApiFallback }
