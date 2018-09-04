@@ -17,6 +17,7 @@ defmodule Wobserver.Web.PhoenixSocket do
     config = [
       cowboy: Wobserver.Web.Client
     ]
+
     callback_module = Wobserver.Web.PhoenixSocket
     transport_path = :ws
     websocket_socket = {transport_path, {callback_module, config}}

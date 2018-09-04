@@ -23,6 +23,7 @@ defmodule Wobserver.Web.Router.Static do
         conn
         |> put_resp_content_type("text/html")
         |> send_asset("assets/index.html", &Assets.html/0)
+
       false ->
         conn
         |> put_resp_header("location", conn.request_path <> "/")
@@ -60,12 +61,14 @@ defmodule Wobserver.Web.Router.Static do
         conn
         |> send_resp(200, fallback.())
       end
+
     root ->
       defp send_asset(conn, asset, fallback) do
         case File.exists?(unquote(root) <> asset) do
           true ->
             conn
             |> send_file(200, unquote(root) <> asset)
+
           false ->
             conn
             |> send_resp(200, fallback.())

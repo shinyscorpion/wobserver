@@ -35,12 +35,13 @@ defmodule Wobserver.System.Scheduler do
       false ->
         get_utilization()
         |> Enum.map(fn {_, u, t} -> percentage(u, t) end)
+
       last ->
         get_utilization()
         |> Enum.zip(last)
         |> Enum.map(fn {{_, u0, t0}, {_, u1, t1}} ->
-                      percentage((u1 - u0), (t1 - t0))
-                    end)
+          percentage(u1 - u0, t1 - t0)
+        end)
     end
   end
 
@@ -50,10 +51,10 @@ defmodule Wobserver.System.Scheduler do
   defp get_utilization do
     util =
       :scheduler_wall_time
-      |> :erlang.statistics
+      |> :erlang.statistics()
       |> :lists.sort()
 
-    :ets.insert @table, {@lookup_key, util}
+    :ets.insert(@table, {@lookup_key, util})
 
     util
   end
@@ -69,7 +70,8 @@ defmodule Wobserver.System.Scheduler do
     case :ets.info(@table) do
       :undefined ->
         :erlang.system_flag(:scheduler_wall_time, true)
-        :ets.new @table, [:named_table, :public]
+        :ets.new(@table, [:named_table, :public])
+
       _ ->
         true
     end

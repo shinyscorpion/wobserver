@@ -61,18 +61,16 @@ defmodule Wobserver.Util.Node.Discovery do
   The special values for search are:
     - `local`, will always return the local node.
   """
-  @spec find(String.t) ::
-    :local
-    | :unknown
-    | {:remote, Remote.t}
+  @spec find(String.t()) ::
+          :local
+          | :unknown
+          | {:remote, Remote.t()}
   def find("local"), do: :local
 
   def find(search) do
     found_node =
       Enum.find(discover(), fn %{name: name, host: host, port: port} ->
-        search == name
-        || search == host
-        || search == "#{host}:#{port}"
+        search == name || search == host || search == "#{host}:#{port}"
       end)
 
     cond do
@@ -120,7 +118,7 @@ defmodule Wobserver.Util.Node.Discovery do
         discovery: :custom,
         discovery_search: "&MyApp.CustomDiscovery.discover/0"
   """
-  @spec discover :: list(Remote.t)
+  @spec discover :: list(Remote.t())
   def discover do
     nodes =
       :wobserver
@@ -133,41 +131,44 @@ defmodule Wobserver.Util.Node.Discovery do
     end
   end
 
-  @spec discovery_call(:dns) :: list(Remote.t)
-  defp discovery_call(:dns), do: dns_discover Application.get_env(:wobserver, :discovery_search, nil)
+  @spec discovery_call(:dns) :: list(Remote.t())
+  defp discovery_call(:dns),
+    do: dns_discover(Application.get_env(:wobserver, :discovery_search, nil))
 
-  @spec discovery_call(:custom) :: list(Remote.t)
+  @spec discovery_call(:custom) :: list(Remote.t())
   defp discovery_call(:custom) do
-    method = Application.get_env :wobserver, :discovery_search, fn -> [] end
+    method = Application.get_env(:wobserver, :discovery_search, fn -> [] end)
 
     cond do
       is_binary(method) ->
-        {call, []} = Code.eval_string method
+        {call, []} = Code.eval_string(method)
 
         call.()
+
       is_function(method) ->
         method.()
+
       true ->
         []
     end
   end
 
-  @spec discovery_call(:none) :: list(Remote.t)
+  @spec discovery_call(:none) :: list(Remote.t())
   defp discovery_call(:none) do
     [
       %Remote{
         name: get_local_ip(),
         host: get_local_ip(),
-        port: Wobserver.Application.port,
-        local?: true,
+        port: Wobserver.Application.port(),
+        local?: true
       }
     ]
   end
 
-  @spec dns_discover(search :: String.t) :: list(Remote.t)
+  @spec dns_discover(search :: String.t()) :: list(Remote.t())
   defp dns_discover(search) when is_binary(search) do
     search
-    |> String.to_charlist
+    |> String.to_charlist()
     |> :inet_res.lookup(:in, :a)
     |> Enum.map(&dns_to_node/1)
   end
@@ -177,10 +178,13 @@ defmodule Wobserver.Util.Node.Discovery do
   # Helpers
 
   defp local?(%{name: "local"}), do: true
+
   defp local?(%{host: "127.0.0.1", port: port}),
-    do: port == Wobserver.Application.port
+    do: port == Wobserver.Application.port()
+
   defp local?(%{host: ip, port: port}),
-    do: ip == get_local_ip() && port == Wobserver.Application.port
+    do: ip == get_local_ip() && port == Wobserver.Application.port()
+
   defp local?(_), do: false
 
   defp ip_to_string({ip1, ip2, ip3, ip4}), do: "#{ip1}.#{ip2}.#{ip3}.#{ip4}"
@@ -191,8 +195,8 @@ defmodule Wobserver.Util.Node.Discovery do
     remote = %Remote{
       name: remote_ip,
       host: remote_ip,
-      port: Wobserver.Application.port,
-      local?: false,
+      port: Wobserver.Application.port(),
+      local?: false
     }
 
     %Remote{remote | local?: local?(remote)}

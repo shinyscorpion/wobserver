@@ -5,20 +5,20 @@ defmodule Wobserver.PageTest do
 
   describe "list" do
     test "returns a list" do
-      assert is_list(Page.list)
+      assert is_list(Page.list())
     end
 
     test "returns a list of maps" do
-      assert is_map(List.first(Page.list))
+      assert is_map(List.first(Page.list()))
     end
 
     test "returns a list of table information" do
       assert %{
-        title: _,
-        command: _,
-        api_only: _,
-        refresh: _,
-      } = List.first(Page.list)
+               title: _,
+               command: _,
+               api_only: _,
+               refresh: _
+             } = List.first(Page.list())
     end
   end
 
@@ -31,11 +31,11 @@ defmodule Wobserver.PageTest do
       Page.register("Test", :test, fn -> 5 end)
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: _,
-        options: %{api_only: false, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: _,
+               options: %{api_only: false, refresh: 1.0}
+             } = Page.find(:test)
     end
   end
 
@@ -61,100 +61,100 @@ defmodule Wobserver.PageTest do
 
   describe "register" do
     test "can register page" do
-      Page.register "Test", :test, fn -> 5 end
+      Page.register("Test", :test, fn -> 5 end)
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: _,
-        options: %{api_only: false, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: _,
+               options: %{api_only: false, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with options" do
-      Page.register "Test", :test, fn -> 5 end, api_only: true
+      Page.register("Test", :test, fn -> 5 end, api_only: true)
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: _,
-        options: %{api_only: true, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: _,
+               options: %{api_only: true, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with tuple" do
-      Page.register {"Test", :test, fn -> 5 end}
+      Page.register({"Test", :test, fn -> 5 end})
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: _,
-        options: %{api_only: false, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: _,
+               options: %{api_only: false, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with tuple and options" do
-      Page.register {"Test", :test, fn -> 5 end, [api_only: true]}
+      Page.register({"Test", :test, fn -> 5 end, [api_only: true]})
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: _,
-        options: %{api_only: true, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: _,
+               options: %{api_only: true, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with struct" do
       fun = fn -> 5 end
 
-      Page.register %{
+      Page.register(%{
         title: "Test",
         command: :test,
         callback: fun
-      }
+      })
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: ^fun,
-        options: %{api_only: false, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: ^fun,
+               options: %{api_only: false, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with struct and options" do
       fun = fn -> 5 end
 
-      Page.register %{
+      Page.register(%{
         title: "Test",
         command: :test,
         callback: fun,
         options: [api_only: true]
-      }
+      })
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: ^fun,
-        options: %{api_only: true, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: ^fun,
+               options: %{api_only: true, refresh: 1.0}
+             } = Page.find(:test)
     end
 
     test "can register page with page" do
       fun = fn -> 5 end
 
-      Page.register %Page{
+      Page.register(%Page{
         title: "Test",
         command: :test,
         callback: fun,
         options: %{api_only: true, refresh: 1.0}
-      }
+      })
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: ^fun,
-        options: %{api_only: true, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: ^fun,
+               options: %{api_only: true, refresh: 1.0}
+             } = Page.find(:test)
     end
   end
 
@@ -162,25 +162,26 @@ defmodule Wobserver.PageTest do
     test "loads from config" do
       fun = fn -> 5 end
 
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :pages -> [{"Test", :test, fun, [api_only: true]}]
           :discovery -> :none
           :port -> 4001
         end
-      end
+      end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
-      Page.load_config
+      Page.load_config()
 
       assert %Page{
-        title: "Test",
-        command: :test,
-        callback: ^fun,
-        options: %{api_only: true, refresh: 1.0}
-      } = Page.find(:test)
+               title: "Test",
+               command: :test,
+               callback: ^fun,
+               options: %{api_only: true, refresh: 1.0}
+             } = Page.find(:test)
     end
   end
 end

@@ -18,27 +18,27 @@ defmodule Wobserver.Web.Router.System do
   alias System.Statistics
 
   get "/" do
-    System.overview
+    System.overview()
     |> send_json_resp(conn)
   end
 
   get "/architecture" do
-    Info.architecture
+    Info.architecture()
     |> send_json_resp(conn)
   end
 
   get "/cpu" do
-    Info.cpu
+    Info.cpu()
     |> send_json_resp(conn)
   end
 
   get "/memory" do
-    Memory.usage
+    Memory.usage()
     |> send_json_resp(conn)
   end
 
   get "/statistics" do
-    Statistics.overview
+    Statistics.overview()
     |> send_json_resp(conn)
   end
 

@@ -9,7 +9,7 @@ defmodule Wobserver.Web.Router do
 
   use Wobserver.Web.Router.Base
 
-  forward "/api", to: Wobserver.Web.Router.Api
-  forward "/metrics", to: Wobserver.Web.Router.Metrics
-  forward "/", to: Wobserver.Web.Router.Static
+  forward("/api", to: Wobserver.Web.Router.Api)
+  forward("/metrics", to: Wobserver.Web.Router.Metrics)
+  forward("/", to: Wobserver.Web.Router.Static)
 end

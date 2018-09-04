@@ -11,10 +11,10 @@ defmodule Wobserver.Page do
   Accepted page formats.
   """
   @type data ::
-    Page.t
-    | map
-    | {String.t, atom, fun}
-    | {String.t, atom, fun, boolean}
+          Page.t()
+          | map
+          | {String.t(), atom, fun}
+          | {String.t(), atom, fun, boolean}
 
   @typedoc ~S"""
   Page structure.
@@ -31,11 +31,11 @@ defmodule Wobserver.Page do
     - `refresh` (`float`, 0-1), sets the refresh time factor. Used in the web interface to refresh the data on the page. Set to `0` for no refresh.
   """
   @type t :: %__MODULE__{
-    title: String.t,
-    command: atom,
-    callback: fun,
-    options: keyword,
-  }
+          title: String.t(),
+          command: atom,
+          callback: fun,
+          options: keyword
+        }
 
   defstruct [
     :title,
@@ -43,8 +43,8 @@ defmodule Wobserver.Page do
     :callback,
     options: %{
       api_only: false,
-      refresh: 1,
-    },
+      refresh: 1
+    }
   ]
 
   @doc ~S"""
@@ -63,13 +63,13 @@ defmodule Wobserver.Page do
     @pages_table
     |> :ets.match(:"$1")
     |> Enum.map(fn [{command, %Page{title: title, options: options}}] ->
-         %{
-           title: title,
-           command: command,
-           api_only: options.api_only,
-           refresh: options.refresh,
-          }
-       end)
+      %{
+        title: title,
+        command: command,
+        api_only: options.api_only,
+        refresh: options.refresh
+      }
+    end)
   end
 
   @doc ~S"""
@@ -77,7 +77,7 @@ defmodule Wobserver.Page do
 
   Returns `:page_not_found`, if no page can be found.
   """
-  @spec find(command :: atom) :: Page.t
+  @spec find(command :: atom) :: Page.t()
   def find(command) do
     ensure_table()
 
@@ -92,7 +92,7 @@ defmodule Wobserver.Page do
 
   Returns the result of the function or `:page_not_found`, if the page can not be found.
   """
-  @spec call(Page.t | atom) :: any
+  @spec call(Page.t() | atom) :: any
   def call(:page_not_found), do: :page_not_found
   def call(%Page{callback: callback}), do: callback.()
   def call(command) when is_atom(command), do: command |> find() |> call()
@@ -123,23 +123,26 @@ defmodule Wobserver.Page do
     - `api_only` (`boolean`), if set to true the page won't show up in the web interface, but will only be available as API.
     - `refresh` (`float`, 0-1), sets the refresh time factor. Used in the web interface to refresh the data on the page. Set to `0` for no refresh.
   """
-  @spec register(page :: Page.data) :: boolean
+  @spec register(page :: Page.data()) :: boolean
   def register(page)
 
   def register({title, command, callback}),
     do: register(title, command, callback)
+
   def register({title, command, callback, options}),
     do: register(title, command, callback, options)
 
   def register(page = %Page{}) do
     ensure_table()
-    :ets.insert @pages_table, {page.command, page}
+    :ets.insert(@pages_table, {page.command, page})
   end
 
   def register(%{title: t, command: command, callback: call, options: options}),
     do: register(t, command, call, options)
+
   def register(%{title: title, command: command, callback: callback}),
     do: register(title, command, callback)
+
   def register(_), do: false
 
   @doc ~S"""
@@ -157,11 +160,11 @@ defmodule Wobserver.Page do
     - `refresh` (`float`, 0-1), sets the refresh time factor. Used in the web interface to refresh the data on the page. Set to `0` for no refresh.
   """
   @spec register(
-    title :: String.t,
-    command :: atom,
-    callback :: fun,
-    options :: keyword
-  ) :: boolean
+          title :: String.t(),
+          command :: atom,
+          callback :: fun,
+          options :: keyword
+        ) :: boolean
   def register(title, command, callback, options \\ []) do
     register(%Page{
       title: title,
@@ -170,7 +173,7 @@ defmodule Wobserver.Page do
       options: %{
         api_only: Keyword.get(options, :api_only, false),
         refresh: Keyword.get(options, :refresh, 1.0)
-      },
+      }
     })
   end
 
@@ -213,8 +216,9 @@ defmodule Wobserver.Page do
   defp ensure_table do
     case :ets.info(@pages_table) do
       :undefined ->
-        :ets.new @pages_table, [:named_table, :public]
+        :ets.new(@pages_table, [:named_table, :public])
         true
+
       _ ->
         true
     end

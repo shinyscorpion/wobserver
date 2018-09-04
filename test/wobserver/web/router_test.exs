@@ -13,7 +13,7 @@ defmodule Wobserver.Web.RouterTest do
 
     assert conn.state == :sent
     assert conn.status == 200
-    assert Poison.encode!(Wobserver.Util.Node.Discovery.discover) == conn.resp_body
+    assert Poison.encode!(Wobserver.Util.Node.Discovery.discover()) == conn.resp_body
   end
 
   test "/ returns 200" do

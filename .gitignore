@@ -35,3 +35,5 @@ assets
 
 # Ignore generated asset modules
 /lib/wobserver/assets.ex
+
+.elixir_ls

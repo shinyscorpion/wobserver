@@ -2,7 +2,7 @@ defmodule Wobserver.System.MemoryTest do
   use ExUnit.Case
 
   test "usage return memory struct" do
-    assert %Wobserver.System.Memory{} = Wobserver.System.Memory.usage
+    assert %Wobserver.System.Memory{} = Wobserver.System.Memory.usage()
   end
 
   test "usage returns values" do
@@ -12,8 +12,8 @@ defmodule Wobserver.System.MemoryTest do
       code: code,
       ets: ets,
       process: process,
-      total: total,
-    } = Wobserver.System.Memory.usage
+      total: total
+    } = Wobserver.System.Memory.usage()
 
     assert atom > 0
     assert binary > 0

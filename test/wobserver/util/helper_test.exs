@@ -24,14 +24,14 @@ defmodule Wobserver.Util.HelperTest do
 
   describe "JSON implementations" do
     test "PID" do
-      pid = Process.pid(33);
+      pid = Process.pid(33)
       encoder = Poison.Encoder.impl_for(pid)
 
       assert encoder.encode(pid, []) == [34, ["#PID<0.33.0>"], 34]
     end
 
     test "Port" do
-      port = :erlang.ports |> List.first
+      port = :erlang.ports() |> List.first()
       encoder = Poison.Encoder.impl_for(port)
 
       assert encoder.encode(port, []) == [34, ["#Port<0.0>"], 34]

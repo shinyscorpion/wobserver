@@ -18,22 +18,23 @@ defmodule Wobserver.Port do
   """
   @spec list :: list(map)
   def list do
-    :erlang.ports
+    :erlang.ports()
     |> Enum.map(&info/1)
     |> Enum.filter(fn
-        :port_not_found -> false
-        _ -> true
-       end)
+      :port_not_found -> false
+      _ -> true
+    end)
   end
 
   defp info(port) do
     port_data =
       port
-      |> :erlang.port_info
+      |> :erlang.port_info()
 
     case port_data do
       :undefined ->
         :port_not_found
+
       data ->
         %{
           id: Keyword.get(data, :id, -1),
@@ -43,7 +44,7 @@ defmodule Wobserver.Port do
           connected: Keyword.get(data, :connected, nil),
           input: Keyword.get(data, :input, 0),
           output: Keyword.get(data, :output, 0),
-          os_pid: Keyword.get(data, :os_pid, nil),
+          os_pid: Keyword.get(data, :os_pid, nil)
         }
     end
   end

@@ -17,15 +17,16 @@ defmodule Mix.Tasks.Analyze do
   """
   @spec run([binary]) :: any
   def run(_) do
-    IO.puts "Running:"
-    execute "mix", ["credo", "--strict"]
-    execute "mix", ["dialyzer", "--halt-exit-status"]
-    execute "mix", ["coveralls.html"], fn output ->
-      if !String.contains?(output, "[TOTAL] 100.0%"), do: IO.write output
-    end
+    IO.puts("Running:")
+    execute("mix", ["credo", "--strict"])
+    execute("mix", ["dialyzer", "--halt-exit-status"])
+
+    execute("mix", ["coveralls.html"], fn output ->
+      if !String.contains?(output, "[TOTAL] 100.0%"), do: IO.write(output)
+    end)
   end
 
-  @spec execute(String.t, [String.t], fun | nil) :: any
+  @spec execute(String.t(), [String.t()], fun | nil) :: any
   defp execute(command, options, post_process \\ nil) do
     commands = ["-q", "/dev/null", command]
 
@@ -34,17 +35,18 @@ defmodule Mix.Tasks.Analyze do
     "    "
     |> Kernel.<>(label)
     |> String.pad_trailing(60, " ")
-    |> IO.write
+    |> IO.write()
 
     case System.cmd("script", commands ++ options) do
       {output, 0} ->
-        IO.puts "\e[32msuccess\e[0m"
+        IO.puts("\e[32msuccess\e[0m")
 
         if post_process, do: post_process.(output)
+
       {output, _} ->
-        IO.puts "\e[31mfailed\e[0m"
-        IO.puts output
-        IO.puts "#{label} \e[31mfailed\e[0m"
+        IO.puts("\e[31mfailed\e[0m")
+        IO.puts(output)
+        IO.puts("#{label} \e[31mfailed\e[0m")
         System.halt(1)
     end
   end

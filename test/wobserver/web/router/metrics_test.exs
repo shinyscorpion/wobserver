@@ -29,10 +29,10 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "returns 500 with failed format" do
-      :meck.new Formatter, [:passthrough]
-      :meck.expect Formatter, :format_all, fn _ -> :error end
+      :meck.new(Formatter, [:passthrough])
+      :meck.expect(Formatter, :format_all, fn _ -> :error end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/memory")
 
@@ -43,24 +43,33 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "returns 200 with custom metrics" do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :metrics ->
-            [additional: [
-              task_bunny_queue: {
-                [normal: 5],
-                :gauge,
-                "The amount of task bunny queues used"
-              }
-            ]]
-          :metric_format -> Wobserver.Util.Metrics.Prometheus
-          :discovery -> :none
-          :port -> 4001
-        end
-      end
+            [
+              additional: [
+                task_bunny_queue: {
+                  [normal: 5],
+                  :gauge,
+                  "The amount of task bunny queues used"
+                }
+              ]
+            ]
 
-      on_exit(fn -> :meck.unload end)
+          :metric_format ->
+            Wobserver.Util.Metrics.Prometheus
+
+          :discovery ->
+            :none
+
+          :port ->
+            4001
+        end
+      end)
+
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/")
 
@@ -71,18 +80,25 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "returns 200 with custom generator" do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :metrics ->
             [generators: [&Wobserver.Web.Router.MetricsTest.test_generator/0]]
-          :metric_format -> Wobserver.Util.Metrics.Prometheus
-          :discovery -> :none
-          :port -> 4001
-        end
-      end
 
-      on_exit(fn -> :meck.unload end)
+          :metric_format ->
+            Wobserver.Util.Metrics.Prometheus
+
+          :discovery ->
+            :none
+
+          :port ->
+            4001
+        end
+      end)
+
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/")
 
@@ -93,24 +109,33 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "returns 200 with invalid custom metrics" do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :metrics ->
-            [additional: [
-              task_bunny_queue: {
-                5,
-                :gauge,
-                "The amount of task bunny queues used"
-              }
-            ]]
-          :metric_format -> Wobserver.Util.Metrics.Prometheus
-          :discovery -> :none
-          :port -> 4001
-        end
-      end
+            [
+              additional: [
+                task_bunny_queue: {
+                  5,
+                  :gauge,
+                  "The amount of task bunny queues used"
+                }
+              ]
+            ]
 
-      on_exit(fn -> :meck.unload end)
+          :metric_format ->
+            Wobserver.Util.Metrics.Prometheus
+
+          :discovery ->
+            :none
+
+          :port ->
+            4001
+        end
+      end)
+
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/")
 
@@ -121,10 +146,10 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "returns 500 if metrics can not be generated" do
-      :meck.new Formatter, [:passthrough]
-      :meck.expect Formatter, :merge_metrics, fn (_) -> :error end
+      :meck.new(Formatter, [:passthrough])
+      :meck.expect(Formatter, :merge_metrics, fn _ -> :error end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/")
 
@@ -155,19 +180,20 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "/n/remote without error" do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, field, _ ->
         case field do
           :discovery -> :custom
           :discovery_search -> fn -> [%Remote{name: "remote", host: "127.0.0.5", port: 4001}] end
           :port -> 4001
         end
-      end
+      end)
 
-      :meck.new Remote, [:passthrough]
-      :meck.expect Remote, :metrics, fn _ -> "ok" end
+      :meck.new(Remote, [:passthrough])
+      :meck.expect(Remote, :metrics, fn _ -> "ok" end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/n/remote")
 
@@ -178,19 +204,20 @@ defmodule Wobserver.Web.Router.MetricsTest do
     end
 
     test "/n/remote with error" do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, field, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, field, _ ->
         case field do
           :discovery -> :custom
           :discovery_search -> fn -> [%Remote{name: "remote", host: "127.0.0.5", port: 4001}] end
           :port -> 4001
         end
-      end
+      end)
 
-      :meck.new Remote, [:passthrough]
-      :meck.expect Remote, :metrics, fn _ -> :error end
+      :meck.new(Remote, [:passthrough])
+      :meck.expect(Remote, :metrics, fn _ -> :error end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       conn = conn(:get, "/n/remote")
 
@@ -218,7 +245,6 @@ defmodule Wobserver.Web.Router.MetricsTest do
     assert conn.state == :sent
     assert conn.status == 200
   end
-
 
   test "unknown url returns 404" do
     conn = conn(:get, "/unknown")
