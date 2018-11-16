@@ -17,9 +17,9 @@ defmodule Wobserver.Web.Router.Metrics do
 
   match "/" do
     data =
-      Discovery.discover
+      Discovery.discover()
       |> Enum.map(&Remote.metrics/1)
-      |> Formatter.merge_metrics
+      |> Formatter.merge_metrics()
 
     case data do
       :error -> send_resp(conn, 500, "Can not generate metrics.")
@@ -30,21 +30,24 @@ defmodule Wobserver.Web.Router.Metrics do
   match "/n/:node_name" do
     case Discovery.find(node_name) do
       :local ->
-        Metrics.overview
+        Metrics.overview()
         |> send_metrics(conn)
+
       {:remote, remote_node} ->
         data =
           remote_node
-          |> Remote.metrics
+          |> Remote.metrics()
 
         case data do
           :error ->
             conn
             |> send_resp(500, "Node #{node_name} not responding.")
+
           result ->
             conn
             |> send_resp(200, result)
         end
+
       :unknown ->
         conn
         |> send_resp(404, "Node #{node_name} not Found")
@@ -52,12 +55,12 @@ defmodule Wobserver.Web.Router.Metrics do
   end
 
   match "/memory" do
-    Metrics.memory
+    Metrics.memory()
     |> send_metrics(conn)
   end
 
   match "/io" do
-    Metrics.memory
+    Metrics.memory()
     |> send_metrics(conn)
   end
 

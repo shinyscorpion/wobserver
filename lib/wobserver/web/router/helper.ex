@@ -13,9 +13,9 @@ defmodule Wobserver.Web.Router.Helper do
   The `conn` content type is set to `application/json`, only if the data could be encoded.
   """
   @spec send_json_resp(
-    data :: atom | String.t | map | list,
-    conn :: Plug.Conn.t
-  ) :: Plug.Conn.t
+          data :: atom | String.t() | map | list,
+          conn :: Plug.Conn.t()
+        ) :: Plug.Conn.t()
   def send_json_resp(data, conn)
 
   def send_json_resp(:page_not_found, conn) do
@@ -29,6 +29,7 @@ defmodule Wobserver.Web.Router.Helper do
         conn
         |> Conn.put_resp_content_type("application/json")
         |> Conn.send_resp(200, json)
+
       _ ->
         conn
         |> Conn.send_resp(500, "Response could not be generated.")

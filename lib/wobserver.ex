@@ -36,7 +36,7 @@ defmodule Wobserver do
   def about do
     version =
       case :application.get_key(:wobserver, :vsn) do
-        {:ok, v} -> List.to_string v
+        {:ok, v} -> List.to_string(v)
         _ -> "Unknown"
       end
 
@@ -45,23 +45,23 @@ defmodule Wobserver do
       version: version,
       description: "Web based metrics, monitoring, and observer.",
       license: %{
-          name: "MIT",
-          url: "license",
+        name: "MIT",
+        url: "license"
       },
       links: [
         %{
           name: "Hex",
-          url: "https://hex.pm/packages/wobserver",
+          url: "https://hex.pm/packages/wobserver"
         },
         %{
           name: "Docs",
-          url: "https://hexdocs.pm/wobserver/",
+          url: "https://hexdocs.pm/wobserver/"
         },
         %{
           name: "Github",
-          url: "https://github.com/shinyscorpion/wobserver",
-        },
-      ],
+          url: "https://github.com/shinyscorpion/wobserver"
+        }
+      ]
     }
   end
 end

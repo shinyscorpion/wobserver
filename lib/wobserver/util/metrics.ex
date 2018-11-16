@@ -26,11 +26,13 @@ defmodule Wobserver.Util.Metrics do
   """
   @spec memory :: keyword
   def memory do
-    [erlang_vm_used_memory_bytes: {
-      &Memory.usage/0,
-      :gauge,
-      "Memory usage of the Erlang VM."
-    }]
+    [
+      erlang_vm_used_memory_bytes: {
+        &Memory.usage/0,
+        :gauge,
+        "Memory usage of the Erlang VM."
+      }
+    ]
   end
 
   @doc ~S"""
@@ -38,11 +40,13 @@ defmodule Wobserver.Util.Metrics do
   """
   @spec io :: keyword
   def io do
-    [erlang_vm_used_io_bytes: {
-      "Tuple.to_list(:erlang.statistics(:io))",
-      :counter,
-      "IO counter for the Erlang VM."
-    }]
+    [
+      erlang_vm_used_io_bytes: {
+        "Tuple.to_list(:erlang.statistics(:io))",
+        :counter,
+        "IO counter for the Erlang VM."
+      }
+    ]
   end
 
   @doc ~S"""
@@ -71,6 +75,7 @@ defmodule Wobserver.Util.Metrics do
         |> Agent.update(fn %{generators: g, metrics: m} ->
           %{generators: g, metrics: Keyword.merge(m, metrics)}
         end)
+
       false ->
         @metrics_table
         |> Agent.update(fn %{generators: g, metrics: m} ->
@@ -148,7 +153,7 @@ defmodule Wobserver.Util.Metrics do
   end
 
   defp generate(generator, results) when is_binary(generator) do
-    {eval_generator, []} = Code.eval_string generator
+    {eval_generator, []} = Code.eval_string(generator)
 
     eval_generator
     |> generate(results)

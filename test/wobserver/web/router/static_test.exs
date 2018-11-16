@@ -8,15 +8,16 @@ defmodule Wobserver.Web.Router.StaticTest do
 
   describe "with config set to false" do
     setup do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :assets -> false
           :port -> 4001
         end
-      end
+      end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       :ok
     end
@@ -60,15 +61,16 @@ defmodule Wobserver.Web.Router.StaticTest do
 
   describe "with config set to \"\"" do
     setup do
-      :meck.new Application, [:passthrough]
-      :meck.expect Application, :get_env, fn (:wobserver, option, _) ->
+      :meck.new(Application, [:passthrough])
+
+      :meck.expect(Application, :get_env, fn :wobserver, option, _ ->
         case option do
           :assets -> ""
           :port -> 4001
         end
-      end
+      end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       :ok
     end

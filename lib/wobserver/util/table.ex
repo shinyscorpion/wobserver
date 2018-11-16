@@ -12,7 +12,7 @@ defmodule Wobserver.Table do
   """
   @spec list :: list(map)
   def list do
-    :ets.all
+    :ets.all()
     |> Enum.map(&info/1)
   end
 
@@ -36,8 +36,8 @@ defmodule Wobserver.Table do
       meta: %{
         read_concurrency: :ets.info(table, :read_concurrency),
         write_concurrency: :ets.info(table, :write_concurrency),
-        compressed: :ets.info(table, :compressed),
-      },
+        compressed: :ets.info(table, :compressed)
+      }
     }
   end
 
@@ -68,9 +68,10 @@ defmodule Wobserver.Table do
   1
   ```
   """
-  @spec sanitize(table :: atom | integer | String.t) :: atom | integer
+  @spec sanitize(table :: atom | integer | String.t()) :: atom | integer
   def sanitize(table) when is_atom(table), do: table
   def sanitize(table) when is_integer(table), do: table
+
   def sanitize(table) when is_binary(table) do
     case Integer.parse(table) do
       {nr, ""} -> nr
@@ -84,6 +85,7 @@ defmodule Wobserver.Table do
     case :ets.info(table, :protection) do
       :private ->
         []
+
       _ ->
         table
         |> :ets.match(:"$1")
@@ -93,7 +95,7 @@ defmodule Wobserver.Table do
 
   defp data_row([row]) do
     row
-    |> Tuple.to_list
-    |> Enum.map(&(to_string(:io_lib.format("~tp", [&1]))))
+    |> Tuple.to_list()
+    |> Enum.map(&to_string(:io_lib.format("~tp", [&1])))
   end
 end

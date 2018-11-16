@@ -8,12 +8,17 @@ defmodule Wobserver.Mixfile do
       elixir: "~> 1.4",
       description: "Web based metrics, monitoring, and observer.",
       package: package(),
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       # Testing
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"],
       # Docs
       name: "Wobserver",
@@ -21,8 +26,8 @@ defmodule Wobserver.Mixfile do
       homepage_url: "https://github.com/shinyscorpion/wobserver",
       docs: [
         main: "readme",
-        extras: ["README.md"],
-      ],
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -32,11 +37,16 @@ defmodule Wobserver.Mixfile do
       maintainers: ["Ian Luites"],
       licenses: ["MIT"],
       files: [
-        "lib/wobserver", "lib/wobserver.ex", "mix.exs", "README*", "LICENSE*", # Elixir
+        # Elixir
+        "lib/wobserver",
+        "lib/wobserver.ex",
+        "mix.exs",
+        "README*",
+        "LICENSE*"
       ],
       links: %{
-        "GitHub" => "https://github.com/shinyscorpion/wobserver",
-      },
+        "GitHub" => "https://github.com/shinyscorpion/wobserver"
+      }
     ]
   end
 
@@ -48,9 +58,10 @@ defmodule Wobserver.Mixfile do
     [
       extra_applications: [
         :logger,
-        :httpoison,
+        :httpoison
       ],
-      mod: {Wobserver.Application, []},]
+      mod: {Wobserver.Application, []}
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -74,7 +85,7 @@ defmodule Wobserver.Mixfile do
       {:meck, "~> 0.8.4", only: :test},
       {:plug, "~> 1.3 or ~> 1.4"},
       {:poison, "~> 2.0 or ~> 3.1"},
-      {:websocket_client, "~> 1.2"},
+      {:websocket_client, "~> 1.2"}
     ]
   end
 end

@@ -3,7 +3,7 @@ defmodule Wobserver.System.StatisticsTest do
 
   describe "overview" do
     test "returns statistics struct" do
-      assert %Wobserver.System.Statistics{} = Wobserver.System.Statistics.overview
+      assert %Wobserver.System.Statistics{} = Wobserver.System.Statistics.overview()
     end
 
     test "returns values" do
@@ -13,8 +13,8 @@ defmodule Wobserver.System.StatisticsTest do
         process_total: process_total,
         process_max: process_max,
         input: input,
-        output: output,
-      } = Wobserver.System.Statistics.overview
+        output: output
+      } = Wobserver.System.Statistics.overview()
 
       assert uptime > 0
       assert process_running >= 0

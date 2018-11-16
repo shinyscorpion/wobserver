@@ -13,9 +13,9 @@ defmodule Wobserver.Util.Application do
   The application information is given as a tuple containing: `{name, description, version}`.
   The `name` is an atom, while both the description and version are Strings.
   """
-  @spec list :: list({atom, String.t, String.t})
+  @spec list :: list({atom, String.t(), String.t()})
   def list do
-    :application_controller.which_applications
+    :application_controller.which_applications()
     |> Enum.filter(&alive?/1)
     |> Enum.map(&structure_application/1)
   end
@@ -35,13 +35,13 @@ defmodule Wobserver.Util.Application do
   def info(app) do
     app_pid =
       app
-      |> :application_controller.get_master
+      |> :application_controller.get_master()
 
     %{
       pid: app_pid,
-      children: app_pid |> :application_master.get_child |> structure_pid(),
+      children: app_pid |> :application_master.get_child() |> structure_pid(),
       name: name(app_pid),
-      meta: Process.meta(app_pid),
+      meta: Process.meta(app_pid)
     }
   end
 
@@ -49,7 +49,7 @@ defmodule Wobserver.Util.Application do
 
   defp alive?({app, _, _}) do
     app
-    |> :application_controller.get_master
+    |> :application_controller.get_master()
     |> is_pid
   catch
     _, _ -> false
@@ -59,23 +59,26 @@ defmodule Wobserver.Util.Application do
     %{
       name: name,
       description: to_string(description),
-      version: to_string(version),
+      version: to_string(version)
     }
   end
 
   defp structure_pid({pid, name}) do
     child = structure_pid({name, pid, :supervisor, []})
 
-    {_, dictionary} = :erlang.process_info pid, :dictionary
+    {_, dictionary} = :erlang.process_info(pid, :dictionary)
 
     case Keyword.get(dictionary, :"$ancestors") do
       [parent] ->
-        [%{
-          pid: parent,
-          children: [child],
-          name: name(parent),
-          meta: Process.meta(parent),
-        }]
+        [
+          %{
+            pid: parent,
+            children: [child],
+            name: name(parent),
+            meta: Process.meta(parent)
+          }
+        ]
+
       _ ->
         [child]
     end
@@ -90,9 +93,10 @@ defmodule Wobserver.Util.Application do
       case Enum.count(links) do
         1 ->
           []
+
         _ ->
           pid
-          |> :supervisor.which_children
+          |> :supervisor.which_children()
           |> Kernel.++(Enum.filter(links, fn link -> is_port(link) end))
           |> parallel_map(&structure_pid/1)
           |> Enum.filter(&(&1 != nil))
@@ -102,7 +106,7 @@ defmodule Wobserver.Util.Application do
       pid: pid,
       children: children,
       name: name(pid),
-      meta: Process.meta(pid),
+      meta: Process.meta(pid)
     }
   end
 
@@ -111,7 +115,7 @@ defmodule Wobserver.Util.Application do
       pid: pid,
       children: [],
       name: name(pid),
-      meta: Process.meta(pid),
+      meta: Process.meta(pid)
     }
   end
 
@@ -124,7 +128,7 @@ defmodule Wobserver.Util.Application do
         status: :port,
         init: "",
         current: "",
-        class: :port,
+        class: :port
       }
     }
   end

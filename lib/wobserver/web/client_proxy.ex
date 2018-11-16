@@ -8,9 +8,9 @@ defmodule Wobserver.Web.ClientProxy do
   @behaviour :websocket_client
 
   @doc false
-  @spec connect(url :: String.t, client :: pid) ::
-    {:ok, pid}
-    | any
+  @spec connect(url :: String.t(), client :: pid) ::
+          {:ok, pid}
+          | any
   def connect(url, client \\ self()) do
     connect =
       try do
@@ -21,9 +21,10 @@ defmodule Wobserver.Web.ClientProxy do
 
     case connect do
       {:ok, pid} ->
-        Process.unlink pid
+        Process.unlink(pid)
 
         {:ok, pid}
+
       error ->
         error
     end
@@ -44,20 +45,19 @@ defmodule Wobserver.Web.ClientProxy do
   @doc false
   @spec ondisconnect(any, state :: map) :: {:close, any, map}
   def ondisconnect(reason, state) do
-    send state.client, :proxy_disconnect
+    send(state.client, :proxy_disconnect)
 
     {:close, reason, state}
   end
 
   @doc false
-  @spec websocket_info({:proxy, data :: String.t}, any, state :: map) ::
-    {:reply, {:text, String.t}, map}
+  @spec websocket_info({:proxy, data :: String.t()}, any, state :: map) ::
+          {:reply, {:text, String.t()}, map}
   def websocket_info({:proxy, data}, _connection, state) do
     {:reply, {:text, data}, state}
   end
 
-  @spec websocket_info(:disconnect, any, state :: map) ::
-    {:close, String.t, map}
+  @spec websocket_info(:disconnect, any, state :: map) :: {:close, String.t(), map}
   def websocket_info(:disconnect, _connection, state) do
     {:close, "Disconnect", state}
   end
@@ -71,7 +71,7 @@ defmodule Wobserver.Web.ClientProxy do
   def websocket_handle(message, conn, state)
 
   def websocket_handle({:text, message}, _conn, state) do
-    send state.client, {:proxy, message}
+    send(state.client, {:proxy, message})
     {:ok, state}
   end
 

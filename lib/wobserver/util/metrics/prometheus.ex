@@ -18,13 +18,13 @@ defmodule Wobserver.Util.Metrics.Prometheus do
     - `help`, a single line text description of the metric.
   """
   @spec format_data(
-    name :: String.t,
-    data :: [{integer | float, keyword}],
-    type :: :atom,
-    help :: String.t
-  ) :: String.t
+          name :: String.t(),
+          data :: [{integer | float, keyword}],
+          type :: :atom,
+          help :: String.t()
+        ) :: String.t()
   def format_data(name, data, type, help) do
-    "#{format_help name, help}#{format_type name, type}#{format_values name, data}"
+    "#{format_help(name, help)}#{format_type(name, type)}#{format_values(name, data)}"
   end
 
   @doc ~S"""
@@ -37,9 +37,7 @@ defmodule Wobserver.Util.Metrics.Prometheus do
       iex> combine_metrics ["metric1{node="127.0.0.1"} 5\n", "metric2{node="127.0.0.1"} 5\n"]
       "metric1{node="127.0.0.1"} 5\n", "metric2{node="127.0.0.1"} 5\n"
   """
-  @spec combine_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
+  @spec combine_metrics(metrics :: list[String.t()]) :: String.t()
   def combine_metrics(metrics), do: Enum.join(metrics)
 
   @doc ~S"""
@@ -54,9 +52,7 @@ defmodule Wobserver.Util.Metrics.Prometheus do
       iex> combine_metrics ["metric{node="192.168.0.6"} 5\n", "metric{node="192.168.0.5"} 5\n"]
       "metric{node="192.168.0.6"} 5\n", "metric{node="192.168.0.7"} 5\n"
   """
-  @spec merge_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
+  @spec merge_metrics(metrics :: list[String.t()]) :: String.t()
   def merge_metrics(metrics) do
     {combined, _} = Enum.reduce(metrics, {"", []}, &filter/2)
 
@@ -66,11 +62,13 @@ defmodule Wobserver.Util.Metrics.Prometheus do
   # Helpers
 
   defp format_help(_name, nil), do: ""
+
   defp format_help(name, help) do
     "\# HELP #{name} #{help}\n"
   end
 
   defp format_type(_name, nil), do: ""
+
   defp format_type(name, type) do
     "\# TYPE #{name} #{type}\n"
   end
@@ -83,8 +81,8 @@ defmodule Wobserver.Util.Metrics.Prometheus do
 
   defp format_values(name, data) do
     data
-    |> Enum.map(fn {value, labels} -> "#{name}{#{format_labels labels}} #{value}\n" end)
-    |> Enum.join
+    |> Enum.map(fn {value, labels} -> "#{name}{#{format_labels(labels)}} #{value}\n" end)
+    |> Enum.join()
   end
 
   defp analyze_metrics(metrics) do
@@ -104,7 +102,7 @@ defmodule Wobserver.Util.Metrics.Prometheus do
   defp filter_line(line, filter) do
     filter
     |> Enum.find_value(false, &String.starts_with?(line, &1))
-    |> Kernel.!
+    |> Kernel.!()
   end
 
   defp filter(metric, {metrics, filter}) do

@@ -12,7 +12,7 @@ defmodule Wobserver.Util.Process do
     :reductions,
     :current_function,
     :message_queue_len,
-    :dictionary,
+    :dictionary
   ]
 
   @process_full [
@@ -32,14 +32,14 @@ defmodule Wobserver.Util.Process do
     :min_heap_size,
     :garbage_collection,
     :status,
-    :dictionary,
+    :dictionary
   ]
 
   @process_meta [
     :initial_call,
     :current_function,
     :status,
-    :dictionary,
+    :dictionary
   ]
 
   @doc ~S"""
@@ -107,19 +107,18 @@ defmodule Wobserver.Util.Process do
   nil
   ```
   """
-  @spec pid(
-    pid :: pid | atom | list | binary | integer | {integer, integer, integer}
-  ) :: pid | nil
+  @spec pid(pid :: pid | atom | list | binary | integer | {integer, integer, integer}) ::
+          pid | nil
   def pid(pid)
 
   def pid(pid) when is_pid(pid), do: pid
-  def pid(pid) when is_atom(pid), do: Process.whereis pid
-  def pid(pid) when is_integer(pid), do: pid "<0.#{pid}.0>"
-  def pid([a, b, c]), do: pid "<#{a}.#{b}.#{c}>"
+  def pid(pid) when is_atom(pid), do: Process.whereis(pid)
+  def pid(pid) when is_integer(pid), do: pid("<0.#{pid}.0>")
+  def pid([a, b, c]), do: pid("<#{a}.#{b}.#{c}>")
   def pid(pid) when is_list(pid), do: :erlang.list_to_pid(pid)
-  def pid({a, b, c}), do: pid "<#{a}.#{b}.#{c}>"
-  def pid("#PID" <> pid), do: pid |> String.to_charlist |> pid()
-  def pid(pid = ("<" <> _)), do: pid |> String.to_charlist |> pid()
+  def pid({a, b, c}), do: pid("<#{a}.#{b}.#{c}>")
+  def pid("#PID" <> pid), do: pid |> String.to_charlist() |> pid()
+  def pid(pid = "<" <> _), do: pid |> String.to_charlist() |> pid()
   def pid(pid) when is_binary(pid), do: pid |> string_to_module() |> pid()
   def pid(_), do: nil
 
@@ -128,13 +127,12 @@ defmodule Wobserver.Util.Process do
 
   For example see: `Wobserver.Util.Process.pid/1`.
   """
-  @spec pid!(
-    pid :: pid | list | binary | integer | {integer, integer, integer}
-  ) :: pid
+  @spec pid!(pid :: pid | list | binary | integer | {integer, integer, integer}) :: pid
   def pid!(pid) do
     case pid(pid) do
       nil ->
-        raise ArgumentError, message: "Can not convert #{inspect pid} to pid."
+        raise ArgumentError, message: "Can not convert #{inspect(pid)} to pid."
+
       p ->
         p
     end
@@ -152,9 +150,7 @@ defmodule Wobserver.Util.Process do
     - `reductions`, the amount of reductions.
     - `message_queue_length`, the amount of unprocessed messages for the process.,
   """
-  @spec info(
-    pid :: pid | list | binary | integer | {integer, integer, integer}
-  ) :: :error | map
+  @spec info(pid :: pid | list | binary | integer | {integer, integer, integer}) :: :error | map
   def info(pid) do
     pid
     |> pid()
@@ -175,7 +171,7 @@ defmodule Wobserver.Util.Process do
   """
   @spec list :: list(map)
   def list do
-    :erlang.processes
+    :erlang.processes()
     |> Enum.map(&summary/1)
   end
 
@@ -244,6 +240,7 @@ defmodule Wobserver.Util.Process do
     case dictionary_init do
       nil ->
         Keyword.get(data, :initial_call, nil)
+
       call ->
         call
     end
@@ -265,7 +262,7 @@ defmodule Wobserver.Util.Process do
       current: format_function(Keyword.get(data, :current_function, nil)),
       memory: Keyword.get(data, :memory, 0),
       reductions: Keyword.get(data, :reductions, 0),
-      message_queue_length: Keyword.get(data, :message_queue_len, 0),
+      message_queue_length: Keyword.get(data, :message_queue_len, 0)
     }
   end
 
@@ -283,7 +280,7 @@ defmodule Wobserver.Util.Process do
       relations: %{
         group_leader: Keyword.get(data, :group_leader, nil),
         ancestors: Keyword.get(dictionary, :"$ancestors", []),
-        links: Keyword.get(data, :links, nil),
+        links: Keyword.get(data, :links, nil)
       },
       memory: %{
         total: Keyword.get(data, :memory, 0),
@@ -291,10 +288,10 @@ defmodule Wobserver.Util.Process do
         heap_size: Keyword.get(data, :heap_size, 0),
         stack_size: Keyword.get(data, :stack_size, 0),
         gc_min_heap_size: Keyword.get(gc, :min_heap_size, 0),
-        gc_full_sweep_after: Keyword.get(gc, :fullsweep_after, 0),
+        gc_full_sweep_after: Keyword.get(gc, :fullsweep_after, 0)
       },
       meta: structure_meta(data, pid),
-      state: to_string(:io_lib.format("~tp", [(state(pid))])),
+      state: to_string(:io_lib.format("~tp", [state(pid)]))
     }
   end
 
@@ -312,7 +309,7 @@ defmodule Wobserver.Util.Process do
       init: format_function(init),
       current: format_function(Keyword.get(data, :current_function)),
       status: Keyword.get(data, :status),
-      class: class,
+      class: class
     }
   end
 end

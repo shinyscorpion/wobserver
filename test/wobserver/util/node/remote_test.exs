@@ -6,10 +6,10 @@ defmodule Wobserver.Util.Node.RemoteTest do
 
   describe "metrics" do
     test "does remote calls" do
-      :meck.new HTTPoison, [:passthrough]
-      :meck.expect HTTPoison, :get, fn _ -> {:ok, %{body: "ok"}} end
+      :meck.new(HTTPoison, [:passthrough])
+      :meck.expect(HTTPoison, :get, fn _ -> {:ok, %{body: "ok"}} end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       assert Remote.metrics(%{host: "", port: 80, local?: false}) == "ok"
     end
@@ -33,19 +33,19 @@ defmodule Wobserver.Util.Node.RemoteTest do
     end
 
     test "remote opens connection (on ok)" do
-      :meck.new ClientProxy, [:passthrough]
-      :meck.expect ClientProxy, :connect, fn _ -> {:ok, 5} end
+      :meck.new(ClientProxy, [:passthrough])
+      :meck.expect(ClientProxy, :connect, fn _ -> {:ok, 5} end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       assert Remote.socket_proxy(%{host: "", port: 1, name: "a", local?: false}) == {5, "a"}
     end
 
     test "remote opens connection (on error)" do
-      :meck.new ClientProxy, [:passthrough]
-      :meck.expect ClientProxy, :connect, fn _ -> :invalid end
+      :meck.new(ClientProxy, [:passthrough])
+      :meck.expect(ClientProxy, :connect, fn _ -> :invalid end)
 
-      on_exit(fn -> :meck.unload end)
+      on_exit(fn -> :meck.unload() end)
 
       assert {:error, _} = Remote.socket_proxy(%{host: "", port: 1, name: ""})
     end

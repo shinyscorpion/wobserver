@@ -4,7 +4,7 @@ defmodule Wobserver.Util.ProcessTest do
   alias Wobserver.Util.Process
 
   defp pid(pid),
-    do: "<0.#{pid}.0>" |> String.to_charlist |> :erlang.list_to_pid
+    do: "<0.#{pid}.0>" |> String.to_charlist() |> :erlang.list_to_pid()
 
   describe "pid" do
     test "returns for pid" do
@@ -71,7 +71,7 @@ defmodule Wobserver.Util.ProcessTest do
       logger_pid = Process.pid(Logger)
 
       info =
-        Process.list
+        Process.list()
         |> Enum.find(nil, fn x -> x.pid == logger_pid end)
 
       [logger: info]
@@ -136,6 +136,7 @@ defmodule Wobserver.Util.ProcessTest do
 
       assert registered_name == Logger
     end
+
     test "returns priority" do
       %{priority: priority} = Process.info(Logger)
 
@@ -171,8 +172,8 @@ defmodule Wobserver.Util.ProcessTest do
     setup do
       info =
         Logger
-        |> Process.pid
-        |> Process.meta
+        |> Process.pid()
+        |> Process.meta()
 
       [logger: info]
     end
@@ -204,12 +205,12 @@ defmodule Wobserver.Util.ProcessTest do
 
   describe "edge cases" do
     test "init in dictionary" do
-      assert Process.initial_call([
-        current: Logger,
-        status: :testing,
-        class: :mock,
-        dictionary: [{:"$initial_call", Logger}]
-      ]) == Logger
+      assert Process.initial_call(
+               current: Logger,
+               status: :testing,
+               class: :mock,
+               dictionary: [{:"$initial_call", Logger}]
+             ) == Logger
     end
   end
 end

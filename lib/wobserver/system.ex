@@ -19,19 +19,19 @@ defmodule Wobserver.System do
     - `scheduler`, scheduler utilization per scheduler.
   """
   @type t :: %__MODULE__{
-    architecture: Info.t,
-    cpu: map,
-    memory: Memory.t,
-    statistics: Statistics.t,
-    scheduler: list(float)
-  }
+          architecture: Info.t(),
+          cpu: map,
+          memory: Memory.t(),
+          statistics: Statistics.t(),
+          scheduler: list(float)
+        }
 
   defstruct [
     :architecture,
     :cpu,
     :memory,
     :statistics,
-    :scheduler,
+    :scheduler
   ]
 
   @doc ~S"""
@@ -44,14 +44,14 @@ defmodule Wobserver.System do
     - `statistics`, general System statistics.
     - `scheduler`, scheduler utilization per scheduler.
   """
-  @spec overview :: Wobserver.System.t
+  @spec overview :: Wobserver.System.t()
   def overview do
     %__MODULE__{
-      architecture: Info.architecture,
-      cpu: Info.cpu,
-      memory: Memory.usage,
-      statistics: Statistics.overview,
-      scheduler: Scheduler.utilization,
+      architecture: Info.architecture(),
+      cpu: Info.cpu(),
+      memory: Memory.usage(),
+      statistics: Statistics.overview(),
+      scheduler: Scheduler.utilization()
     }
   end
 end

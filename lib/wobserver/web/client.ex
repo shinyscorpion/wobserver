@@ -30,13 +30,13 @@ defmodule Wobserver.Web.Client do
   Returns a map as state.
   """
   @spec client_handle(atom | list(atom), state :: map) ::
-    {:reply, atom | list(atom), map, map}
-    | {:reply, atom | list(atom), map}
-    | {:noreply, map}
+          {:reply, atom | list(atom), map, map}
+          | {:reply, atom | list(atom), map}
+          | {:noreply, map}
   def client_handle(command, state)
 
   def client_handle(:hello, state) do
-    {:reply, :ehlo, Discovery.local, state}
+    {:reply, :ehlo, Discovery.local(), state}
   end
 
   def client_handle(:ping, state) do
@@ -44,15 +44,15 @@ defmodule Wobserver.Web.Client do
   end
 
   def client_handle(:system, state) do
-    {:reply, :system, System.overview, state}
+    {:reply, :system, System.overview(), state}
   end
 
   def client_handle(:about, state) do
-    {:reply, :about, Wobserver.about, state}
+    {:reply, :about, Wobserver.about(), state}
   end
 
   def client_handle(:application, state) do
-    {:reply, :application, Application.list, state}
+    {:reply, :application, Application.list(), state}
   end
 
   def client_handle([:application, app], state) do
@@ -60,42 +60,42 @@ defmodule Wobserver.Web.Client do
   end
 
   def client_handle(:process, state) do
-    {:reply, :process, Process.list, state}
+    {:reply, :process, Process.list(), state}
   end
 
   def client_handle([:process, process], state) do
     data =
       process
-      |> Atom.to_string
-      |> Process.info
+      |> Atom.to_string()
+      |> Process.info()
 
     {:reply, [:process, process], data, state}
   end
 
   def client_handle(:ports, state) do
-    {:reply, :ports, Wobserver.Port.list, state}
+    {:reply, :ports, Wobserver.Port.list(), state}
   end
 
   def client_handle(:allocators, state) do
-    {:reply, :allocators, Allocator.list, state}
+    {:reply, :allocators, Allocator.list(), state}
   end
 
   def client_handle(:table, state) do
-    {:reply, :table, Table.list, state}
+    {:reply, :table, Table.list(), state}
   end
 
   def client_handle([:table, table], state) do
     data =
       table
-      |> Atom.to_string
-      |> Table.sanitize
+      |> Atom.to_string()
+      |> Table.sanitize()
       |> Table.info(true)
 
     {:reply, [:table, table], data, state}
   end
 
   def client_handle(:custom, state) do
-    {:reply, :custom, Page.list, state}
+    {:reply, :custom, Page.list(), state}
   end
 
   def client_handle(custom, state) do
@@ -117,9 +117,9 @@ defmodule Wobserver.Web.Client do
 
   @doc false
   @spec terminate(any, any, any) :: :ok
-  def terminate(_,_,_), do: :ok
+  def terminate(_, _, _), do: :ok
 
   @doc false
-  @spec handle(:cowboy_req.req, any) :: {:ok, :cowboy_req.req, any}
+  @spec handle(:cowboy_req.req(), any) :: {:ok, :cowboy_req.req(), any}
   def handle(req, state), do: {:ok, req, state}
 end

@@ -3,7 +3,7 @@ defmodule Wobserver.System.InfoTest do
 
   describe "architecture" do
     test "returns info struct" do
-      assert %Wobserver.System.Info{} = Wobserver.System.Info.architecture
+      assert %Wobserver.System.Info{} = Wobserver.System.Info.architecture()
     end
 
     test "returns values" do
@@ -17,8 +17,8 @@ defmodule Wobserver.System.InfoTest do
         threads: threads,
         thread_pool_size: thread_pool_size,
         wordsize_internal: wordsize_internal,
-        wordsize_external: wordsize_external,
-      } = Wobserver.System.Info.architecture
+        wordsize_external: wordsize_external
+      } = Wobserver.System.Info.architecture()
 
       assert is_binary(otp_release)
       assert is_binary(elixir_version)
@@ -40,8 +40,8 @@ defmodule Wobserver.System.InfoTest do
       logical_processors_available: logical_processors_available,
       schedulers: schedulers,
       schedulers_online: schedulers_online,
-      schedulers_available: schedulers_available,
-    } = Wobserver.System.Info.cpu
+      schedulers_available: schedulers_available
+    } = Wobserver.System.Info.cpu()
 
     assert is_integer(logical_processors)
     assert is_integer(logical_processors_online)

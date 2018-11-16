@@ -12,7 +12,7 @@ defmodule Wobserver.Util.Helper do
 
     Uses `inspect/1` to turn the `pid` into a String and passes the `options` to `BitString.encode/1`.
     """
-    @spec encode(pid :: pid, options :: any) :: String.t
+    @spec encode(pid :: pid, options :: any) :: String.t()
     def encode(pid, options) do
       pid
       |> inspect
@@ -26,7 +26,7 @@ defmodule Wobserver.Util.Helper do
 
     Uses `inspect/1` to turn the `port` into a String and passes the `options` to `BitString.encode/1`.
     """
-    @spec encode(port :: port, options :: any) :: String.t
+    @spec encode(port :: port, options :: any) :: String.t()
     def encode(port, options) do
       port
       |> inspect
@@ -40,7 +40,7 @@ defmodule Wobserver.Util.Helper do
 
     Uses `inspect/1` to turn the `reference` into a String and passes the `options` to `BitString.encode/1`.
     """
-    @spec encode(reference :: reference, options :: any) :: String.t
+    @spec encode(reference :: reference, options :: any) :: String.t()
     def encode(reference, options) do
       reference
       |> inspect
@@ -53,7 +53,7 @@ defmodule Wobserver.Util.Helper do
 
   The given `module` string will be turned into atoms that get concatted.
   """
-  @spec string_to_module(module :: String.t) :: atom
+  @spec string_to_module(module :: String.t()) :: atom
   def string_to_module(module) do
     first_letter = String.first(module)
 
@@ -62,10 +62,11 @@ defmodule Wobserver.Util.Helper do
         module
         |> String.split(".")
         |> Enum.map(&String.to_atom/1)
-        |> Module.concat
+        |> Module.concat()
+
       _ ->
         module
-        |> String.to_atom
+        |> String.to_atom()
     end
   end
 
@@ -88,7 +89,7 @@ defmodule Wobserver.Util.Helper do
   nil
   ```
   """
-  @spec format_function(nil | {atom, atom, integer} | atom) :: String.t | nil
+  @spec format_function(nil | {atom, atom, integer} | atom) :: String.t() | nil
   def format_function(nil), do: nil
   def format_function({module, name, arity}), do: "#{module}.#{name}/#{arity}"
   def format_function(name), do: "#{name}"
@@ -101,7 +102,7 @@ defmodule Wobserver.Util.Helper do
   @spec parallel_map(enum :: list, function :: fun) :: list
   def parallel_map(enum, function) do
     enum
-    |> Enum.map(&(Task.async(fn -> function.(&1) end)))
+    |> Enum.map(&Task.async(fn -> function.(&1) end))
     |> Enum.map(&Task.await/1)
   end
 end

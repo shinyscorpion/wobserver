@@ -15,11 +15,11 @@ defmodule Wobserver.Util.Metrics.Formatter do
     - `help`, a single line text description of the metric.
   """
   @callback format_data(
-    name :: String.t,
-    data :: [{integer | float, keyword}],
-    type :: :atom,
-    help :: String.t
-  ) :: String.t
+              name :: String.t(),
+              data :: [{integer | float, keyword}],
+              type :: :atom,
+              help :: String.t()
+            ) :: String.t()
 
   @doc ~S"""
   Combines formatted metrics together.
@@ -27,9 +27,7 @@ defmodule Wobserver.Util.Metrics.Formatter do
   Arguments:
     - `metrics`, a list of formatted metrics for one node.
   """
-  @callback combine_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
+  @callback combine_metrics(metrics :: list[String.t()]) :: String.t()
 
   @doc ~S"""
   Merges formatted sets of metrics from different nodes together.
@@ -39,9 +37,7 @@ defmodule Wobserver.Util.Metrics.Formatter do
   Arguments:
     - `metrics`, a list of formatted sets metrics for multiple node.
   """
-  @callback merge_metrics(
-    metrics :: list[String.t]
-  ) :: String.t
+  @callback merge_metrics(metrics :: list[String.t()]) :: String.t()
 
   @doc ~S"""
   Format a set of `data` with a `label` for a metric parser/aggregater.
@@ -52,30 +48,36 @@ defmodule Wobserver.Util.Metrics.Formatter do
     - `formatter`, a module implementing the `Formatter` behaviour to format metrics.
   """
   @spec format(
-    data :: any,
-    label :: String.t,
-    type :: :gauge | :counter | nil,
-    help :: String.t | nil,
-    formatter :: atom | nil
-  ) :: String.t | :error
+          data :: any,
+          label :: String.t(),
+          type :: :gauge | :counter | nil,
+          help :: String.t() | nil,
+          formatter :: atom | nil
+        ) :: String.t() | :error
   def format(data, label, type \\ nil, help \\ nil, formatter \\ nil)
 
   def format(data, label, type, help, nil) do
-    format(data, label, type, help, Application.get_env(
-      :wobserver,
-      :metric_format,
-      Wobserver.Util.Metrics.Prometheus
-    ))
+    format(
+      data,
+      label,
+      type,
+      help,
+      Application.get_env(
+        :wobserver,
+        :metric_format,
+        Wobserver.Util.Metrics.Prometheus
+      )
+    )
   end
 
   def format(data, label, type, help, formatter) when is_binary(formatter) do
-    {new_formatter, []} = Code.eval_string formatter
+    {new_formatter, []} = Code.eval_string(formatter)
 
     format(data, label, type, help, new_formatter)
   end
 
   def format(data, label, type, help, formatter)
-  when is_integer(data) or is_float(data) do
+      when is_integer(data) or is_float(data) do
     format([{data, []}], label, type, help, formatter)
   end
 
@@ -86,7 +88,7 @@ defmodule Wobserver.Util.Metrics.Formatter do
   end
 
   def format(data, label, type, help, formatter) when is_binary(data) do
-    {new_data, []} = Code.eval_string data
+    {new_data, []} = Code.eval_string(data)
 
     format(new_data, label, type, help, formatter)
   catch
@@ -104,14 +106,16 @@ defmodule Wobserver.Util.Metrics.Formatter do
         data
         |> list_to_data()
         |> format(label, type, help, formatter)
+
       is_list(data) ->
         data =
           data
           |> Enum.map(fn {value, labels} ->
-              {value, Keyword.merge([node: Discovery.local.name], labels)}
-            end)
+            {value, Keyword.merge([node: Discovery.local().name], labels)}
+          end)
 
         formatter.format_data(label, data, type, help)
+
       true ->
         :error
     end
@@ -176,15 +180,18 @@ defmodule Wobserver.Util.Metrics.Formatter do
   simple{node=\"10.74.181.35\",location=\"wall\"} 8\n"
   ```
   """
-  @spec format_all(data :: list, formatter :: atom) :: String.t | :error
+  @spec format_all(data :: list, formatter :: atom) :: String.t() | :error
   def format_all(data, formatter \\ nil)
 
   def format_all(data, nil) do
-    format_all(data, Application.get_env(
-      :wobserver,
-      :metric_format,
-      Wobserver.Util.Metrics.Prometheus
-    ))
+    format_all(
+      data,
+      Application.get_env(
+        :wobserver,
+        :metric_format,
+        Wobserver.Util.Metrics.Prometheus
+      )
+    )
   end
 
   def format_all(data, formatter) do
@@ -206,12 +213,12 @@ defmodule Wobserver.Util.Metrics.Formatter do
   Arguments:
     - `metrics`, a list of formatted sets metrics for multiple node.
   """
-  @spec merge_metrics(metrics :: list(String.t), formatter :: atom)
-   :: String.t | :error
+  @spec merge_metrics(metrics :: list(String.t()), formatter :: atom) :: String.t() | :error
   def merge_metrics(metrics, formatter \\ nil)
 
   def merge_metrics(metrics, nil) do
-    merge_metrics(metrics,
+    merge_metrics(
+      metrics,
       Application.get_env(
         :wobserver,
         :metric_format,
@@ -248,8 +255,8 @@ defmodule Wobserver.Util.Metrics.Formatter do
 
   defp map_to_data(map) do
     map
-    |> Map.to_list
-    |> Enum.filter(fn {a, _} -> a != :__struct__ && a != :total  end)
+    |> Map.to_list()
+    |> Enum.filter(fn {a, _} -> a != :__struct__ && a != :total end)
     |> list_to_data()
   end
 
