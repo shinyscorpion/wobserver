@@ -74,7 +74,7 @@ defmodule Wobserver.Mixfile do
       {:meck, "~> 0.8.4", only: :test},
       {:plug, "~> 1.3 or ~> 1.4"},
       {:poison, "~> 2.0 or ~> 3.1"},
-      {:websocket_client, "~> 1.2"},
+      {:websocket_client, "~> 1.3.0"},
     ]
   end
 end
